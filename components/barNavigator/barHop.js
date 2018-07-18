@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import globals from './index';
+import { View } from 'react-native';
+import globals from '..';
 import { Button } from 'react-native-elements';
 const style = globals.style;
 const qrIcon={
