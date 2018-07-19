@@ -24,7 +24,6 @@ export default class extends React.Component {
     const songs = this.props.children;
     return (
       <FlatList data={songs} keyExtractor={(item, index)=>String(index)} renderItem={({item})=>this.eachSong(item)}>
-
       </FlatList>
     );
   }

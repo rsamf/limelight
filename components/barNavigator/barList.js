@@ -1,19 +1,16 @@
 import React from 'react';
-import { View } from 'react-native';
-import { List, ListItem, Icon } from 'react-native-elements';
+import { View, FlatList, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
+import { Icon } from 'react-native-elements';
 import globals from '..';
-
-const style = globals.style;
-
 
 class BarList extends React.Component {
   bars = [{
-    name: "Sammy",
-    live: false,
-    img: "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"
-  }, {
     name: "Amanda",
     live: true,
+    img: "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"
+  }, {
+    name: "Sammy",
+    live: false,
     img: "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg"
   }, {
     name: "Alex",
@@ -64,26 +61,57 @@ class BarList extends React.Component {
       bars: this.bars.sort((a, b) => a.live < b.live)
     };
   }
-
+  navigateTo = (bar) => {
+    this.props.navigation.navigate('Bar');
+  }
+  eachBar(bar){
+    return (
+      <TouchableOpacity style={style.bar} onPress={()=>this.navigateTo(bar)}>
+        <Image style={style.barImage} source={{uri:bar.img}}></Image>
+        <Text style={{...style.barText, color: bar.live ? globals.sSand : globals.sGrey}}>{bar.name}</Text>
+        {
+          bar.live ?
+          <View style={{flexDirection: 'row'}}>
+            <Icon size={14} color={globals.sGreen} name="sound" type="entypo"></Icon>
+            <Icon size={14} color={globals.sGreen} name="chevron-thin-right" type="entypo"></Icon>
+          </View> :
+          <View>
+            <Icon size={14} color={globals.sGrey} name="sound-mute" type="entypo"></Icon>
+          </View>
+        }   
+      </TouchableOpacity>
+    );
+  }
   render(){
     return (
-      <View style={style.view}>
-        <List>
-        {
-          this.state.bars.map((l, i) => (
-            <ListItem style={{backgroundColor: globals.sGrey}} roundAvatar key={i} 
-            title={l.name} avatar={{uri:l.img}} onPress={()=>this.props.navigation.navigate('Bar')} subtitle={
-              <View>
-                <Icon raised size={14} color={l.live ? globals.sGreen : globals.sGrey} name={l.live ? "sound" : "sound-mute"} type="entypo"></Icon>
-              </View>
-            }/>
-          ))
-        }
-        </List>
+      <View style={globals.style.view}>
+        <FlatList data={this.state.bars} keyExtractor={(item, index)=>String(index)} renderItem={({item})=>this.eachBar(item)}>
+        </FlatList>
       </View>
     );
   }
 }
 
+const style = StyleSheet.create({
+  bar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 0.5,
+    borderBottomColor: globals.sGrey,
+    height: 100,
+    marginLeft: 40,
+    marginRight: 40,
+    paddingLeft: 20,
+    paddingRight: 20
+  },
+  barText: {
+    fontSize: 18
+  },
+  barImage: {
+    width: 50,
+    height: 50
+  }
+});
 
 export default BarList;
