@@ -19,26 +19,25 @@ const Root = createStackNavigator({
   gesturesEnabled: false
 });
 
-export default class extends React.Component {
+export default class App extends React.Component {
   componentDidMount(){
-    // initialize Spotify if it hasn't been initialized yet
+    Spotify.addListener("login", details => {
+      console.warn(details);
+    });
 		if(!Spotify.isInitialized())
 		{
-			// initialize spotify
 			let spotifyOptions = {
 			  clientID: "65a08501d9e64abfb003fb795ee1a540",
 				sessionUserDefaultsKey: "SpotifySession",
 				redirectURL: "spotlight://auth",
-				scopes:["user-read-private", "playlist-read", "playlist-read-private", "streaming"],
+				scopes: ["user-read-private", "playlist-read", "playlist-read-private", "streaming"],
 			};
 			Spotify.initialize(spotifyOptions).then((loggedIn) => {
-				// update UI state
-				this.setState({spotifyInitialized: true});
-				// handle initialization
-				if(loggedIn)
-				{
-					this.goToPlayer();
-				}
+        console.warn("Spotify is initializzed");
+        console.warn("Login status", loggedIn);
+        if(!loggedIn){
+          Spotify.login();
+        }
 			}).catch((error) => {
 				Alert.alert("Error", error.message);
 			});
