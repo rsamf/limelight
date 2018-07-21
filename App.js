@@ -33,10 +33,9 @@ export default class App extends React.Component {
 				scopes: ["user-read-private", "playlist-read", "playlist-read-private", "streaming"],
 			};
 			Spotify.initialize(spotifyOptions).then((loggedIn) => {
-        console.warn("Spotify is initializzed");
         console.warn("Login status", loggedIn);
         if(!loggedIn){
-          Spotify.login();
+          // Spotify.login();
         }
 			}).catch((error) => {
 				Alert.alert("Error", error.message);

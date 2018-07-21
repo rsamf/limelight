@@ -2,6 +2,7 @@ import React from 'react';
 import { View, FlatList, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import globals from '..';
+import Signin from '../signin';
 
 class BarList extends React.Component {
   bars = [{
@@ -85,7 +86,8 @@ class BarList extends React.Component {
   render(){
     return (
       <View style={globals.style.view}>
-        <FlatList data={this.state.bars} keyExtractor={(item, index)=>String(index)} renderItem={({item})=>this.eachBar(item)}>
+        <Signin></Signin>
+        <FlatList style={{marginTop: 14}} data={this.state.bars} keyExtractor={(item, index)=>String(index)} renderItem={({item})=>this.eachBar(item)}>
         </FlatList>
       </View>
     );

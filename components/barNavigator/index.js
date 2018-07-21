@@ -30,7 +30,8 @@ const Root = createMaterialTopTabNavigator({
     showIcon: true,
     showLabel: false,
     style: {
-      backgroundColor: globals.sBlack
+      backgroundColor: globals.sBlack,
+      zIndex: 10
     },
     activeTintColor: globals.sGreen,
     indicatorStyle: {

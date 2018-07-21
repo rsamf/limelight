@@ -5,69 +5,90 @@ import Spotify from 'rn-spotify-sdk';
 import globals from '..';
 
 export default class extends React.Component {
+
   constructor(props){
     super(props);
     this.state = {
-      playing: false,
-      trackInitialized: false,
-      trackIndex: 0,
-      trackPosition: 0
+      track: null
     };
   }
+
   componentDidMount(){
+    if(!this.props.children || !this.props.owned) return;
     let self = this;
-    Spotify.addListener("play", (anything) => {
-      self.setState({
-        track: anything.metadata.currentTrack
+    Spotify.addListener("play", (song) => {
+      self.setTrack({
+        name: song.metadata.currentTrack.name,
+        artistName: song.metadata.currentTrack.artistName,
+        playing: true,
+        interval: setInterval(()=>{
+          Spotify.getPlaybackStateAsync().then(state => {
+            self.setTrack({
+              position: state.position
+            });
+          });
+        }, 1000)
       });
     });
+    this.play();
   }
+
   pause() {
     Spotify.setPlaying(false);
     clearInterval(this.state.interval);
-    this.setState({
+    this.setTrack({
       playing: false
     });
   }
+
   play() {
-    if(this.state.trackInitialized) {
+    if(this.state.track) {
       Spotify.setPlaying(true);
     } else {
-      Spotify.playURI("spotify:track:7kQiiHm3jvdz2npYMW7wcE", 0, 0);
+      Spotify.playURI(`spotify:track:${this.props.children}`, 0, 0);
     }
-    let self = this;
-    let interval = setInterval(()=>{
-      Spotify.getPlaybackStateAsync().then(state => {
-        self.setState({
-          trackPosition: state.position
-        });
-      });
-    }, 1000);
-    this.setState({
-      playing: true,
-      trackInitialized: true,
-      interval: interval
-    });
-
-
   }
+
+  seekStart(){
+    Spotify.seek(0);
+  }
+
+  skip(){
+    this.props.next();
+  }
+
   componentWillUnmount(){
     Spotify.setPlaying(false);
     clearInterval(this.state.interval);
   }
-  render(){
-    const song = this.props.children;
+
+  setTrack(assignment){
+    this.setState({
+      track: {
+        ...this.state.track,
+        ...assignment
+      }
+    });
+  }
+
+  renderForGuest(){
     const track = this.state.track;
-    const trackPosition = this.state.trackPosition;
-    const position = track && trackPosition ? trackPosition / track.duration : 0;
-    console.warn(position);
     return (
       <View style={style.view}>
-        <Text style={style.song}>{song.artist} - {song.name}</Text>
+        {track ? <Text style={style.song}>{track.artistName} - {track.name}</Text> : <Text style={style.song}> </Text>}
+      </View>
+    );
+  }
+
+  renderForHost(){
+    const track = this.state.track;
+    return (
+      <View style={style.view}>
+        {track ? <Text style={style.song}>{track.artistName} - {track.name}</Text> : <Text style={style.song}> </Text>}
         <View style={style.control}>
           <Icon iconStyle={style.controlItem} color={globals.sWhite} name="step-backward" type="font-awesome"></Icon>
           {
-            this.state.playing
+            track && track.playing
             ?
             <Icon onPress={()=>this.pause()} iconStyle={style.controlItem} 
             color={globals.sWhite} name="pause" type="font-awesome" underlayColor={globals.sBlack}>
@@ -79,9 +100,13 @@ export default class extends React.Component {
           }
           <Icon iconStyle={style.controlItem} color={globals.sWhite} name="step-forward" type="font-awesome"></Icon>
         </View>
-        <ProgressViewIOS style={style.progress} trackTintColor={globals.sGrey} progressTintColor={globals.sSand} progress={position}></ProgressViewIOS>
+        <ProgressViewIOS style={style.progress} trackTintColor={globals.sGrey} progressTintColor={globals.sSand} progress={track ? track.position : 0}></ProgressViewIOS>
       </View>
     );
+  }
+  
+  render(){
+    return this.props.owned ? this.renderForHost() : this.renderForGuest();
   }
 }
 
