@@ -4,9 +4,6 @@ export default class extends Popout {
   constructor(props){
     super(props);
 
-    // this.style.
-    // this.style.content.backgroundColor = 'black';
-
     this.handleColor = "white";
     this.style.handle = {
       ...this.style.handle,

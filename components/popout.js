@@ -1,50 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, Animated, Easing, PanResponder } from 'react-native';
+import { View, StyleSheet, Animated, PanResponder } from 'react-native';
 import { Icon } from 'react-native-elements';
 
 export default class extends React.Component {
   constructor(props){
     super(props);
     
-    this._panResponder = PanResponder.create({
-      // Ask to be the responder:
-      onStartShouldSetPanResponder: (evt, gestureState) => true,
-      onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
-      onMoveShouldSetPanResponder: (evt, gestureState) => true,
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
-      // onPanResponderTerminationRequest: (evt, gestureState) => true,
-      // onPanResponderTerminate: (evt, gestureState) => this.close(),
-      onPanResponderMove: (evt, gestureState) => {
-        if(!this.state.opened) {
-          this.setState({
-            view: {
-              top: new Animated.Value(this.getPosition(gestureState.dy/this.state.contentHeight))
-            }
-          });
-        } else {
-          this.setState({
-            view: {
-              top: new Animated.Value(this.getPosition(1+gestureState.dy/this.state.contentHeight))
-            }
-          });
-        }
-      },
-      onPanResponderRelease: (evt, gestureState) => {
-        if(this.state.opened){
-          if(-gestureState.dy >= this.state.contentHeight/2) {
-            this.close()
-          } else {
-            this.open();
-          }
-        } else {
-          if(gestureState.dy >= this.state.contentHeight/2) {
-            this.open()
-          } else {
-            this.close();
-          }
-        }
-      }
-    });
     this.state = {
       view: {
         top: new Animated.Value(0)
@@ -61,7 +22,7 @@ export default class extends React.Component {
     return val;
   }
 
-  open(distance=this.state.contentHeight){
+  open(){
     Animated.timing(this.state.view.top, {
       toValue: 0,
       duration: 500
@@ -100,7 +61,7 @@ export default class extends React.Component {
         <View onLayout={(evt)=>this.onContentLayout(evt)} style={this.style.content}>
           {this.props.children}
         </View>
-        <View style={this.style.handle} {...this._panResponder.panHandlers}>
+        <View style={this.style.handle} {...this.responder.panHandlers}>
           <Icon size={14} name="chevron-small-down" type="entypo" color={this.handleColor}></Icon>
         </View>
       </Animated.View>
@@ -130,4 +91,42 @@ export default class extends React.Component {
     }
   });
 
+  responder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onStartShouldSetPanResponderCapture: () => true,
+    onMoveShouldSetPanResponder: () => true,
+    onMoveShouldSetPanResponderCapture: () => true,
+    onPanResponderTerminationRequest: () => true,
+    onPanResponderTerminate: () => this.close(),
+    onPanResponderMove: (evt, gestureState) => {
+      if(!this.state.opened) {
+        this.setState({
+          view: {
+            top: new Animated.Value(this.getPosition(gestureState.dy/this.state.contentHeight))
+          }
+        });
+      } else {
+        this.setState({
+          view: {
+            top: new Animated.Value(this.getPosition(1+gestureState.dy/this.state.contentHeight))
+          }
+        });
+      }
+    },
+    onPanResponderRelease: (evt, gestureState) => {
+      if(this.state.opened){
+        if(-gestureState.dy >= this.state.contentHeight/2) {
+          this.close()
+        } else {
+          this.open();
+        }
+      } else {
+        if(gestureState.dy >= this.state.contentHeight/2) {
+          this.open()
+        } else {
+          this.close();
+        }
+      }
+    }
+  });
 }

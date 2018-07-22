@@ -20,9 +20,37 @@ const Root = createStackNavigator({
 });
 
 export default class App extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      userLoggedIn: null
+    };
+  }
+
+  getUser(callback){
+    Spotify.getMe().then(user => {
+      globals.user = user;
+      callback();
+    });
+  }
+
+  count = 0;
   componentDidMount(){
+    
+    let self = this;
+    setInterval(()=>{
+      self.setState({
+        user: {
+          name: "hi" + this.count++,
+        }
+      });
+    }, 1000);
     Spotify.addListener("login", details => {
-      console.warn(details);
+      this.getUser(()=>{
+        self.setState({
+          userLoggedIn: true
+        });
+      });
     });
 		if(!Spotify.isInitialized())
 		{
@@ -32,18 +60,14 @@ export default class App extends React.Component {
 				redirectURL: "spotlight://auth",
 				scopes: ["user-read-private", "playlist-read", "playlist-read-private", "streaming"],
 			};
-			Spotify.initialize(spotifyOptions).then((loggedIn) => {
-        console.warn("Login status", loggedIn);
-        if(!loggedIn){
-          // Spotify.login();
-        }
-			}).catch((error) => {
+			Spotify.initialize(spotifyOptions).catch((error) => {
 				Alert.alert("Error", error.message);
 			});
 		}
-	}
+  }
+  
   render(){
-    return <Root/>;
+    return <Root screenProps={{user: this.state.user}}/>;
   }
 }
 

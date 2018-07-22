@@ -62,9 +62,15 @@ class BarList extends React.Component {
       bars: this.bars.sort((a, b) => a.live < b.live)
     };
   }
+
+  componentDidUpdate(){
+    // console.warn(this.props);
+  }
+
   navigateTo = (bar) => {
     this.props.navigation.navigate('Bar');
   }
+
   eachBar(bar){
     return (
       <TouchableOpacity style={style.bar} onPress={()=>this.navigateTo(bar)}>
@@ -86,7 +92,7 @@ class BarList extends React.Component {
   render(){
     return (
       <View style={globals.style.view}>
-        <Signin></Signin>
+        <Signin user={this.props.user}></Signin>
         <FlatList style={{marginTop: 14}} data={this.state.bars} keyExtractor={(item, index)=>String(index)} renderItem={({item})=>this.eachBar(item)}>
         </FlatList>
       </View>

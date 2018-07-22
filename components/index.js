@@ -30,13 +30,16 @@ const style = StyleSheet.create({
   }
 });
 
+let user = null;
+
 const globals = {
   style,
   sGreen,
   sBlack,
   sGrey,
   sSand,
-  sWhite
+  sWhite,
+  user
 };
 
 export default globals;

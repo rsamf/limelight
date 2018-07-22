@@ -40,4 +40,16 @@ const Root = createMaterialTopTabNavigator({
   }
 });
 
-export default Root;
+export default class BarNavigator extends React.Component {
+  static router = Root.router;
+
+  constructor(props){
+    super(props);
+  }
+
+  render() {
+    return (
+      <Root screenProps={this.props.screenProps} navigation={this.props.navigation} />
+    );
+  }
+}
