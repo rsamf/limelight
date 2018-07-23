@@ -18,6 +18,7 @@ export default class extends React.Component {
   login(){
     Spotify.login();
   }
+
   renderNotLoggedIn(){
     return(
       <Shade>
@@ -30,23 +31,25 @@ export default class extends React.Component {
       </Shade>
     );
   }
+
   renderLoggedIn(){
+    let user = this.props.user;
     return(
       <Shade>
         <View style={style.view}>
-          {/* <Avatar
-            medium
-            source={{uri: "https://s3.amazonaws.com/uifaces/faces/twitter/kfriedson/128.jpg"}}
+          <Avatar
+            medium rounded
+            source={{uri: user.images[0].url}}
             onPress={() => console.log("Works!")}
             activeOpacity={0.7}
-          /> */}
-          <Text>{globals.user.name}</Text>
+          />
+          <Text style={globals.style.text}>{user.display_name}</Text>
         </View>
       </Shade>
     );
   }
   render(){
-    if(globals.user) {
+    if(this.props.user) {
       return this.renderLoggedIn();
     } else {
       return this.renderNotLoggedIn();

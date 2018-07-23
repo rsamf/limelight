@@ -23,34 +23,25 @@ export default class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      userLoggedIn: null
+      user: null
     };
   }
 
-  getUser(callback){
+  getUser(){
     Spotify.getMe().then(user => {
-      globals.user = user;
-      callback();
+      console.warn(user);
+      this.setState({
+        user: user
+      });
     });
   }
 
-  count = 0;
   componentDidMount(){
-    
-    let self = this;
-    setInterval(()=>{
-      self.setState({
-        user: {
-          name: "hi" + this.count++,
-        }
-      });
-    }, 1000);
-    Spotify.addListener("login", details => {
-      this.getUser(()=>{
-        self.setState({
-          userLoggedIn: true
-        });
-      });
+    Spotify.addListener("login", () => {
+      this.getUser();
+    });
+    Spotify.addListener("logout", () => {
+      Spotify.login();
     });
 		if(!Spotify.isInitialized())
 		{

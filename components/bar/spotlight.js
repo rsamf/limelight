@@ -9,52 +9,104 @@ export default class extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      track: null
+      track: this.props.children,
+      trackState: {
+        position: 0,
+        playing: false,
+        initialized: false
+      },
+      interval: null,
     };
   }
 
+  componentDidUpdate(){
+  }
+
   componentDidMount(){
-    if(!this.props.children || !this.props.owned) return;
-    let self = this;
-    Spotify.addListener("play", (song) => {
-      self.setTrack({
-        name: song.metadata.currentTrack.name,
-        artistName: song.metadata.currentTrack.artistName,
-        playing: true,
+    Spotify.addListener("play", () => {
+      this.setState({
         interval: setInterval(()=>{
           Spotify.getPlaybackStateAsync().then(state => {
-            self.setTrack({
-              position: state.position
-            });
+            console.warn(state);
+            if(!state.playing && this.state.trackState.playing) {
+              console.warn(state.position, this.state.track.duration - .001);
+              this.next();
+            } else {
+              this.setState({
+                trackState: {
+                  ...this.state.trackState,
+                  position: state.position/this.state.track.duration
+                }
+              });
+            }
           });
         }, 1000)
       });
     });
-    this.play();
+    if(this.props.children && this.props.owned) {
+      this.play();
+    }
   }
 
   pause() {
     Spotify.setPlaying(false);
-    clearInterval(this.state.interval);
-    this.setTrack({
-      playing: false
+    this.setState({
+      trackState: {
+        ...this.state.trackState,
+        playing: false
+      }
     });
   }
 
-  play() {
-    if(this.state.track) {
+  play(song) {
+    if(!song && this.state.trackState.initialized && this.state.track) {
+      // Play Already playing song
       Spotify.setPlaying(true);
     } else {
-      Spotify.playURI(`spotify:track:${this.props.children}`, 0, 0);
+      // Play new song
+      Spotify.playURI(`spotify:track:${song ? song.id : this.state.track.id}`, 0, 0);
+      this.setState({
+        trackState: {
+          position: 0
+        }
+      });
     }
+    this.setState({
+      trackState: {
+        ...this.state.trackState,
+        playing: true,
+        initialized: true
+      }
+    });
   }
 
   seekStart(){
     Spotify.seek(0);
+    if(!this.state.trackState.playing) {
+      clearInterval(this.state.interval);
+    }
+    this.setState({
+      trackState: {
+        ...this.state.trackState,
+        position: 0
+      }
+    });
   }
 
-  skip(){
-    this.props.next();
+  next(){
+    let newSong = this.props.next();
+    console.warn("nexting and got", newSong);
+
+    this.setState({
+      track: newSong,
+      trackState: {
+        position: 0,
+        playing: false,
+        initialized: false
+      },
+      interval: clearInterval(this.state.interval)
+    });
+    this.play(newSong);
   }
 
   componentWillUnmount(){
@@ -62,31 +114,24 @@ export default class extends React.Component {
     clearInterval(this.state.interval);
   }
 
-  setTrack(assignment){
-    this.setState({
-      track: {
-        ...this.state.track,
-        ...assignment
-      }
-    });
-  }
-
   renderForGuest(){
-    const track = this.state.track;
+    const track = {...this.state.track, ...this.state.trackState};
     return (
       <View style={style.view}>
-        {track ? <Text style={style.song}>{track.artistName} - {track.name}</Text> : <Text style={style.song}> </Text>}
+        {track ? <Text style={style.song}>{track.artist} - {track.name}</Text> : <Text style={style.song}> </Text>}
       </View>
     );
   }
 
   renderForHost(){
-    const track = this.state.track;
+    const track = {...this.state.track, ...this.state.trackState};
     return (
       <View style={style.view}>
-        {track ? <Text style={style.song}>{track.artistName} - {track.name}</Text> : <Text style={style.song}> </Text>}
+        {track ? <Text style={style.song}>{track.artist} - {track.name}</Text> : <Text style={style.song}> </Text>}
         <View style={style.control}>
-          <Icon iconStyle={style.controlItem} color={globals.sWhite} name="step-backward" type="font-awesome"></Icon>
+          <Icon onPress={()=>this.seekStart()} iconStyle={style.controlItem} 
+          color={globals.sWhite} name="step-backward" type="font-awesome">
+          </Icon>
           {
             track && track.playing
             ?
@@ -98,7 +143,9 @@ export default class extends React.Component {
             color={globals.sWhite} name="play" type="font-awesome" underlayColor={globals.sBlack}>
             </Icon>
           }
-          <Icon iconStyle={style.controlItem} color={globals.sWhite} name="step-forward" type="font-awesome"></Icon>
+          <Icon onPress={()=>this.next()} iconStyle={style.controlItem} 
+          color={globals.sWhite} name="step-forward" type="font-awesome">
+          </Icon>
         </View>
         <ProgressViewIOS style={style.progress} trackTintColor={globals.sGrey} progressTintColor={globals.sSand} progress={track ? track.position : 0}></ProgressViewIOS>
       </View>

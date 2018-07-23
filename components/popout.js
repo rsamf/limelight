@@ -42,10 +42,10 @@ export default class extends React.Component {
     });
   }
 
-  flag = false;
+  // flag = false;
   onContentLayout(evt){
-    if(this.flag) return;
-    this.flag = true;
+    // if(this.flag) return;
+    // this.flag = true;
     let height = evt.nativeEvent.layout.height;
     this.setState({
       contentHeight: height,
