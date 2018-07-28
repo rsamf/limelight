@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ProgressViewIOS } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Spotify from 'rn-spotify-sdk';
-import globals from '..';
+import globals from '../helpers';
 
 export default class extends React.Component {
 
@@ -27,9 +27,7 @@ export default class extends React.Component {
       this.setState({
         interval: setInterval(()=>{
           Spotify.getPlaybackStateAsync().then(state => {
-            console.warn(state);
             if(!state.playing && this.state.trackState.playing) {
-              console.warn(state.position, this.state.track.duration - .001);
               this.next();
             } else {
               this.setState({
@@ -95,7 +93,6 @@ export default class extends React.Component {
 
   next(){
     let newSong = this.props.next();
-    console.warn("nexting and got", newSong);
 
     this.setState({
       track: newSong,

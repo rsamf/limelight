@@ -4,7 +4,7 @@ import { createMaterialTopTabNavigator } from 'react-navigation';
 import BarHop from './barHop';
 import BarList from './barList';
 import { Icon } from 'react-native-elements';
-import globals from '..';
+import globals from '../helpers';
 import React from 'react';
 
 const Root = createMaterialTopTabNavigator({

@@ -2,8 +2,8 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { Icon, Button, Avatar } from 'react-native-elements';
 import Spotify from 'rn-spotify-sdk';
-import Shade from './shade';
-import globals from '.';
+import Shade from '../helpers/shade';
+import globals from '../helpers';
 
 export default class extends React.Component {
 
@@ -15,10 +15,6 @@ export default class extends React.Component {
     };
   }
 
-  login(){
-    Spotify.login();
-  }
-
   renderNotLoggedIn(){
     return(
       <Shade>
@@ -26,7 +22,7 @@ export default class extends React.Component {
           <Icon type="font-awesome" name="user-o" color={globals.sWhite}></Icon>
           <Button large raised backgroundColor={globals.sGreen} 
           rightIcon={{color: globals.sWhite, name: 'spotify', type: 'entypo'}} title='Login' 
-          onPress={()=>this.login()}/>
+          onPress={()=>Spotify.login()}/>
         </View>
       </Shade>
     );

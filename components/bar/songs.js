@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, Text, StyleSheet, View } from 'react-native';
 import { Icon } from 'react-native-elements';
-import globals from '..';
+import globals from '../helpers';
 
 export default class extends React.Component {
   constructor(props){

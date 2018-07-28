@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
-import globals from '..';
-import Header from '../header';
+import globals from '../helpers';
+import Header from '../helpers/header';
 import Spotlight from './spotlight';
 import Spotify from 'rn-spotify-sdk';
 import Songs from './songs';
@@ -14,35 +14,6 @@ export default class Bar extends React.Component {
     this.state = {
       songs: [],
       playlistId: "0MvwPHEYqwU5xHu5H0geaM"
-      // songs: [{
-      //   name: "Single Ladies",
-      //   votes: 6,
-      //   artist: "Beyonce",
-      //   id: 0,
-      //   voted: false,
-      //   uri: "5R9a4t5t5O0IsznsrKPVro"
-      // }, {
-      //   name: "Hello",
-      //   votes: 5,
-      //   artist: "Adele",
-      //   id: 1,
-      //   voted: false,
-      //   uri: "4sPmO7WMQUAf45kwMOtONw"
-      // }, {
-      //   name: "Heartless",
-      //   votes: 2,
-      //   artist: "Kanye West",
-      //   id: 2,
-      //   voted: false,
-      //   uri: "4EWCNWgDS8707fNSZ1oaA5"
-      // }, {
-      //   name: "It Was a Good Day",
-      //   votes: 1,
-      //   artist: "Ice Cube",
-      //   id: 3,
-      //   voted: false,
-      //   uri: "2qOm7ukLyHUXWyR4ZWLwxA"
-      // }]
     };
   }
 

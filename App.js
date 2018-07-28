@@ -1,10 +1,15 @@
 import { createStackNavigator } from 'react-navigation';
-import { AppRegistry, Alert } from 'react-native';
+import { AppRegistry, Alert, View } from 'react-native';
 import BarNavigator from './components/barNavigator';
 import Bar from './components/bar';
 import Spotify from 'rn-spotify-sdk';
 import React from 'react';
-import globals from './components';
+import globals from './components/helpers';
+
+// AppSync
+import { Rehydrated } from 'aws-appsync-react';
+import { ApolloProvider } from 'react-apollo';
+
 
 const Root = createStackNavigator({
   BarNavigator: {
@@ -58,7 +63,13 @@ export default class App extends React.Component {
   }
   
   render(){
-    return <Root screenProps={{user: this.state.user}}/>;
+    return (
+      <ApolloProvider client={globals.client}>
+        <Rehydrated>
+          <Root screenProps={{user: this.state.user}}/>
+        </Rehydrated>
+      </ApolloProvider>
+    );
   }
 }
 
