@@ -70,8 +70,10 @@ export default class BarHop extends React.Component {
         hostInputActive: true
       });
       Spotify.sendRequest("v1/me/playlists", "GET", {}, true).then(({items}) => {
-        this.setState({
-          myPlaylists: items.filter(i => i.public)
+        localPlaylists.getAll(list => {
+          this.setState({
+            myPlaylists: items.filter(i => i.public && !list.includes(i.id))
+          });
         });
       });
     } else {
@@ -160,7 +162,6 @@ export default class BarHop extends React.Component {
               renderItem={({item})=>this.eachPlaylist(item)} style={{marginBottom:20}}>
               </FlatList>
               <View style={style.overlayButtons}>
-                {/* <Button disabled={this.state.selectedPlaylist === -1} title="Add" onPress={()=>addPlaylist(getPlaylist())}></Button> */}
                 <Button style={{marginLeft: 20}} title="Cancel" onPress={()=>this.setState({hostInputActive:false})}></Button>
               </View>
             </View>

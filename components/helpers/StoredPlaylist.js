@@ -49,6 +49,13 @@ export default class StoredPlaylist {
     return parsedList;
   }
 
+  wipe(callback) {
+    this.setList([]).then(()=>{
+      if(callback) callback(playlist);
+    });
+    return [];
+  }
+  
   setList(list) {
     return AsyncStorage.setItem(this.item, JSON.stringify(list));
   }
