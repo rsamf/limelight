@@ -6,20 +6,22 @@ import globals from '../helpers';
 export default class extends React.Component {
   constructor(props){
     super(props);
-
   }
-  eachSong(song){
+
+  eachSong(song, i){
     return (
       <View style={style.song}>
-        <Icon iconStyle={style.voteIcon} type="entypo" name="chevron-with-circle-up" color={song.voted ? globals.sGreen : globals.sGrey} underLayColor={globals.sBlack} onPress={()=>this.vote(song)}></Icon>
+        <Icon iconStyle={style.voteIcon} type="entypo" name="chevron-with-circle-up" color={song.voted ? globals.sGreen : globals.sGrey} underLayColor={globals.sBlack} onPress={()=>this.vote(song, i)}></Icon>
         <Text style={{...style.voteText, ...globals.style.smallText, color: song.voted ? globals.sGreen : globals.sSand}}>{song.votes}</Text>
         <Text style={{...style.songDescription, ...globals.style.smallText}}>{song.artist} - {song.name}</Text>
       </View>
     );
   }
-  vote(song){
-    this.props.vote(song);
+
+  vote(song, i){
+    this.props.vote(song, i);
   }
+
   render(){
     const songs = this.props.children;
     return (

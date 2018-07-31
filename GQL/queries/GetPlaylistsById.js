@@ -5,6 +5,7 @@ query GetSomePlaylists($ids: [ID]!) {
   getPlaylistsOf(ids: $ids) {
     id
     ownerName
+    ownerURI
     playlistName
     live
     image

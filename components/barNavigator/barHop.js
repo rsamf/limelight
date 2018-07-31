@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, TextInput, StyleSheet, Text, FlatList, Modal, TouchableOpacity } from 'react-native';
+import { View, TextInput, StyleSheet, Text, FlatList, Modal, TouchableOpacity, findNodeHandle, Platform } from 'react-native';
 import globals from '../helpers';
 import { Button, Icon } from 'react-native-elements';
 import AddPlaylist from '../../GQL/mutations/AddPlaylist';
 import GetPlaylist from '../../GQL/queries/GetPlaylist';
 import Spotify from 'rn-spotify-sdk';
+import { BlurView } from 'react-native-blur';
 const _ = globals.requireSpotifyAuthorizationAndInjectUserDetails;
 const { localPlaylists } = globals;
 
@@ -82,17 +83,44 @@ export default class BarHop extends React.Component {
   }
 
   render(){
+    const renderHost = this.state.hostInputActive && this.props.screenProps.user && this.state.viewRef;
     return (
-      <View style={{...globals.style.view, ...style.barHop}}>
-        {this.renderHostOverlay()}
-        <Button style={globals.style.button} large raised backgroundColor={globals.sGrey} 
-        title="Scan QR Code" rightIcon={qrIcon} textStyle={globals.style.text}>
-        </Button>
-        {this.renderManualInput()}
-        <Button style={globals.style.button} large raised backgroundColor={globals.sGreen} 
-        title="Host Playlist" rightIcon={hostIcon} textStyle={globals.style.text}
-        onPress={()=>this.getPlaylists()}>
-        </Button>
+      <View style={{flex: 1}}>
+        <View style={{...globals.style.view, ...style.barHop,...style.absolute}} ref="view"
+        onLayout={()=>this.setState({ viewRef: findNodeHandle(this.refs.view) })}
+        >
+          <Button style={globals.style.button} large raised backgroundColor={globals.sGrey} 
+          title="Scan QR Code" rightIcon={qrIcon} textStyle={globals.style.text}/>
+          {this.renderManualInput()}
+          <Button style={globals.style.button} large raised backgroundColor={globals.sGreen} 
+          title="Host Playlist" rightIcon={hostIcon} textStyle={globals.style.text}
+          onPress={()=>this.getPlaylists()}/>
+        </View>
+        { 
+          renderHost && 
+          <BlurView style={style.absolute} viewRef={this.state.viewRef} blurType="dark" blurAmount={3}/>
+        }
+        { 
+          renderHost && 
+          <View style={style.overlayView}>
+            <View>
+              <Text style={style.label}>Use songs from one of your playlists:</Text>
+              <View style={style.playlists}>
+                <FlatList data={this.state.myPlaylists} keyExtractor={(item, index)=>String(index)} 
+                renderItem={({item})=>this.eachPlaylist(item)}>
+                </FlatList>
+              </View>  
+              <Text style={style.label}>Or create one from scratch:</Text>
+              <Button style={globals.style.button} title="Create New" onPress={()=>this.addPlaylist()}/>
+            </View>
+          </View>
+        }
+        {
+          renderHost &&
+          <View style={style.cancelButton}>
+            <Button title="Cancel" onPress={()=>this.setState({hostInputActive:false})}/>
+          </View>
+        }
       </View>
     );
   }
@@ -116,7 +144,7 @@ export default class BarHop extends React.Component {
     );
   }
 
-  eachPlaylist(playlist) {
+  eachPlaylist(playlist, i) {
     return (
       <TouchableOpacity style={style.playlist} onPress={()=>{this.addPlaylist(playlist)}}>
         <Text style={style.playlistText}>{playlist.name}</Text>
@@ -125,23 +153,34 @@ export default class BarHop extends React.Component {
   }
 
   addPlaylist(playlist){
-    let { user } = this.props.screenProps;
-    let playlistImage = playlist.images[0];
-    let userImage = user.images[0];
-    let image = (playlistImage && playlistImage.url) || (userImage && userImage.url);
-    globals.getSongsDataHTTP(user.id, playlist.id, songs => {
+    const { user } = this.props.screenProps;
+    let variables = {
+      ownerURI: user.id,
+      ownerName: user.display_name,
+      image: user.images[0].url
+    };
+    if(playlist) {
+      globals.getSongsDataHTTP(user.id, playlist.id, songs => {
+        Object.assign(variables, {
+          playlistName: playlist.name,
+          songs: songs,
+          image: (playlist.images[0] && playlist.images[0].url) || variables.image
+        });
+        sendMutation(variables)
+      });
+    } else {
+      Object.assign(variables, {
+        playlistName: user.display_name,
+        songs: [],
+      });
+      sendMutation(variables);
+    }
+    const sendMutation = (variables) => {
       globals.client.mutate({
         mutation: AddPlaylist,
-        variables: {
-          ownerURI: user.id,
-          playlistURI: playlist.id,
-          ownerName: user.display_name,
-          playlistName: playlist.name,
-          songs,
-          image
-        }
-      }).then(({loading, data: {addPlaylist: {id}}})=>{
-        console.warn(loading);
+        variables
+      }).then(({data: {addPlaylist: {id}}})=>{
+        console.warn(id);
         this.setState({
           hostInputActive: false
         });
@@ -149,30 +188,7 @@ export default class BarHop extends React.Component {
           this.props.navigation.navigate('BarList');
         });
       });
-    });
-  }
-
-  renderHostOverlay(){
-    if(this.state.hostInputActive) {
-      if(this.props.screenProps.user) {
-        return (
-          <Modal animationType="slide" transparent={false} visible={true}>
-            <View style={style.overlayView}>
-              <FlatList data={this.state.myPlaylists} keyExtractor={(item, index)=>String(index)} 
-              renderItem={({item})=>this.eachPlaylist(item)} style={{marginBottom:20}}>
-              </FlatList>
-              <View style={style.overlayButtons}>
-                <Button style={{marginLeft: 20}} title="Cancel" onPress={()=>this.setState({hostInputActive:false})}></Button>
-              </View>
-            </View>
-          </Modal>
-        );
-      } else {
-        Spotify.login();
-        return <View/>;
-      }
     }
-    return <View/>;
   }
 
   renderQR(){
@@ -181,55 +197,47 @@ export default class BarHop extends React.Component {
 }
 
 const style = StyleSheet.create({
+  label: {
+    marginTop: 40,
+    marginBottom: 20,
+    fontFamily: 'Futura',
+    color: globals.sWhite
+  },
   manualInput: {
     flexDirection: 'row'
   },
   barHop: {
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   overlayView: {
     alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    marginTop: 50
+    flex: 1
   },
-  overlayButtons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center'
+  cancelButton: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20
+  },
+  playlists: {
+    flex: .7,
+    borderTopWidth: 1,
+    borderColor: globals.sGrey
   },
   playlist: {
-    paddingLeft: 100,
-    paddingRight: 100,
-    padding: 15,
-    borderColor: globals.sBlack,
-    borderWidth: 1
+    alignItems: 'center',
+    paddingTop: 20,
+    paddingBottom: 20,
+    borderColor: globals.sGrey,
+    borderBottomWidth: 1
   },
   playlistText: {
-    color: globals.sBlack,
+    color: globals.sWhite,
     fontSize: 24,
     fontFamily: 'Futura',
+  },
+  absolute: {
+    position: "absolute",
+    top: 0, left: 0, bottom: 0, right: 0,
   }
 });
-
-
-// const AddPlaylistElement = graphql(AddPlaylistMutation, {
-//   props: (props) => ({
-//       onAdd: post => props.mutate({
-//           variables: post,
-//           optimisticResponse: () => ({ addPost: { ...post, __typename: 'Post', version: 1 } }),
-//       })
-//   }),
-//   options: {
-//       refetchQueries: [{ query: GetPlaylistsQuery }],
-//       update: (dataProxy, { data: { addPlaylist } }) => {
-//         const query = GetPlaylistsQuery;
-//         const data = dataProxy.readQuery({ query });
-
-//         data.allPlaylist.posts.push(addPlaylist);
-
-//         dataProxy.writeQuery({ query, data });
-//       }
-//   }
-// })(AddPlaylistComponent);

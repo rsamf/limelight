@@ -54,20 +54,18 @@ const Loader = () => {
   );
 };
 
+const getSongsAsObjects = (songs) => {
+  return songs.map(s => JSON.parse(s));
+};
 
 const getSongData = (track) => {
-  return JSON.stringify({
+  return {
     id: track.id,
     name: track.name,
     artist: track.artists[0].name,
     duration: track.duration_ms/1000,
-    image: track.album.images[0].url,
-    votes: track.votes || 0,
-  });
-};
-
-const getSongsData = (tracks) => {
-  return tracks.map(t => getSongsData(t));
+    image: track.album.images[0].url
+  };
 };
 
 const getSongsDataHTTP = (userId, playlistId, callback) => {
@@ -97,7 +95,7 @@ const AppSync = {
   "region": "us-west-2",
   // "authenticationType": "AWS_IAM",
   "authenticationType": "API_KEY",
-  "apiKey": "da2-sx6yn4py2rf2zpreqrweh7kq3m"
+  "apiKey": "da2-bjll6lxhnzbdrnf57b4kl6ts2y	"
 };
 
 const client = new AWSAppSyncClient({
@@ -125,8 +123,8 @@ const globals = {
   Loader,
   client,
   getSongData,
-  getSongsData,
   getSongsDataHTTP,
+  getSongsAsObjects,
   requireSpotifyAuthorization,
   requireSpotifyAuthorizationAndInjectUserDetails,
   localPlaylists: new StoredPlaylist(),

@@ -4,9 +4,12 @@ export default gql`
 query GetPlaylist($id: ID!) {
   getPlaylist(id: $id) {
     id
-    owner
-    item
+    ownerName
+    ownerURI
+    playlistName
+    playlistURI
     songs
     currentSong
+    image
   }
 }`;

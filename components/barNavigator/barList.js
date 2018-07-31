@@ -17,10 +17,6 @@ class BarList extends React.Component {
     };
   }
 
-  navigateTo = (bar) => {
-    this.props.navigation.navigate('Bar');
-  }
-
   getLocalPlaylists(){
     localPlaylists.getAll(ids => {
       console.warn("returned list", ids);
@@ -36,7 +32,7 @@ class BarList extends React.Component {
   render(){
     return (
       <View style={globals.style.view}>
-        <NavigationEvents onDidFocus={()=>this.getLocalPlaylists()}/>
+        <NavigationEvents onWillFocus={()=>this.getLocalPlaylists()}/>
         <Signin user={this.props.screenProps.user}></Signin>
         {this.renderList()}    
       </View>
@@ -76,23 +72,25 @@ class BarList extends React.Component {
 }
 
 class Playlists extends React.Component {
-  navigateTo(bar){
-    this.props.navigation.navigate('Bar');
-  }
-
   eachBar(bar){
     return (
-      <TouchableOpacity style={style.bar} onPress={()=>this.navigateTo(bar)}>
-        <Image style={style.barImage} source={{uri:bar.image}}></Image>
-        <Text style={{...style.barText, color: bar.live ? globals.sSand : globals.sGrey}}>{bar.playlistName}</Text>
+      <TouchableOpacity style={style.bar} onPress={()=>this.props.navigation.navigate('Bar', bar)}>
+        {
+          bar.image ?
+          <Image style={style.barImage} source={{uri:bar.image}}/> :
+          <Icon size={50} type="feather" name="music" color={globals.sWhite}/>
+        }
+        <Text style={{...style.barText, color: bar.live ? globals.sSand : globals.sGrey}}>
+          {bar.playlistName}
+        </Text>
         {
           bar.live ?
-          <View style={{flexDirection: 'row'}}>
-            <Icon size={14} color={globals.sGreen} name="sound" type="entypo"></Icon>
-            <Icon size={14} color={globals.sGreen} name="chevron-thin-right" type="entypo"></Icon>
+          <View style={style.barIconsRight}>
+            <Icon size={14} color={globals.sGreen} name="sound" type="entypo"/>
+            <Icon size={14} color={globals.sGreen} name="chevron-thin-right" type="entypo"/>
           </View> :
           <View>
-            <Icon size={14} color={globals.sGrey} name="sound-mute" type="entypo"></Icon>
+            <Icon size={14} color={globals.sGrey} name="sound-mute" type="entypo"/>
           </View>
         }   
       </TouchableOpacity>
@@ -103,9 +101,8 @@ class Playlists extends React.Component {
     if (this.props.loading) return <globals.Loader/>;
     if (this.props.error) return <Text style={globals.style.text}>'Error'</Text>;
     return (
-      <FlatList style={{marginTop: 14}} data={this.props.playlists} 
-      keyExtractor={(item, index)=>String(index)} renderItem={({item})=>this.eachBar(item)}>
-      </FlatList>
+      <FlatList data={this.props.playlists} keyExtractor={(item, index)=>String(index)} 
+      renderItem={({item})=>this.eachBar(item)}/>
     );
   }
 }
@@ -129,6 +126,9 @@ const style = StyleSheet.create({
   barImage: {
     width: 50,
     height: 50
+  },
+  barIconsRight: {
+    flexDirection: 'row'
   },
   noPlaylistsText: {
     ...globals.style.text,
