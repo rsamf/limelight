@@ -18,10 +18,7 @@ export default class extends React.Component {
       interval: null,
     };
   }
-
-  componentDidUpdate(){
-  }
-
+  
   componentDidMount(){
     Spotify.addListener("play", () => {
       this.setState({
@@ -42,7 +39,7 @@ export default class extends React.Component {
       });
     });
     if(this.props.children && this.props.owned) {
-      this.play();
+      // this.play();
     }
   }
 
@@ -94,16 +91,16 @@ export default class extends React.Component {
   next(){
     let newSong = this.props.next();
 
-    this.setState({
-      track: newSong,
-      trackState: {
-        position: 0,
-        playing: false,
-        initialized: false
-      },
-      interval: clearInterval(this.state.interval)
-    });
-    this.play(newSong);
+    // this.setState({
+    //   track: newSong,
+    //   trackState: {
+    //     position: 0,
+    //     playing: false,
+    //     initialized: false
+    //   },
+    //   interval: clearInterval(this.state.interval)
+    // });
+    // this.play(newSong);
   }
 
   componentWillUnmount(){

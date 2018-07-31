@@ -1,8 +1,13 @@
 import gql from 'graphql-tag';
 
 export default gql`
-mutation NextSong($id: ID!) {
+mutation NextSong($id: ID) {
   nextSong(id: $id) {
-    songs
+    id
+    artist
+    name
+    duration
+    image
+    votes
   }
 }`;

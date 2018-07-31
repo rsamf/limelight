@@ -1,9 +1,14 @@
 import gql from 'graphql-tag';
 
 export default gql`
-subscription SongAdded($id: ID!) {
-  onSongsChanged(id: $id) {
-    songs
+subscription SongsChanged{
+  onSongsChanged {
+    id
+    name
+    artist
+    duration
+    image
+    votes
   }
 }
 `;

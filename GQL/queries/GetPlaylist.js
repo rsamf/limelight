@@ -7,9 +7,15 @@ query GetPlaylist($id: ID!) {
     ownerName
     ownerURI
     playlistName
-    playlistURI
-    songs
-    currentSong
+    songs {
+      id
+      name
+      artist
+      duration
+      image
+      votes
+    }
     image
+    live
   }
 }`;
