@@ -43,9 +43,12 @@ export default class App extends React.Component {
 
   componentDidMount(){
     Spotify.addListener("login", () => {
+      Alert.alert("You are logged in");
+      console.warn("getting user");
       this.getUser();
     });
     Spotify.addListener("logout", () => {
+      Alert.alert("You have logged out");
       Spotify.login();
     });
 		if(!Spotify.isInitialized())
@@ -57,7 +60,7 @@ export default class App extends React.Component {
 				scopes: ["user-read-private", "playlist-read", "playlist-read-private", "streaming"],
 			};
 			Spotify.initialize(spotifyOptions).catch((error) => {
-				Alert.alert("Error", error.message);
+				Alert.alert("Error in initializing Spotify");
 			});
 		}
   }

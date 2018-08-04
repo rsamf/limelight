@@ -88,19 +88,10 @@ export default class extends React.Component {
     });
   }
 
-  next(){
-    let newSong = this.props.next();
-
-    // this.setState({
-    //   track: newSong,
-    //   trackState: {
-    //     position: 0,
-    //     playing: false,
-    //     initialized: false
-    //   },
-    //   interval: clearInterval(this.state.interval)
-    // });
-    // this.play(newSong);
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      track: nextProps.children
+    });
   }
 
   componentWillUnmount(){
@@ -123,7 +114,7 @@ export default class extends React.Component {
       <View style={style.view}>
         {track ? <Text style={style.song}>{track.artist} - {track.name}</Text> : <Text style={style.song}> </Text>}
         <View style={style.control}>
-          <Icon onPress={()=>this.seekStart()} iconStyle={style.controlItem} 
+          <Icon onPress={()=>this.seekStart()} iconStyle={style.controlItem} underlayColor={globals.sBlack}
           color={globals.sWhite} name="step-backward" type="font-awesome">
           </Icon>
           {
@@ -137,7 +128,7 @@ export default class extends React.Component {
             color={globals.sWhite} name="play" type="font-awesome" underlayColor={globals.sBlack}>
             </Icon>
           }
-          <Icon onPress={()=>this.next()} iconStyle={style.controlItem} 
+          <Icon onPress={()=>this.props.next()} iconStyle={style.controlItem} underlayColor={globals.sBlack}
           color={globals.sWhite} name="step-forward" type="font-awesome">
           </Icon>
         </View>

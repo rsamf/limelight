@@ -43,13 +43,17 @@ const style = StyleSheet.create({
   },
   button: {
     margin: 10
+  },
+  fullscreen: {
+    position: "absolute",
+    top: 0, left: 0, bottom: 0, right: 0,
   }
 });
 
 const Loader = () => {
   return (
-    <View style={{height: 100, justifyContent: 'center', alignItems: 'center'}}>
-      <ActivityIndicator size="large" color={globals.sGreen}/>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <ActivityIndicator size="large" color={globals.sWhite}/>
     </View>
   );
 };

@@ -33,7 +33,6 @@ class BarList extends React.Component {
     return (
       <View style={globals.style.view}>
         <NavigationEvents onWillFocus={()=>this.getLocalPlaylists()}/>
-        <Signin user={this.props.screenProps.user}></Signin>
         {this.renderList()}    
       </View>
     );

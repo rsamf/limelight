@@ -9,5 +9,6 @@ query GetSomePlaylists($ids: [ID]!) {
     playlistName
     live
     image
+    songs
   }
 }`;

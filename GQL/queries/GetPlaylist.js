@@ -7,14 +7,7 @@ query GetPlaylist($id: ID!) {
     ownerName
     ownerURI
     playlistName
-    songs {
-      id
-      name
-      artist
-      duration
-      image
-      votes
-    }
+    songs
     image
     live
   }

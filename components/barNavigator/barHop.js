@@ -3,6 +3,7 @@ import { View, TextInput, StyleSheet, Text, FlatList, Modal, TouchableOpacity, f
 import globals from '../helpers';
 import { Button, Icon } from 'react-native-elements';
 import AddPlaylist from '../../GQL/mutations/AddPlaylist';
+import CreateSongs from '../../GQL/mutations/CreateSongs';
 import GetPlaylist from '../../GQL/queries/GetPlaylist';
 import Spotify from 'rn-spotify-sdk';
 import { BlurView } from 'react-native-blur';
@@ -86,7 +87,7 @@ export default class BarHop extends React.Component {
     const renderHost = this.state.hostInputActive && this.props.screenProps.user && this.state.viewRef;
     return (
       <View style={{flex: 1}}>
-        <View style={{...globals.style.view, ...style.barHop,...style.absolute}} ref="view"
+        <View style={{...globals.style.view, ...style.barHop,...style.fullscreen}} ref="view"
         onLayout={()=>this.setState({ viewRef: findNodeHandle(this.refs.view) })}
         >
           <Button style={globals.style.button} large raised backgroundColor={globals.sGrey} 
@@ -98,7 +99,7 @@ export default class BarHop extends React.Component {
         </View>
         { 
           renderHost && 
-          <BlurView style={style.absolute} viewRef={this.state.viewRef} blurType="dark" blurAmount={3}/>
+          <BlurView style={style.fullscreen} viewRef={this.state.viewRef} blurType="dark" blurAmount={3}/>
         }
         { 
           renderHost && 
@@ -157,38 +158,43 @@ export default class BarHop extends React.Component {
     let variables = {
       ownerURI: user.id,
       ownerName: user.display_name,
-      image: user.images[0].url
+      image: (playlist.images[0] && playlist.images[0].url) || (user.images[0] && user.images[0].url),
+      playlistName: playlist ? playlist.name : user.display_name
     };
-    if(playlist) {
-      globals.getSongsDataHTTP(user.id, playlist.id, songs => {
-        Object.assign(variables, {
-          playlistName: playlist.name,
-          songs: songs,
-          image: (playlist.images[0] && playlist.images[0].url) || variables.image
-        });
-        sendMutation(variables)
-      });
-    } else {
-      Object.assign(variables, {
-        playlistName: user.display_name,
-        songs: [],
-      });
-      sendMutation(variables);
-    }
-    const sendMutation = (variables) => {
+    const sendPlaylistMutation = (variables, callback) => {
       globals.client.mutate({
         mutation: AddPlaylist,
         variables
       }).then(({data: {addPlaylist: {id}}})=>{
-        console.warn(id);
         this.setState({
           hostInputActive: false
         });
         localPlaylists.push(id, ()=>{
           this.props.navigation.navigate('BarList');
         });
+        callback(id);
       });
     }
+    const sendSongsMutation = (variables, callback) => {
+      globals.client.mutate({
+        mutation: CreateSongs,
+        variables
+      }).then(({data: {createSongs: {id}}})=>{
+        callback(data)
+      });
+    };
+    sendPlaylistMutation(variables, (id) => {
+      let songVariables = { id: id, songs: [] };
+      console.warn(id);
+      if(playlist) {
+        globals.getSongsDataHTTP(user.id, playlist.id, songs => {
+          songVariables.songs = songs;
+          sendSongsMutation(songVariables, console.warn);
+        });
+      } else {
+        sendSongsMutation(songVariables, console.warn);
+      }
+    });
   }
 
   renderQR(){
@@ -235,9 +241,5 @@ const style = StyleSheet.create({
     color: globals.sWhite,
     fontSize: 24,
     fontFamily: 'Futura',
-  },
-  absolute: {
-    position: "absolute",
-    top: 0, left: 0, bottom: 0, right: 0,
   }
 });
