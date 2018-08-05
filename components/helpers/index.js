@@ -31,7 +31,8 @@ const style = StyleSheet.create({
     backgroundColor: 'white',
     fontFamily: 'Futura',
     fontSize: 24,
-    width: 200
+    width: 200,
+    padding: 20
   },
   textInputFailed: {
     backgroundColor: 'white',
@@ -39,14 +40,19 @@ const style = StyleSheet.create({
     fontSize: 24,
     width: 200,
     borderBottomColor: 'red',
-    borderBottomWidth: 3
+    borderBottomWidth: 3,
+    padding: 20
   },
   button: {
     margin: 10
   },
   fullscreen: {
     position: "absolute",
+    flex: 1,
     top: 0, left: 0, bottom: 0, right: 0,
+  },
+  absolute: {
+    position: 'absolute'
   }
 });
 

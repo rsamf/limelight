@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, StyleSheet, Text, FlatList, Modal, TouchableOpacity, findNodeHandle, Platform } from 'react-native';
+import { View, TextInput, StyleSheet, Text, FlatList, TouchableOpacity, findNodeHandle } from 'react-native';
 import globals from '../helpers';
 import { Button, Icon } from 'react-native-elements';
 import AddPlaylist from '../../GQL/mutations/AddPlaylist';
@@ -27,13 +27,14 @@ export default class BarHop extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      input: "",
+      // QR INPUT STATE
       qrInputActive: false,
+      // MANUAL INPUT STATE
       manualInputActive: false,
-      hostInputActive: false,
-      selectedPlaylist: -1,
-      loading: false,
+      input: "",
       failure: false,
+      // HOST INPUT STATE
+      hostInputActive: false,
       myPlaylists: []
     };
   }
@@ -68,9 +69,7 @@ export default class BarHop extends React.Component {
 
   getPlaylists(){
     if(this.props.screenProps.user) {
-      this.setState({
-        hostInputActive: true
-      });
+      this.setOverlay(true);
       Spotify.sendRequest("v1/me/playlists", "GET", {}, true).then(({items}) => {
         localPlaylists.getAll(list => {
           this.setState({
@@ -83,15 +82,20 @@ export default class BarHop extends React.Component {
     }
   }
 
+  setOverlay(active) {
+    this.setState({ hostInputActive: active });
+    this.props.screenProps.setProfileIconVisibility(!active);
+  }
+
   render(){
     const renderHost = this.state.hostInputActive && this.props.screenProps.user && this.state.viewRef;
     return (
       <View style={{flex: 1}}>
-        <View style={{...globals.style.view, ...style.barHop,...style.fullscreen}} ref="view"
+        <View style={{...globals.style.view, ...style.barHop,...globals.style.fullscreen}} ref="view"
         onLayout={()=>this.setState({ viewRef: findNodeHandle(this.refs.view) })}
         >
           <Button style={globals.style.button} large raised backgroundColor={globals.sGrey} 
-          title="Scan QR Code" rightIcon={qrIcon} textStyle={globals.style.text}/>
+          title="Join with QR Code" rightIcon={qrIcon} textStyle={globals.style.text}/>
           {this.renderManualInput()}
           <Button style={globals.style.button} large raised backgroundColor={globals.sGreen} 
           title="Host Playlist" rightIcon={hostIcon} textStyle={globals.style.text}
@@ -99,7 +103,7 @@ export default class BarHop extends React.Component {
         </View>
         { 
           renderHost && 
-          <BlurView style={style.fullscreen} viewRef={this.state.viewRef} blurType="dark" blurAmount={3}/>
+          <BlurView style={globals.style.fullscreen} viewRef={this.props.screenProps.viewRef} blurType="dark" blurAmount={3}/>
         }
         { 
           renderHost && 
@@ -119,7 +123,7 @@ export default class BarHop extends React.Component {
         {
           renderHost &&
           <View style={style.cancelButton}>
-            <Button title="Cancel" onPress={()=>this.setState({hostInputActive:false})}/>
+            <Button title="Cancel" onPress={()=>this.setOverlay(false)}/>
           </View>
         }
       </View>
@@ -133,14 +137,13 @@ export default class BarHop extends React.Component {
           <TextInput style={this.state.failure ? globals.style.textInputFailed : globals.style.textInput} placeholder="Playlist Id" 
           onChangeText={(input) => this.setState({input})} onSubmitEditing={()=>this.submitJoin()}>
           </TextInput>
-          <Icon raised backgroundColor={globals.sWhite} name="check" type="evilicons" onPress={()=>this.submitJoin()}>
-          </Icon>
+          <Icon raised backgroundColor={globals.sWhite} name="check" type="evilicons" onPress={()=>this.submitJoin()}/>
         </View>
       );
     }
     return (
       <Button style={globals.style.button} large raised backgroundColor={globals.sGrey} 
-      title="Enter Code" rightIcon={codeIcon} textStyle={globals.style.text} onPress={()=>this.setState({manualInputActive:true})}>
+      title="Join with ID" rightIcon={codeIcon} textStyle={globals.style.text} onPress={()=>this.setState({manualInputActive:true})}>
       </Button>
     );
   }
@@ -166,9 +169,7 @@ export default class BarHop extends React.Component {
         mutation: AddPlaylist,
         variables
       }).then(({data: {addPlaylist: {id}}})=>{
-        this.setState({
-          hostInputActive: false
-        });
+        this.setOverlay(false)
         localPlaylists.push(id, ()=>{
           this.props.navigation.navigate('BarList');
         });
@@ -180,7 +181,7 @@ export default class BarHop extends React.Component {
         mutation: CreateSongs,
         variables
       }).then(({data: {createSongs: {id}}})=>{
-        callback(data)
+        callback(id)
       });
     };
     sendPlaylistMutation(variables, (id) => {

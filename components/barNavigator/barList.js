@@ -2,7 +2,6 @@ import React from 'react';
 import { View, FlatList, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import globals from '../helpers';
-import Signin from './signin';
 import { graphql, compose } from 'react-apollo';
 import GetPlaylistsById from '../../GQL/queries/GetPlaylistsById';
 import { NavigationEvents } from 'react-navigation';
@@ -19,7 +18,7 @@ class BarList extends React.Component {
 
   getLocalPlaylists(){
     localPlaylists.getAll(ids => {
-      console.warn("returned list", ids);
+      // console.warn("returned list", ids);
       this.setState({
         barIds: ids
       });

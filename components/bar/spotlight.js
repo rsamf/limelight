@@ -112,7 +112,7 @@ export default class extends React.Component {
     const track = {...this.state.track, ...this.state.trackState};
     return (
       <View style={style.view}>
-        {track ? <Text style={style.song}>{track.artist} - {track.name}</Text> : <Text style={style.song}> </Text>}
+        {this.state.track ? <Text style={style.song}>{track.artist} - {track.name}</Text> : <Text style={style.song}> </Text>}
         <View style={style.control}>
           <Icon onPress={()=>this.seekStart()} iconStyle={style.controlItem} underlayColor={globals.sBlack}
           color={globals.sWhite} name="step-backward" type="font-awesome">

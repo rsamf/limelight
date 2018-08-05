@@ -45,6 +45,10 @@ export default class BarNavigator extends React.Component {
 
   constructor(props){
     super(props);
+
+    this.state = {
+      opened: false
+    };
   }
 
   render() {

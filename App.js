@@ -1,10 +1,13 @@
 import { createStackNavigator } from 'react-navigation';
-import { AppRegistry, Alert, View } from 'react-native';
+import { AppRegistry, Alert, View, findNodeHandle, Text } from 'react-native';
 import BarNavigator from './components/barNavigator';
 import Bar from './components/bar';
 import Spotify from 'rn-spotify-sdk';
 import React from 'react';
+import Signin from './components/helpers/signin';
 import globals from './components/helpers';
+import { BlurView } from 'react-native-blur';
+import Profile from './components/helpers/profile';
 
 // AppSync
 import { Rehydrated } from 'aws-appsync-react';
@@ -28,7 +31,9 @@ export default class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      user: null
+      user: null,
+      opened: false,
+      isProfileIconVisible: true
     };
   }
 
@@ -43,13 +48,14 @@ export default class App extends React.Component {
 
   componentDidMount(){
     Spotify.addListener("login", () => {
-      Alert.alert("You are logged in");
       console.warn("getting user");
       this.getUser();
     });
     Spotify.addListener("logout", () => {
-      Alert.alert("You have logged out");
-      Spotify.login();
+      // Spotify.login();
+      this.setState({
+        user: null
+      });
     });
 		if(!Spotify.isInitialized())
 		{
@@ -64,12 +70,36 @@ export default class App extends React.Component {
 			});
 		}
   }
-  
+
   render(){
+    let propsToPass = {
+      user: this.state.user,
+      setProfileIconVisibility: (val) => {
+        this.setState({
+          isProfileIconVisible: val
+        });
+      }
+    };
     return (
       <ApolloProvider client={globals.client}>
         <Rehydrated>
-          <Root screenProps={{user: this.state.user}}/>
+          <View style={{flex:1}}>
+            <View style={globals.style.fullscreen} ref="view" onLayout={()=>this.setState({ viewRef: findNodeHandle(this.refs.view) })}>
+              <Root screenProps={propsToPass}/>
+              {
+                this.state.isProfileIconVisible &&
+                <Signin open={()=>this.setState({ opened: true })} user={this.state.user}/>
+              }
+            </View>
+            {
+              this.state.opened &&
+              <BlurView style={globals.style.fullscreen} viewRef={this.state.viewRef} blurType="dark" blurAmount={3}/>
+            }
+            {
+              this.state.opened &&
+              <Profile close={()=>this.setState({ opened: false })} user={this.state.user}/>
+            }
+          </View>
         </Rehydrated>
       </ApolloProvider>
     );
