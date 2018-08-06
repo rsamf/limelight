@@ -8,6 +8,12 @@ import Signin from './components/helpers/signin';
 import globals from './components/helpers';
 import { BlurView } from 'react-native-blur';
 import Profile from './components/helpers/profile';
+import HostPlaylist from './components/blurs/hostPlaylist';
+import AddSong from './components/blurs/addSong';
+import PlaylistOptions from './components/blurs/playlistOptions';
+import StoredPlaylist from './components/helpers/StoredPlaylist';
+const localPlaylists = new StoredPlaylist();
+
 
 // AppSync
 import { Rehydrated } from 'aws-appsync-react';
@@ -32,24 +38,20 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       user: null,
-      opened: false,
-      isProfileIconVisible: true
+      playlists: null,
+      opened: [false, false, false],
+      props: {}
     };
   }
 
   getUser(){
-    Spotify.getMe().then(user => {
-      console.warn(user);
-      this.setState({
-        user: user
-      });
-    });
-  }
-
-  componentDidMount(){
     Spotify.addListener("login", () => {
-      console.warn("getting user");
-      this.getUser();
+      Spotify.getMe().then(user => {
+        console.warn(user);
+        this.setState({
+          user: user
+        });
+      });
     });
     Spotify.addListener("logout", () => {
       // Spotify.login();
@@ -57,6 +59,42 @@ export default class App extends React.Component {
         user: null
       });
     });
+  }
+
+  getLocalPlaylistsInterface() {
+    localPlaylists.getAll(list => {
+      this.setState({
+        playlists: {
+          stored: list,
+          add: (id, callback) => {
+            localPlaylists.push(id, (ids)=>{
+              this.setState({
+                playlists: {
+                  ...this.state.playlists,
+                  stored: ids
+                }
+              });
+              callback(ids);
+            });
+          },
+          remove: (id, callback) => {
+            localPlaylists.remove(id, callback);
+            this.setState({
+              playlists: {
+                ...this.state.playlists,
+                stored: ids
+              }
+            });
+            callback(ids);
+          }
+        }
+      })
+    });
+  }
+
+  componentDidMount(){
+    this.getLocalPlaylistsInterface()
+    this.getUser();
 		if(!Spotify.isInitialized())
 		{
 			let spotifyOptions = {
@@ -71,14 +109,20 @@ export default class App extends React.Component {
 		}
   }
 
+  setOpened(which, props) {
+    let opened = this.state.opened;
+    opened[which] = !opened[which];
+    this.setState({ 
+      opened,
+      props
+    });
+  }
+
   render(){
     let propsToPass = {
       user: this.state.user,
-      setProfileIconVisibility: (val) => {
-        this.setState({
-          isProfileIconVisible: val
-        });
-      }
+      localPlaylists: this.state.playlists,
+      setOpenedBlur: (i, props) => this.setOpened(i, props),
     };
     return (
       <ApolloProvider client={globals.client}>
@@ -86,23 +130,44 @@ export default class App extends React.Component {
           <View style={{flex:1}}>
             <View style={globals.style.fullscreen} ref="view" onLayout={()=>this.setState({ viewRef: findNodeHandle(this.refs.view) })}>
               <Root screenProps={propsToPass}/>
-              {
-                this.state.isProfileIconVisible &&
-                <Signin open={()=>this.setState({ opened: true })} user={this.state.user}/>
-              }
+              <Signin open={()=>this.setOpened(0)} user={this.state.user}/>
             </View>
-            {
-              this.state.opened &&
-              <BlurView style={globals.style.fullscreen} viewRef={this.state.viewRef} blurType="dark" blurAmount={3}/>
-            }
-            {
-              this.state.opened &&
-              <Profile close={()=>this.setState({ opened: false })} user={this.state.user}/>
-            }
+            {this.renderBlurs()}
           </View>
         </Rehydrated>
       </ApolloProvider>
     );
+  }
+  renderBlurs() {
+    const which = this.state.opened.indexOf(true);
+    const props = {
+      ...this.state.props,
+      viewRef: this.state.viewRef,
+      user: this.state.user,
+      close: ()=>this.setOpened(which),
+      localPlaylists: this.state.playlists
+    };
+    switch(which) {
+      case 0:
+        return (
+          <View style={globals.style.fullscreen}>
+            <BlurView style={globals.style.fullscreen} viewRef={this.state.viewRef} blurType="dark" blurAmount={3}/>
+            <Profile close={()=>this.setOpened(0)} user={this.state.user}/>
+          </View>
+        );
+      case 1: 
+        return (
+          <HostPlaylist {...props}/>
+        );
+      case 2:
+        return (
+          <AddSong {...props}/>
+        );
+      case 3:
+        return (
+          <PlaylistOptions {...props}/>
+        );
+    }
   }
 }
 

@@ -77,9 +77,7 @@ export default (Component) => compose(
       return {
         addSong: (song) => {
           props.mutate({
-            variables: { id: props.ownProps.children, song },
-            update: (dataProxy, data) => {
-            }
+            variables: { id: props.ownProps.children, song }
           });
         }
       };

@@ -61,8 +61,8 @@ export default class Bar extends React.Component {
     const playlist = this.props.navigation.state.params;
     return (
       <View style={globals.style.view}>
-        <Header navigation={this.props.navigation}>
-          {playlist.playlistName}
+        <Header navigation={this.props.navigation} setOpenedBlur={(i, props)=>this.props.screenProps.setOpenedBlur(i,props)}>
+          {playlist}
         </Header>
         <Playlist screenProps={this.props.screenProps}>
           {playlist.id}

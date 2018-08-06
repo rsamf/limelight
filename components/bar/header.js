@@ -8,16 +8,22 @@ export default class extends React.Component {
     super(props);
   }
 
+  showPlaylistOptions() {
+    this.props.setOpenedBlur(3, {
+      playlist: this.props.children
+    });
+  }
+
   render(){
     return (
       <View style={style.view}>
         <Icon name="ios-arrow-back" type="ionicon" color={globals.sBlack} underlayColor={globals.sSand}
         onPress={()=>this.props.navigation.goBack()} iconStyle={style.icon}/>
         <View style={style.titleContainer}>
-          <Text style={style.title}>{this.props.children}</Text>
+          <Text style={style.title}>{this.props.children.playlistName}</Text>
         </View>
-        {/* <Icon name="md-more" type="iconicons" color={globals.sBlack} underlayColor={globals.sSand}
-        onPress={()=>}/> */}
+        <Icon name="md-more" type="ionicon" color={globals.sBlack} underlayColor={globals.sSand}
+         onPress={()=>this.showPlaylistOptions()} iconStyle={style.icon}/>
       </View>
     );
   }
@@ -33,7 +39,8 @@ const style = StyleSheet.create({
     paddingTop: 20
   },
   icon: {
-    marginLeft: 20
+    marginLeft: 20,
+    marginRight: 20
   },
   title: {
     color: globals.sBlack

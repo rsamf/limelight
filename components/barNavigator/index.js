@@ -53,7 +53,7 @@ export default class BarNavigator extends React.Component {
 
   render() {
     return (
-      <Root screenProps={this.props.screenProps} navigation={this.props.navigation} />
+      <Root screenProps={this.props.screenProps} navigation={this.props.navigation}/>
     );
   }
 }

@@ -105,7 +105,7 @@ const AppSync = {
   "region": "us-west-2",
   // "authenticationType": "AWS_IAM",
   "authenticationType": "API_KEY",
-  "apiKey": "da2-bjll6lxhnzbdrnf57b4kl6ts2y	"
+  "apiKey": "da2-gmi6gjnjkzhvzg5zb7xpo2oftu"
 };
 
 const client = new AWSAppSyncClient({
