@@ -54,7 +54,7 @@ export default class AddSong extends React.Component {
           <FlatList data={this.state.searchedSongs} keyExtractor={(item, index)=>String(index)} renderItem={({item, index})=>this.eachAddSong(item, index)}>
           </FlatList>
           <View style={style.cancel}>
-            <Button title="Cancel" onPress={()=>this.close()}></Button>
+            <Button title="Cancel" onPress={()=>this.props.close()}></Button>
           </View>
         </View>
       </View>

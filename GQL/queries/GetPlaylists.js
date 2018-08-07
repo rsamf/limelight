@@ -6,7 +6,8 @@ query AllPlaylists {
     playlists {
       id
       owner
-      item
+      image
+      playlistName
     }
   }
 }

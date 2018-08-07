@@ -10,5 +10,6 @@ query GetPlaylist($id: ID!) {
     songs
     image
     live
+    shortCode
   }
 }`;

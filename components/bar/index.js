@@ -30,6 +30,13 @@ class PlaylistComponent extends React.Component {
     if(!this.props.loading && this.props.playlist && this.props.songs) {
       return (
         <View style={{flex:1}}>
+          <Header navigation={this.props.navigation}
+          updatePlaylist={(p)=>this.props.updatePlaylist(p)}
+          deletePlaylist={()=>this.props.deletePlaylist()}
+          deleteSongs={()=>this.props.deleteSongs()}
+          setOpenedBlur={(i, props)=>this.props.screenProps.setOpenedBlur(i,props)}>
+            {this.props.playlist}
+          </Header>
           <Spotlight next={()=>this.props.nextSong()} owned={true}>
             {this.props.songs[0]}
           </Spotlight>
@@ -58,14 +65,10 @@ export default class Bar extends React.Component {
   }
 
   render(){
-    const playlist = this.props.navigation.state.params;
     return (
       <View style={globals.style.view}>
-        <Header navigation={this.props.navigation} setOpenedBlur={(i, props)=>this.props.screenProps.setOpenedBlur(i,props)}>
-          {playlist}
-        </Header>
-        <Playlist screenProps={this.props.screenProps}>
-          {playlist.id}
+        <Playlist screenProps={this.props.screenProps} navigation={this.props.navigation}>
+          {this.props.navigation.state.params.id}
         </Playlist>
       </View>
     );

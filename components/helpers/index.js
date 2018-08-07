@@ -34,6 +34,13 @@ const style = StyleSheet.create({
     width: 200,
     padding: 20
   },
+  smallTextInput: {
+    backgroundColor: 'white',
+    fontFamily: 'Futura',
+    fontSize: 16,
+    width: 100,
+    padding: 5
+  },
   textInputFailed: {
     backgroundColor: 'white',
     fontFamily: 'Futura',

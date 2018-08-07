@@ -15,16 +15,27 @@ export default class PlaylistOptions extends React.Component {
     super(props);
 
     this.state = {
-      editingTitle: null
+      editingTitle: null,
+      editingCode: null
     };
   }
 
   submitEditingTitle() {
-    console.warn("submitting", this.state.editingTitle);
+    this.props.updatePlaylist({ playlistName: this.state.editingTitle });
+    this.props.close();
+  }
+
+  submitEditingCode() {
+    this.props.updatePlaylist({ shortCode: this.state.editingCode });
+    this.props.close();
   }
 
   deletePlaylist() {
-    console.warn("deleting playist");
+    this.props.deleteSongs();
+    this.props.deletePlaylist();
+    this.props.localPlaylists.remove(this.props.playlist.id);
+    this.props.close();
+    this.props.navigation.navigate('BarList');
   }
 
   render() {
@@ -40,6 +51,15 @@ export default class PlaylistOptions extends React.Component {
               style={globals.style.textInput} onBlur={()=>this.setState({editingTitle:null})}/> :
               <TouchableOpacity onPress={()=>this.setState({editingTitle:this.props.playlist.playlistName})}>
                 <Text style={globals.style.text}>{this.props.playlist.playlistName}</Text>
+              </TouchableOpacity>
+            }
+            {
+              this.state.editingCode !== null ?
+              <TextInput onChangeText={(input)=>this.setState({editingCode:input})} defaultValue={this.props.playlist.shortCode}
+              blurOnSubmit={true} enablesReturnKeyAutomatically={true} onSubmitEditing={()=>this.submitEditingCode()}
+              style={globals.style.smallTextInput} onBlur={()=>this.setState({editingCode:null})}/> :
+              <TouchableOpacity onPress={()=>this.setState({editingCode:this.props.playlist.shortCode})}>
+                <Text style={globals.style.smallText}>{this.props.playlist.shortCode}</Text>
               </TouchableOpacity>
             }
           </View>

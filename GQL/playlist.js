@@ -1,5 +1,8 @@
 import GetPlaylist from './queries/GetPlaylist';
 import GetSongs from './queries/GetSongs';
+import UpdatePlaylistMutation from './mutations/UpdatePlaylist';
+import DeletePlaylistMutation from './mutations/DeletePlaylist';
+import DeleteSongsMutation from './mutations/DeleteSongs';
 import VoteSongMutation from './mutations/VoteSong';
 import NextSongMutation from './mutations/NextSong';
 import AddSongMutation from './mutations/AddSong';
@@ -20,6 +23,46 @@ export default (Component) => compose(
         loading: props.data.loading,
         error: props.data.error  
       };
+    }
+  }),
+  graphql(UpdatePlaylistMutation, {
+    props: props => {
+      return {
+        updatePlaylist: (playlist) => {
+          props.mutate({
+            variables: {
+              id: props.ownProps.playlist.id,
+              playlist
+            }
+          }).then(console.warn);
+        }
+      }
+    }
+  }),
+  graphql(DeletePlaylistMutation, {
+    props: props => {
+      return {
+        deletePlaylist: () => {
+          props.mutate({
+            variables: {
+              id: props.ownProps.playlist.id
+            }
+          }).then(console.warn);
+        }
+      }
+    }
+  }),
+  graphql(DeleteSongsMutation, {
+    props: props => {
+      return {
+        deleteSongs: () => {
+          props.mutate({
+            variables: {
+              id: props.ownProps.playlist.songs
+            }
+          }).then(console.warn);
+        }
+      }
     }
   }),
   graphql(GetSongs, {

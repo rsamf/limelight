@@ -10,7 +10,11 @@ export default class extends React.Component {
 
   showPlaylistOptions() {
     this.props.setOpenedBlur(3, {
-      playlist: this.props.children
+      playlist: this.props.children,
+      navigation: this.props.navigation,
+      updatePlaylist: (p)=>this.props.updatePlaylist(p),
+      deletePlaylist: ()=>this.props.deletePlaylist(),
+      deleteSongs: ()=>this.props.deleteSongs()
     });
   }
 
