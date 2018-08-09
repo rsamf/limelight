@@ -6,9 +6,9 @@ import Spotify from 'rn-spotify-sdk';
 import React from 'react';
 import Signin from './components/helpers/signin';
 import globals from './components/helpers';
-import { BlurView } from 'react-native-blur';
-import Profile from './components/helpers/profile';
+import Profile from './components/blurs/profile';
 import HostPlaylist from './components/blurs/hostPlaylist';
+import JoinPlaylist from './components/blurs/joinPlaylist';
 import AddSong from './components/blurs/addSong';
 import PlaylistOptions from './components/blurs/playlistOptions';
 import StoredPlaylist from './components/helpers/StoredPlaylist';
@@ -150,10 +150,7 @@ export default class App extends React.Component {
     switch(which) {
       case 0:
         return (
-          <View style={globals.style.fullscreen}>
-            <BlurView style={globals.style.fullscreen} viewRef={this.state.viewRef} blurType="dark" blurAmount={3}/>
-            <Profile close={()=>this.setOpened(0)} user={this.state.user}/>
-          </View>
+          <Profile {...props}/>
         );
       case 1: 
         return (
@@ -166,6 +163,10 @@ export default class App extends React.Component {
       case 3:
         return (
           <PlaylistOptions {...props}/>
+        );
+      case 4:
+        return (
+          <JoinPlaylist {...props}/>
         );
     }
   }

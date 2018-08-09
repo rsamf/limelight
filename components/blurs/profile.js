@@ -1,19 +1,21 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Button, Avatar, Icon } from 'react-native-elements';
+import { View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import { Icon, Avatar, Button } from 'react-native-elements';
+import { BlurView } from 'react-native-blur';
 import Spotify from 'rn-spotify-sdk';
-import globals from '.';
+import globals from '../helpers';
 
-export default class extends React.Component {
+export default class Profile extends React.Component {
   constructor(props) {
     super(props);
   }
 
-  render() {
+  render(){
     let user = this.props.user;
     return (
-      <View style={style.view}>
-        <View style={style.center}>
+      <View style={globals.style.fullscreen}>
+        <BlurView style={globals.style.fullscreen} viewRef={this.props.viewRef} blurType="dark" blurAmount={3}/>
+        <View style={style.view}>
           <View style={style.item}>
             <Avatar style={style.innerItem}
               large rounded
@@ -32,24 +34,28 @@ export default class extends React.Component {
 }
 
 const style = StyleSheet.create({
-  view: {
-    flex: 1
+  cancel: {
+    position: 'absolute',
+    top: 20,
+    left: 20
   },
-  center: {
+  view: {
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1
   },
   item: {
     margin: 20,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   innerItem: {
-    margin: 20
+    margin: 10
   },
-  cancel: {
-    position: 'absolute',
-    top: 20,
-    left: 20
+  title: {
+    marginBottom: 40
+  },
+  delete: {
+    marginTop: 40
   }
 });

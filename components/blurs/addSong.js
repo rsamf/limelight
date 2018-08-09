@@ -49,8 +49,8 @@ export default class AddSong extends React.Component {
         <BlurView style={globals.style.fullscreen} viewRef={this.props.viewRef} blurType="light" blurAmount={10}/>
         <View style={style.addSongView}>
           <TextInput placeholder="Song Name" style={globals.style.textInput} onChangeText={(text)=>this.changeQuery(text)}
-          blurOnSubmit={true} enablesReturnKeyAutomatically={true} onSubmitEditing={()=>this.searchSongs()}
-          ></TextInput>
+          blurOnSubmit={true} enablesReturnKeyAutomatically={true} onSubmitEditing={()=>this.searchSongs()}>
+          </TextInput>
           <FlatList data={this.state.searchedSongs} keyExtractor={(item, index)=>String(index)} renderItem={({item, index})=>this.eachAddSong(item, index)}>
           </FlatList>
           <View style={style.cancel}>
@@ -65,7 +65,7 @@ export default class AddSong extends React.Component {
 const style = StyleSheet.create({
   addSongView: {
     ...globals.style.fullscreen,
-    paddingTop: 30,
+    paddingTop: 50,
     alignItems: 'center'
   },
   addSongInput: {
