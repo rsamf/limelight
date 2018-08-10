@@ -1,31 +1,55 @@
 import React from 'react';
-import { FlatList, Text, StyleSheet, View } from 'react-native';
+import { FlatList, Text, StyleSheet, View, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import globals from '../helpers';
+import Spotify from 'rn-spotify-sdk';
 
 export default class extends React.Component {
   constructor(props){
     super(props);
 
     this.state = {
-      addingSong: false
+      addingSong: false,
+      voted: []
     };
   }
 
+  vote(song, i) {
+    if(this.state.voted.includes(song.id)) return;
+    this.setState({
+      voted: [...this.state.voted, song.id]
+    });
+    this.props.vote(song, i);
+  }
+
+  componentWillReceiveProps(newProps) {
+    let songs = newProps.children;
+    let toBeRemoved = songs[songs.length - 1].id;
+    this.setState({
+      voted: this.state.voted.filter(v => v !== toBeRemoved)
+    });
+  }
+
   eachSong(song, i) {
+    let voted = this.state.voted.includes(song.id);
     return (
       <View style={style.song}>
-        <Icon iconStyle={style.voteIcon} type="entypo" name="chevron-with-circle-up" color={song.voted ? globals.sGreen : globals.sGrey} underlayColor={globals.sBlack} onPress={()=>this.props.vote(song, i)}/>
-        <Text style={{...style.voteText, ...globals.style.smallText, color: song.voted ? globals.sGreen : globals.sGrey}}>{song.votes}</Text>
+        <Icon iconStyle={style.voteIcon} type="entypo" name="chevron-with-circle-up" color={voted ? globals.sGreen : globals.sGrey} underlayColor={globals.sBlack} onPress={()=>this.vote(song, i)}/>
+        <Text style={{...style.voteText, ...globals.style.smallText, color: voted ? globals.sGreen : globals.sGrey}}>{song.votes}</Text>
+        <Image style={style.image} source={{uri:song.image}}/>
         <Text style={{...style.songDescription, ...globals.style.smallText}}>{song.artist} - {song.name}</Text>
       </View>
     );
   }
 
   setOverlay() {
-    this.props.setOpenedBlur(2, { 
-      addSong: (song) => this.props.addSong(song)
-    });
+    if(Spotify.isLoggedIn()) {
+      this.props.setOpenedBlur(2, { 
+        addSong: (song) => this.props.addSong(song)
+      });
+    } else {
+      Spotify.login();
+    }
   }
 
   render() {
@@ -36,9 +60,7 @@ export default class extends React.Component {
           <FlatList data={songs} keyExtractor={(item, index)=>String(index)} renderItem={({item, index})=>this.eachSong(item, index)}>
           </FlatList>
           <View style={style.addIcon}>
-            <Icon color={globals.sBlack} size={30} name="ios-add" type="ionicon" raised
-            onPress={()=>this.setOverlay()}
-            />
+            <Icon color={globals.sBlack} size={30} name="ios-add" type="ionicon" raised onPress={()=>this.setOverlay()}/>
           </View>
         </View>
       </View>
@@ -54,11 +76,12 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     borderBottomWidth: 0.5,
     borderBottomColor: globals.sGrey,
-    paddingBottom: 15,
-    paddingTop: 15,
+    paddingBottom: 12,
+    paddingTop: 12,
     paddingLeft: 10,
     marginLeft: 5,
-    marginRight: 5
+    marginRight: 5,
+    alignItems: 'center'
   },
   songDescription: {
   },
@@ -72,5 +95,10 @@ const style = StyleSheet.create({
     position: 'absolute', 
     bottom: 20, 
     right: 20
+  },
+  image: {
+    height: 30,
+    width: 30,
+    marginRight: 7
   }
 });

@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { Icon } from 'react-native-elements';
 import globals from '../helpers';
 import Header from './header';
 import Spotlight from './spotlight';
@@ -28,16 +27,21 @@ class PlaylistComponent extends React.Component {
 
   render() {
     if(!this.props.loading && this.props.playlist && this.props.songs) {
+      let user = this.props.screenProps.user;
+      let owned = user && user.id === this.props.playlist.ownerURI;
       return (
         <View style={{flex:1}}>
-          <Header navigation={this.props.navigation}
+          <Header
+          owned={owned}
+          navigation={this.props.navigation}
           updatePlaylist={(p)=>this.props.updatePlaylist(p)}
           deletePlaylist={()=>this.props.deletePlaylist()}
           deleteSongs={()=>this.props.deleteSongs()}
-          setOpenedBlur={(i, props)=>this.props.screenProps.setOpenedBlur(i,props)}>
+          setOpenedBlur={(i, props)=>this.props.screenProps.setOpenedBlur(i,props)}
+          >
             {this.props.playlist}
           </Header>
-          <Spotlight next={()=>this.props.nextSong()} owned={true}>
+          <Spotlight next={()=>this.props.nextSong()} owned={owned}>
             {this.props.songs[0]}
           </Spotlight>
           <Songs addSong={(song)=>this.props.addSong(song)} vote={(song, i)=>this.props.voteSong(i)} {...this.props.screenProps}>

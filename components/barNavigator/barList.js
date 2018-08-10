@@ -6,6 +6,8 @@ import createPlaylists from '../../GQL/playlists';
 
 class PlaylistsComponent extends React.Component {
   eachBar(bar){
+    let user = this.props.user;
+    let owned = user && user.id === bar.ownerURI;
     return (
       <TouchableOpacity style={style.bar} onPress={()=>this.props.navigation.navigate('Bar', bar)}>
         {
@@ -13,19 +15,20 @@ class PlaylistsComponent extends React.Component {
           <Image style={style.barImage} source={{uri:bar.image}}/> :
           <Icon size={50} type="feather" name="music" color={globals.sWhite}/>
         }
-        <Text style={{...style.barText, color: bar.live ? globals.sSand : globals.sGrey}}>
+        <Text ellipsizeMode={'tail'} numberOfLines={1} style={style.barText}>
           {bar.playlistName}
         </Text>
         {
-          bar.live ?
+          owned ? 
           <View style={style.barIconsRight}>
             <Icon size={14} color={globals.sGreen} name="sound" type="entypo"/>
             <Icon size={14} color={globals.sGreen} name="chevron-thin-right" type="entypo"/>
           </View> :
           <View>
             <Icon size={14} color={globals.sGrey} name="sound-mute" type="entypo"/>
+            <Icon size={14} color={globals.sGrey} name="chevron-thin-right" type="entypo"/>
           </View>
-        }   
+        }
       </TouchableOpacity>
     );
   }
@@ -63,7 +66,7 @@ export default class BarList extends React.Component {
       const ids = localPlaylists.stored;
       if(ids.length > 0) {
         return  (
-          <Playlists navigation={this.props.navigation}>
+          <Playlists navigation={this.props.navigation} user={this.props.screenProps.user}>
             {ids}
           </Playlists>
         );
@@ -92,7 +95,10 @@ const style = StyleSheet.create({
     paddingRight: 20
   },
   barText: {
-    fontSize: 18
+    ...globals.style.smallText,
+    width: 200,
+    marginLeft: 10,
+    marginRight: 10
   },
   barImage: {
     width: 50,

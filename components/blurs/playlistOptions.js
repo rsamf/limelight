@@ -58,8 +58,8 @@ export default class PlaylistOptions extends React.Component {
               <TextInput onChangeText={(input)=>this.setState({editingCode:input})} defaultValue={this.props.playlist.shortCode}
               blurOnSubmit={true} enablesReturnKeyAutomatically={true} onSubmitEditing={()=>this.submitEditingCode()}
               style={globals.style.smallTextInput} onBlur={()=>this.setState({editingCode:null})}/> :
-              <TouchableOpacity onPress={()=>this.setState({editingCode:this.props.playlist.shortCode})}>
-                <Text style={globals.style.smallText}>{this.props.playlist.shortCode}</Text>
+              <TouchableOpacity onPress={()=>this.setState({editingCode:this.props.playlist.playlistName})}>
+                <Text style={globals.style.smallText}>{this.props.playlist.shortCode || "Create a Code for People to Join"}</Text>
               </TouchableOpacity>
             }
           </View>

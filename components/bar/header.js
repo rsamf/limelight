@@ -26,8 +26,11 @@ export default class extends React.Component {
         <View style={style.titleContainer}>
           <Text style={style.title}>{this.props.children.playlistName}</Text>
         </View>
-        <Icon name="md-more" type="ionicon" color={globals.sBlack} underlayColor={globals.sSand}
+        {
+          this.props.owned &&
+          <Icon name="md-more" type="ionicon" color={globals.sBlack} underlayColor={globals.sSand}
          onPress={()=>this.showPlaylistOptions()} iconStyle={style.icon}/>
+        }
       </View>
     );
   }
