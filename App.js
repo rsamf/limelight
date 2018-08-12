@@ -39,7 +39,7 @@ export default class App extends React.Component {
     this.state = {
       user: null,
       playlists: null,
-      opened: [false, false, false],
+      opened: [false, false, false, false, false],
       props: {}
     };
   }
@@ -67,25 +67,28 @@ export default class App extends React.Component {
         playlists: {
           stored: list,
           add: (id, callback) => {
+            console.warn("in app, adding", id, 'your callback is', callback);
             localPlaylists.push(id, (ids)=>{
+              console.warn("added, is now", ids);
               this.setState({
                 playlists: {
                   ...this.state.playlists,
                   stored: ids
                 }
               });
-              callback(ids);
+              if(callback) callback(ids);
             });
           },
           remove: (id, callback) => {
-            localPlaylists.remove(id, callback);
-            this.setState({
-              playlists: {
-                ...this.state.playlists,
-                stored: ids
-              }
+            localPlaylists.remove(id, (ids)=> {
+              this.setState({
+                playlists: {
+                  ...this.state.playlists,
+                  stored: ids
+                }
+              });
+              if(callback) callback(ids);
             });
-            callback(ids);
           }
         }
       })

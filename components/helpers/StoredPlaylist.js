@@ -11,7 +11,7 @@ export default class StoredPlaylist {
     this.getAll(list => {
       list.pop();
       this.setList(list).then(()=>{
-        callback(list);
+        if(callback) callback(list);
       });
     });
   }
@@ -21,9 +21,10 @@ export default class StoredPlaylist {
       if(!list.includes(playlistId)) {
         list.push(playlistId);
         this.setList(list).then(()=>{
-          callback(list);
+          if(callback) callback(list);
         });
       }
+      if(callback) callback(list);
     });
   }
 
@@ -31,27 +32,27 @@ export default class StoredPlaylist {
     this.getAll(list => {
       list.splice(list.indexOf(playlistId), 1);
       this.setList(list).then(()=>{
-        callback(list);
+        if(callback) callback(list);
       });
     });
   }
 
   get(index, callback) {
     this.getAll(list => {
-      callback(list[index]);
+      if(callback) callback(list[index]);
     });
   }
 
   getAll(callback) {
     AsyncStorage.getItem(this.item, (err, list) => {
       let parsedList = (!err && list) ? JSON.parse(list) : [];
-      callback(parsedList);
+      if(callback) callback(parsedList);
     });
   }
 
   wipe(callback) {
     this.setList([]).then(()=>{
-      callback([]);
+      if(callback) callback([]);
     });
   }
   

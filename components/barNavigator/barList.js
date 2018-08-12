@@ -6,38 +6,43 @@ import createPlaylists from '../../GQL/playlists';
 
 class PlaylistsComponent extends React.Component {
   eachBar(bar){
-    let user = this.props.user;
-    let owned = user && user.id === bar.ownerURI;
     return (
       <TouchableOpacity style={style.bar} onPress={()=>this.props.navigation.navigate('Bar', bar)}>
         {
           bar.image ?
           <Image style={style.barImage} source={{uri:bar.image}}/> :
-          <Icon size={50} type="feather" name="music" color={globals.sWhite}/>
+          <Icon size={50} type="feather" name="music" color={globals.sGrey}/>
         }
         <Text ellipsizeMode={'tail'} numberOfLines={1} style={style.barText}>
           {bar.playlistName}
         </Text>
-        {
-          owned ? 
-          <View style={style.barIconsRight}>
-            <Icon size={14} color={globals.sGreen} name="sound" type="entypo"/>
-            <Icon size={14} color={globals.sGreen} name="chevron-thin-right" type="entypo"/>
-          </View> :
-          <View>
-            <Icon size={14} color={globals.sGrey} name="sound-mute" type="entypo"/>
-            <Icon size={14} color={globals.sGrey} name="chevron-thin-right" type="entypo"/>
-          </View>
-        }
+        <View style={style.barIconsRight}>
+          <Icon size={14} color={globals.sGreen} name="sound" type="entypo"/>
+          <Icon size={14} color={globals.sGreen} name="chevron-thin-right" type="entypo"/>
+        </View>
       </TouchableOpacity>
     );
   }
 
+  getSortedPlaylists(playlists) {
+    let user = this.props.user;
+    if(!user) return playlists;
+    let playlistsCopy = playlists.slice(0);
+    return playlistsCopy.sort((a, b) => {
+      let ownedA = user.id === a.ownerURI;
+      let ownedB = user.id === b.ownerURI;
+      return (ownedA === ownedB) ? (a.playlistName > b.playlistName) : (ownedA < ownedB);
+    });
+  }
+
   render(){
     if (this.props.loading) return <globals.Loader/>;
-    if (this.props.error) {console.warn(this.props.error);return <Text style={globals.style.text}>'Error'</Text>;}
+    if (this.props.error) {
+      console.warn(this.props.error);
+      return <Text style={globals.style.text}>'Error'</Text>;
+    }
     return (
-      <FlatList data={this.props.playlists} keyExtractor={(item, index)=>String(index)} 
+      <FlatList data={this.getSortedPlaylists(this.props.playlists)} keyExtractor={(item, index)=>String(index)} 
       renderItem={({item})=>this.eachBar(item)}/>
     );
   }
@@ -63,10 +68,12 @@ export default class BarList extends React.Component {
   renderList(){
     const localPlaylists = this.props.screenProps.localPlaylists;
     if(localPlaylists && localPlaylists.stored) {
+      console.warn(localPlaylists.stored);
       const ids = localPlaylists.stored;
       if(ids.length > 0) {
         return  (
-          <Playlists navigation={this.props.navigation} user={this.props.screenProps.user}>
+          <Playlists navigation={this.props.navigation} user={this.props.screenProps.user}
+          localPlaylists={localPlaylists}>
             {ids}
           </Playlists>
         );

@@ -112,7 +112,7 @@ export default class extends React.Component {
   renderNotLive(){
     return (
       <View style={style.view}>
-        <Text style={globals.style.text}>Not currently live</Text>
+        <Text style={globals.style.smallText}>Add some songs!</Text>
       </View>
     );
   }

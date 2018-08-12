@@ -24,10 +24,13 @@ export default class extends React.Component {
 
   componentWillReceiveProps(newProps) {
     let songs = newProps.children;
-    let toBeRemoved = songs[songs.length - 1].id;
-    this.setState({
-      voted: this.state.voted.filter(v => v !== toBeRemoved)
-    });
+    let toBeRemoved = songs[songs.length - 1];
+    if(toBeRemoved) {
+      this.setState({
+        voted: this.state.voted.filter(v => v !== toBeRemoved.id)
+      });
+    }
+    
   }
 
   eachSong(song, i) {

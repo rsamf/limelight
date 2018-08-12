@@ -16,7 +16,10 @@ export default class Profile extends React.Component {
   }
 
   addPlaylist(id) {
+    console.warn("adding", id);
     this.props.localPlaylists.add(id, () => {
+      console.warn('done');
+      this.props.close();
       this.props.navigation.navigate('BarList');
     });
   }
@@ -37,7 +40,7 @@ export default class Profile extends React.Component {
   eachPlaylist(playlist, i) {
     console.warn(playlist);
     return (
-      <TouchableOpacity style={style.playlist} onPress={()=>this.addPlaylist(playlist)}>
+      <TouchableOpacity style={style.playlist} onPress={()=>this.addPlaylist(playlist.id)}>
         <Image style={style.playlistImage} source={{uri:playlist.image}}/>
         <Text style={globals.style.smallText}> {playlist.playlistName}</Text>
         <Text style={globals.style.smallText}> {playlist.ownerName}</Text>

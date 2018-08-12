@@ -4,6 +4,8 @@ import { Button } from 'react-native-elements';
 import { BlurView } from 'react-native-blur';
 import Spotify from 'rn-spotify-sdk';
 import globals from '../helpers';
+import AddPlaylistMutation from '../../GQL/mutations/AddPlaylist';
+import CreateSongsMutation from '../../GQL/mutations/CreateSongs';
 
 export default class HostPlaylist extends React.Component {
   constructor(props) {
@@ -60,19 +62,20 @@ export default class HostPlaylist extends React.Component {
   }
 
   addPlaylist(playlist){
-    const { user } = this.props.screenProps;
+    const { user } = this.props;
     let variables = {
       ownerURI: user.id,
       ownerName: user.display_name,
-      image: (playlist.images[0] && playlist.images[0].url) || (user.images[0] && user.images[0].url),
+      image: (playlist && playlist.images[0] && playlist.images[0].url) || (user.images[0] && user.images[0].url),
       playlistName: playlist ? playlist.name : user.display_name
     };
     const sendPlaylistMutation = (variables, callback) => {
       globals.client.mutate({
-        mutation: AddPlaylist,
+        mutation: AddPlaylistMutation,
         variables
       }).then(({data: {addPlaylist: {id}}})=>{
         this.props.localPlaylists.add(id, ()=>{
+          this.props.close();
           this.props.navigation.navigate('BarList');
         });
         callback(id);
@@ -80,7 +83,7 @@ export default class HostPlaylist extends React.Component {
     }
     const sendSongsMutation = (variables, callback) => {
       globals.client.mutate({
-        mutation: CreateSongs,
+        mutation: CreateSongsMutation,
         variables
       }).then(({data: {createSongs: {id}}})=>{
         callback(id)
