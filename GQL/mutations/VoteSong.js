@@ -11,6 +11,7 @@ mutation VoteSong($id: ID!, $index: Int!) {
       artist
       votes
       duration
+      state
     }
   }
 }`;

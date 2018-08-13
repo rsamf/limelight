@@ -11,6 +11,7 @@ mutation NextSong($id: ID!) {
       artist
       votes
       duration
+      state
     }
   }
 }`;

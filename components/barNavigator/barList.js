@@ -68,7 +68,6 @@ export default class BarList extends React.Component {
   renderList(){
     const localPlaylists = this.props.screenProps.localPlaylists;
     if(localPlaylists && localPlaylists.stored) {
-      console.warn(localPlaylists.stored);
       const ids = localPlaylists.stored;
       if(ids.length > 0) {
         return  (

@@ -11,6 +11,7 @@ mutation AddSong($id: ID!, $song: SongInput!) {
       artist
       votes
       duration
+      state
     }
   }
 }`;

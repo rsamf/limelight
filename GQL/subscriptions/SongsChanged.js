@@ -10,6 +10,7 @@ subscription($id: ID!){
       image
       duration
       artist
+      state
     }
   }
 }

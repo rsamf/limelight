@@ -17,7 +17,6 @@ export default class HostPlaylist extends React.Component {
   }
 
   componentDidMount() {
-    console.warn("mounted");
     if(this.props.user) {
       Spotify.sendRequest("v1/me/playlists", "GET", {}, true).then(({items}) => {
         this.setState({
@@ -63,7 +62,7 @@ export default class HostPlaylist extends React.Component {
 
   addPlaylist(playlist){
     const { user } = this.props;
-    let variables = {
+    const variables = {
       ownerURI: user.id,
       ownerName: user.display_name,
       image: (playlist && playlist.images[0] && playlist.images[0].url) || (user.images[0] && user.images[0].url),
@@ -73,32 +72,30 @@ export default class HostPlaylist extends React.Component {
       globals.client.mutate({
         mutation: AddPlaylistMutation,
         variables
-      }).then(({data: {addPlaylist: {id}}})=>{
-        this.props.localPlaylists.add(id, ()=>{
-          this.props.close();
-          this.props.navigation.navigate('BarList');
-        });
-        callback(id);
-      });
+      }).then(({data})=>{callback(data)});
     }
     const sendSongsMutation = (variables, callback) => {
       globals.client.mutate({
         mutation: CreateSongsMutation,
         variables
-      }).then(({data: {createSongs: {id}}})=>{
-        callback(id)
+      }).then(({data})=>{callback(data)});
+    };
+    const switchView = (id) => {
+      this.props.localPlaylists.add(id, ()=>{
+        this.props.close();
+        this.props.navigation.navigate('BarList');
       });
     };
-    sendPlaylistMutation(variables, (id) => {
+    sendPlaylistMutation(variables, data => {
+      const id = data.addPlaylist.id;
       let songVariables = { id: id, songs: [] };
-      console.warn(id);
       if(playlist) {
         globals.getSongsDataHTTP(user.id, playlist.id, songs => {
           songVariables.songs = songs;
-          sendSongsMutation(songVariables, console.warn);
+          sendSongsMutation(songVariables, ({createSongs: {id}})=>switchView(id));
         });
       } else {
-        sendSongsMutation(songVariables, console.warn);
+        sendSongsMutation(songVariables, ({createSongs: {id}})=>switchView(id));
       }
     });
   }

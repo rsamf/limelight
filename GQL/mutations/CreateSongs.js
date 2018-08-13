@@ -11,6 +11,7 @@ export default gql`
         artist
         votes
         duration
+        state
       }
     }
   }

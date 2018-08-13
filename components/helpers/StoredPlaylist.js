@@ -23,8 +23,9 @@ export default class StoredPlaylist {
         this.setList(list).then(()=>{
           if(callback) callback(list);
         });
+      } else {
+        if(callback) callback(list);
       }
-      if(callback) callback(list);
     });
   }
 

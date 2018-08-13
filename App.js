@@ -67,9 +67,7 @@ export default class App extends React.Component {
         playlists: {
           stored: list,
           add: (id, callback) => {
-            console.warn("in app, adding", id, 'your callback is', callback);
-            localPlaylists.push(id, (ids)=>{
-              console.warn("added, is now", ids);
+            localPlaylists.push(id, ids => {
               this.setState({
                 playlists: {
                   ...this.state.playlists,
@@ -80,7 +78,7 @@ export default class App extends React.Component {
             });
           },
           remove: (id, callback) => {
-            localPlaylists.remove(id, (ids)=> {
+            localPlaylists.remove(id, ids => {
               this.setState({
                 playlists: {
                   ...this.state.playlists,
@@ -96,7 +94,7 @@ export default class App extends React.Component {
   }
 
   componentDidMount(){
-    this.getLocalPlaylistsInterface()
+    this.getLocalPlaylistsInterface();
     this.getUser();
 		if(!Spotify.isInitialized())
 		{

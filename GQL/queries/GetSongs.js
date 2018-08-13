@@ -10,6 +10,7 @@ export default gql`
         image
         duration
         votes
+        state
       }
     }
   }

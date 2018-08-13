@@ -49,8 +49,7 @@ export default class extends React.Component {
 
   componentWillReceiveProps(newProps) {
     let song = newProps.children;
-    console.warn("setting song to", song);
-    if(song != this.props.children) {
+    if(song.id != this.props.children.id) {
       Spotify.playURI(`spotify:track:${song.id}`, 0, 0);
       this.setState({
         track: {

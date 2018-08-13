@@ -81,7 +81,7 @@ const getSongData = (track) => {
     name: track.name,
     artist: track.artists[0].name,
     duration: track.duration_ms/1000,
-    image: track.album.images[0].url
+    image: track.album.images[0] && track.album.images[0].url
   };
 };
 
@@ -112,7 +112,7 @@ const AppSync = {
   "region": "us-west-2",
   // "authenticationType": "AWS_IAM",
   "authenticationType": "API_KEY",
-  "apiKey": "da2-gmi6gjnjkzhvzg5zb7xpo2oftu"
+  "apiKey": "da2-pgysebhe6rbfbosewzj675jgpu"
 };
 
 const client = new AWSAppSyncClient({

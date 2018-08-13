@@ -47,7 +47,7 @@ export default (Component) => compose(
             variables: {
               id: props.ownProps.playlist.id
             }
-          }).then(console.warn);
+          });
         }
       }
     }
@@ -60,7 +60,7 @@ export default (Component) => compose(
             variables: {
               id: props.ownProps.playlist.songs
             }
-          }).then(console.warn);
+          });
         }
       }
     }
