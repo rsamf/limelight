@@ -80,6 +80,7 @@ export default (Component) => compose(
             document: OnSongsChangedSubscription,
             variables: { id: props.ownProps.children },
             updateQuery: (prev, {subscriptionData:{data:{onSongsChanged:{id, songs}}}}) => {
+              console.warn(prev);
               return {
                 getSongs: {
                   id,
@@ -96,9 +97,9 @@ export default (Component) => compose(
   graphql(VoteSongMutation, {
     props: props => {
       return {
-        voteSong: (i) => {
+        voteSong: (id) => {
           props.mutate({
-            variables: { id: props.ownProps.children, index: i }
+            variables: { id: props.ownProps.children, songId: id }
           });
         }
       };

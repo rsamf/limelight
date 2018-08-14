@@ -52,10 +52,11 @@ class PlaylistComponent extends React.Component {
     });
   }
 
-  voteSong(i) {
-    this.props.localVotes.vote(this.state.songs[i].id, this.state.songs[i].state, (songs, notAlreadyVoted) => {
+  voteSong(song) {
+    console.warn("voting for", song);
+    this.props.localVotes.vote(song.id, song.state, (songs, notAlreadyVoted) => {
       if(notAlreadyVoted) {
-        this.props.voteSong(i);
+        this.props.voteSong(song.id);
       }
     });
   }
@@ -79,7 +80,7 @@ class PlaylistComponent extends React.Component {
           <Spotlight next={()=>this.props.nextSong()} owned={owned}>
             {this.state.songs[0]}
           </Spotlight>
-          <Songs addSong={(song)=>this.props.addSong(song)} vote={(song, i)=>this.voteSong(i)} {...this.props.screenProps}>
+          <Songs addSong={(song)=>this.props.addSong(song)} vote={(song, i)=>this.voteSong(song)} {...this.props.screenProps}>
             {this.state.songs.slice(1)}
           </Songs>
         </View>

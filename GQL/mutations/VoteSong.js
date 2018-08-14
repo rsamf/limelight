@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export default gql`
-mutation VoteSong($id: ID!, $index: Int!) {
-  voteSong(id: $id, index: $index) {
+mutation VoteSong($id: ID!, $songId: ID!) {
+  voteSong(id: $id, songId: $songId) {
     id
     songs {
       id
