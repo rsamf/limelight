@@ -16,9 +16,7 @@ export default class Profile extends React.Component {
   }
 
   addPlaylist(id) {
-    console.warn("adding", id);
     this.props.localPlaylists.add(id, () => {
-      console.warn('done');
       this.props.close();
       this.props.navigation.navigate('BarList');
     });

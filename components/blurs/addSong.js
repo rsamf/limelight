@@ -36,7 +36,6 @@ export default class AddSong extends React.Component {
 
   searchSongs() {
     Spotify.search(this.state.songToSearch.replace(/ /g, '+'), ['track'], {}).then(({tracks: {items}}) => {
-      console.warn(items);
       this.setState({
         searchedSongs: items
       });

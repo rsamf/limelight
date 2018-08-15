@@ -80,7 +80,6 @@ export default (Component) => compose(
             document: OnSongsChangedSubscription,
             variables: { id: props.ownProps.children },
             updateQuery: (prev, {subscriptionData:{data:{onSongsChanged:{id, songs}}}}) => {
-              console.warn(prev);
               return {
                 getSongs: {
                   id,

@@ -43,13 +43,13 @@ export default class extends React.Component {
       this.interval = setInterval(setPlaybackState, 1000)
     }
     if(this.props.children && this.props.owned) {
-      this.play();
+      // this.play();
     }
   }
 
   componentWillReceiveProps(newProps) {
     let song = newProps.children;
-    if(song.id != this.props.children.id) {
+    if(song && this.props.children && song.id != this.props.children.id) {
       Spotify.playURI(`spotify:track:${song.id}`, 0, 0);
       this.setState({
         track: {

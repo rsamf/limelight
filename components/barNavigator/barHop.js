@@ -74,10 +74,8 @@ export default class BarHop extends React.Component {
 
     const success = ({data}) => {
       cancel();
-      console.warn(data);
       this.props.screenProps.localPlaylists.add(data, (list) => {
         this.props.navigation.navigate('BarList');
-        console.warn(list);
       });
     }
 

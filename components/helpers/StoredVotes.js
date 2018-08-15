@@ -45,7 +45,6 @@ export default class StoredVotes {
   tryVote(playlistId, songId, state, callback) {
     this.getAll(playlists => {
       let song = playlists[playlistId][songId];
-      console.warn(state, song.state, song.voted);
       if(state !== song.state || !song.voted) {
         this.setPlaylists({
           ...playlists,
@@ -57,11 +56,9 @@ export default class StoredVotes {
             }
           }
         }).then(()=>{
-          console.warn("succeeding to vote");
           if(callback) callback(playlists, true);
         });
       } else {
-        console.warn("failing to vote");
         if(callback) callback(playlists, false);
       }
     });
@@ -87,14 +84,23 @@ export default class StoredVotes {
   }
 
   setPlaylistToSongs(playlistId, songs, callback) {
-    let playlist = {};
-    songs.forEach(song => {
-      playlist[song.id] = {
-        voted: false,
-        state: song.state
-      };
-    });
     this.getAll(playlists => {
+      let playlist = playlists[playlistId] || {};
+      songs.forEach(song => {
+        let local = playlist[song.id];
+        // If exists locally, get local state, else it is a new song, so it is not voted for and the state is from network
+        if(local) {
+          playlist[song.id] = {
+            voted: (local.state === song.state) ? local.voted : false,
+            state: local.state
+          };
+        } else {
+          playlist[song.id] = {
+            voted: false,
+            state: song.state
+          };
+        }
+      });
       playlists[playlistId] = playlist;
       this.setPlaylists(playlists);
       if(callback) callback(playlist);

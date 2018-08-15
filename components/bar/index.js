@@ -36,24 +36,22 @@ class PlaylistComponent extends React.Component {
   }
 
   async mergeSongsWithVotes (songs) {
-    let votedSongs = await this.props.localVotes.get();
-    if(!votedSongs) {
-      votedSongs = await this.props.localVotes.set(songs);
-    }
+    let votedSongs = await this.props.localVotes.set(songs);
+    let newSongs = songs.map(s => {
+      let currentVotedState = votedSongs[s.id];
+      return {
+        ...s,
+        voted: (currentVotedState !== undefined) ? currentVotedState.voted : false
+      };
+    });
+    console.warn(newSongs);
     this.setState({
       mergedVotes: true,
-      songs: songs.map(s => {
-        let currentVotedState = votedSongs[s.id];
-        return {
-          ...s,
-          voted: currentVotedState ? currentVotedState.voted : false
-        };
-      })
+      songs: newSongs
     });
   }
 
   voteSong(song) {
-    console.warn("voting for", song);
     this.props.localVotes.vote(song.id, song.state, (songs, notAlreadyVoted) => {
       if(notAlreadyVoted) {
         this.props.voteSong(song.id);
@@ -62,7 +60,7 @@ class PlaylistComponent extends React.Component {
   }
 
   render() {
-    if(!this.props.loading && this.props.playlist && this.props.songs && this.state.mergedVotes) {
+    if(!this.props.loading && this.props.playlist && this.props.songs) {
       let user = this.props.screenProps.user;
       let owned = user && user.id === this.props.playlist.ownerURI;
       return (

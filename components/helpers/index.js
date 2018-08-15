@@ -6,7 +6,9 @@ import Spotify from 'rn-spotify-sdk';
 import StoredPlaylist from './StoredPlaylist';
 
 
-const sGreen = '#84bd00',
+const sBlue = '#43e5f8'//'#84bd00',
+      sMiddle = '#20f3cb',
+      sGreen = '#04fea6'
       sBlack = '#000000',
       sGrey = '#828282',
       sSand = '#ecebe8',
@@ -14,7 +16,7 @@ const sGreen = '#84bd00',
 
 const style = StyleSheet.create({
   view: {
-    backgroundColor: 'black',
+    backgroundColor: sBlack,
     flex: 1
   },
   text: {
@@ -28,21 +30,21 @@ const style = StyleSheet.create({
     fontSize: 16
   },
   textInput: {
-    backgroundColor: 'white',
+    backgroundColor: sWhite,
     fontFamily: 'Futura',
     fontSize: 24,
     width: 200,
     padding: 20
   },
   smallTextInput: {
-    backgroundColor: 'white',
+    backgroundColor: sWhite,
     fontFamily: 'Futura',
     fontSize: 16,
     width: 100,
     padding: 5
   },
   textInputFailed: {
-    backgroundColor: 'white',
+    backgroundColor: sWhite,
     fontFamily: 'Futura',
     fontSize: 24,
     width: 200,
