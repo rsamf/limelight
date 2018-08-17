@@ -133,6 +133,8 @@ const client = new AWSAppSyncClient({
 
 const globals = {
   style,
+  sBlue,
+  sMiddle,
   sGreen,
   sBlack,
   sGrey,

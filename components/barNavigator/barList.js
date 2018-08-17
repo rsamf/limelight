@@ -17,8 +17,8 @@ class PlaylistsComponent extends React.Component {
           {bar.playlistName}
         </Text>
         <View style={style.barIconsRight}>
-          <Icon size={14} color={globals.sGreen} name="sound" type="entypo"/>
-          <Icon size={14} color={globals.sGreen} name="chevron-thin-right" type="entypo"/>
+          <Icon size={14} color={globals.sMiddle} name="sound" type="entypo"/>
+          <Icon size={14} color={globals.sBlue} name="chevron-thin-right" type="entypo"/>
         </View>
       </TouchableOpacity>
     );
