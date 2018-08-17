@@ -32,8 +32,7 @@ export default class extends React.Component {
           });
         }
         else if (this.state.track.playing && !this.nexting) {
-          this.nexting = true;
-          this.props.next();
+          this.next();
         }
       });
     }
@@ -43,6 +42,11 @@ export default class extends React.Component {
     if(this.props.children && this.props.owned) {
       this.play();
     }
+  }
+
+  next() {
+    this.nexting = true;
+    this.props.next();
   }
 
   componentWillReceiveProps(newProps) {
@@ -144,7 +148,7 @@ export default class extends React.Component {
             <Icon onPress={()=>this.play()} iconStyle={style.controlItem} 
             color={globals.sWhite} name="play" type="font-awesome" underlayColor={globals.sBlack}/>
           }
-          <Icon onPress={()=>this.props.next()} iconStyle={style.controlItem} underlayColor={globals.sBlack}
+          <Icon onPress={()=>this.next()} iconStyle={style.controlItem} underlayColor={globals.sBlack}
           color={globals.sWhite} name="step-forward" type="font-awesome"/>
         </View>
         <ProgressViewIOS style={style.progress} trackTintColor={globals.sGrey} progressTintColor={globals.sSand} progress={this.state.track.position}/>

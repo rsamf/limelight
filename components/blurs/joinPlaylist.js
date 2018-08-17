@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, FlatList, Text, TextInput, TouchableOpacity, Image } from 'react-native';
-import { Icon, Button } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import { BlurView } from 'react-native-blur';
 import GetPlaylistsByCode from '../../GQL/queries/GetPlaylistsByCode';
 import globals from '../helpers';
