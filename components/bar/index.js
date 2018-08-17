@@ -74,10 +74,17 @@ class PlaylistComponent extends React.Component {
           >
             {this.props.playlist}
           </Header>
-          <Spotlight next={()=>this.props.nextSong()} owned={owned}>
+          <Spotlight owned={owned} 
+          next={()=>this.props.nextSong()}
+          >
             {this.state.songs[0]}
           </Spotlight>
-          <Songs addSong={(song)=>this.props.addSong(song)} vote={(song, i)=>this.voteSong(song)} {...this.props.screenProps}>
+          <Songs owned={owned} 
+          {...this.props.screenProps}
+          addSong={(song)=>this.props.addSong(song)}
+          deleteSong={(songId)=>this.props.deleteSong(songId)}
+          vote={(song)=>this.voteSong(song)}
+          >
             {this.state.songs.slice(1)}
           </Songs>
         </View>

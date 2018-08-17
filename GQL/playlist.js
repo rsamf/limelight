@@ -6,6 +6,7 @@ import DeleteSongsMutation from './mutations/DeleteSongs';
 import VoteSongMutation from './mutations/VoteSong';
 import NextSongMutation from './mutations/NextSong';
 import AddSongMutation from './mutations/AddSong';
+import DeleteSongMutation from './mutations/DeleteSong';
 import OnSongsChangedSubscription from './subscriptions/SongsChanged';
 import { graphql, compose } from 'react-apollo';
 import SongsManipulation from './songHandlers';
@@ -177,6 +178,35 @@ export default (Component) => compose(
               });
               data.getSongs.songs = addSong.songs;
               proxy.writeQuery({ query: GetSongs, variables: { id: props.ownProps.children, song: newSong }, data });
+            }
+          });
+        }
+      };
+    }
+  }),
+  graphql(DeleteSongMutation, {
+    props: props => {
+      return {
+        deleteSong: (id) => {
+          props.mutate({
+            variables: { id: props.ownProps.children, songId: id },
+            optimisticResponse: () => {
+              let songs = SongsManipulation.delete(props.ownProps.songs, id);
+              return {
+                deleteSong: {
+                  id: props.ownProps.children,
+                  songs: songs,
+                  __typename: 'SongList'
+                }
+              };
+            },
+            update: (proxy, { data: { deleteSong } }) => {
+              let data = proxy.readQuery({ 
+                query: GetSongs, 
+                variables: { id: props.ownProps.children, songId: id }
+              });
+              data.getSongs.songs = deleteSong.songs;
+              proxy.writeQuery({ query: GetSongs, variables: { id: props.ownProps.children, songId: id }, data });
             }
           });
         }
