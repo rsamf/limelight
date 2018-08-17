@@ -81,10 +81,9 @@ export default (Component) => compose(
           props.data.subscribeToMore({
             document: OnSongsChangedSubscription,
             variables: { id: props.ownProps.children },
-            updateQuery: (prev, {subscriptionData:{data:{onSongsChanged:{id, songs}}}}) => {
+            updateQuery: (prev, {subscriptionData:{data:{onSongsChanged:{songs}}}}) => {
               return {
                 getSongs: {
-                  id,
                   songs,
                   __typename: 'SongList'
                 }
