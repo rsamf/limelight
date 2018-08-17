@@ -8,12 +8,13 @@ import NextSongMutation from './mutations/NextSong';
 import AddSongMutation from './mutations/AddSong';
 import OnSongsChangedSubscription from './subscriptions/SongsChanged';
 import { graphql, compose } from 'react-apollo';
+import SongsManipulation from './songHandlers';
 
 export default (Component) => compose(
   graphql(GetPlaylist, {
     options: props => {
       return {
-        fetchPolicy: 'network-only',
+        fetchPolicy: 'cache-and-network',
         variables: { id: props.children }
       };
     },
@@ -68,7 +69,7 @@ export default (Component) => compose(
   graphql(GetSongs, {
     options: props => {
       return {
-        fetchPolicy: 'network-only',
+        fetchPolicy: 'cache-and-network',
         variables: { id: props.children }
       };
     },
@@ -98,7 +99,25 @@ export default (Component) => compose(
       return {
         voteSong: (id) => {
           props.mutate({
-            variables: { id: props.ownProps.children, songId: id }
+            variables: { id: props.ownProps.children, songId: id },
+            optimisticResponse: () => {
+              let songs = SongsManipulation.vote(props.ownProps.songs, id);
+              return {
+                voteSong: {
+                  id: props.ownProps.children,
+                  songs: songs,
+                  __typename: 'SongList'
+                }
+              };
+            },
+            update: (proxy, { data: { voteSong } }) => {
+              let data = proxy.readQuery({ 
+                query: GetSongs, 
+                variables: { id: props.ownProps.children, songId: id }
+              });
+              data.getSongs.songs = voteSong.songs;
+              proxy.writeQuery({ query: GetSongs, variables: { id: props.ownProps.children, songId: id }, data });
+            }
           });
         }
       };
@@ -109,7 +128,25 @@ export default (Component) => compose(
       return {
         nextSong: () => {
           props.mutate({
-            variables: { id: props.ownProps.children }
+            variables: { id: props.ownProps.children },
+            optimisticResponse: () => {
+              let songs = SongsManipulation.next(props.ownProps.songs);
+              return {
+                nextSong: {
+                  id: props.ownProps.children,
+                  songs: songs,
+                  __typename: 'SongList'
+                }
+              };
+            },
+            update: (proxy, { data: { nextSong } }) => {
+              let data = proxy.readQuery({ 
+                query: GetSongs, 
+                variables: { id: props.ownProps.children }
+              });
+              data.getSongs.songs = nextSong.songs;
+              proxy.writeQuery({ query: GetSongs, variables: { id: props.ownProps.children }, data });
+            }
           });
         }
       };
@@ -120,7 +157,27 @@ export default (Component) => compose(
       return {
         addSong: (song) => {
           props.mutate({
-            variables: { id: props.ownProps.children, song }
+            variables: { id: props.ownProps.children, song },
+            optimisticResponse: () => {
+              let newSong = {...song, __typename: 'Song'};
+              let songs = SongsManipulation.add(props.ownProps.songs, newSong);
+              return {
+                addSong: {
+                  id: props.ownProps.children,
+                  songs: songs,
+                  __typename: 'SongList'
+                }
+              };
+            },
+            update: (proxy, { data: { addSong } }) => {
+              let newSong = {...song, __typename: 'Song'};
+              let data = proxy.readQuery({ 
+                query: GetSongs, 
+                variables: { id: props.ownProps.children, song: newSong }
+              });
+              data.getSongs.songs = addSong.songs;
+              proxy.writeQuery({ query: GetSongs, variables: { id: props.ownProps.children, song: newSong }, data });
+            }
           });
         }
       };

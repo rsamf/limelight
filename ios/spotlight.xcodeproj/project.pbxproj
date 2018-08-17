@@ -29,6 +29,7 @@
 		223B96EA20FBE45E006CAC33 /* SpotifyAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223B96E720FBE45E006CAC33 /* SpotifyAuthentication.framework */; };
 		223B96EB20FBE45E006CAC33 /* SpotifyAudioPlayback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223B96E820FBE45E006CAC33 /* SpotifyAudioPlayback.framework */; };
 		223B96EC20FBE45E006CAC33 /* SpotifyMetadata.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223B96E920FBE45E006CAC33 /* SpotifyMetadata.framework */; };
+		2298F0472123CDE400901262 /* iTunesArtwork@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2298F01A2123CDE400901262 /* iTunesArtwork@1x.png */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -410,6 +411,7 @@
 		223B96E720FBE45E006CAC33 /* SpotifyAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyAuthentication.framework; path = "../node_modules/rn-spotify-sdk/ios/external/SpotifySDK/SpotifyAuthentication.framework"; sourceTree = "<group>"; };
 		223B96E820FBE45E006CAC33 /* SpotifyAudioPlayback.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyAudioPlayback.framework; path = "../node_modules/rn-spotify-sdk/ios/external/SpotifySDK/SpotifyAudioPlayback.framework"; sourceTree = "<group>"; };
 		223B96E920FBE45E006CAC33 /* SpotifyMetadata.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyMetadata.framework; path = "../node_modules/rn-spotify-sdk/ios/external/SpotifySDK/SpotifyMetadata.framework"; sourceTree = "<group>"; };
+		2298F01A2123CDE400901262 /* iTunesArtwork@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@1x.png"; sourceTree = "<group>"; };
 		22C2BCBD2101594F004DFB30 /* spotlight.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = spotlight.entitlements; path = spotlight/spotlight.entitlements; sourceTree = "<group>"; };
 		24FD0D7A60E14DB8909959BC /* libRNCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCamera.a; sourceTree = "<group>"; };
 		2580A20E30B349C2B20F59F8 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
@@ -595,6 +597,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				2298F01A2123CDE400901262 /* iTunesArtwork@1x.png */,
 			);
 			name = spotlight;
 			sourceTree = "<group>";
@@ -1336,6 +1339,7 @@
 				427202C7AC2F453C9A6A8602 /* Ionicons.ttf in Resources */,
 				4EF040DE9CA54B13891EA23C /* MaterialCommunityIcons.ttf in Resources */,
 				72B2DE7ED46F48B381E363D1 /* MaterialIcons.ttf in Resources */,
+				2298F0472123CDE400901262 /* iTunesArtwork@1x.png in Resources */,
 				C1E3B00984204B4DAC61A30A /* Octicons.ttf in Resources */,
 				1409DFD1F40D4387A62028E1 /* SimpleLineIcons.ttf in Resources */,
 				15FB8DB5B39C413E9465C985 /* Zocial.ttf in Resources */,

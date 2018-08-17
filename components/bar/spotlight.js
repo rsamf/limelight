@@ -23,7 +23,7 @@ export default class extends React.Component {
       Spotify.getPlaybackStateAsync().then(state => {
         if(!state) return;
         if(state.playing) {
-          this.loading = false;
+          this.nexting = false;
           this.setState({
             track: {
               ...this.state.track,
@@ -31,10 +31,8 @@ export default class extends React.Component {
             }
           });
         }
-        else if (this.state.track.playing && !this.loading && !this.nexting) {
+        else if (this.state.track.playing && !this.nexting) {
           this.nexting = true;
-          this.loading = true;
-          console.warn("NEXTING");
           this.props.next();
         }
       });
@@ -43,7 +41,7 @@ export default class extends React.Component {
       this.interval = setInterval(setPlaybackState, 1000)
     }
     if(this.props.children && this.props.owned) {
-      // this.play();
+      this.play();
     }
   }
 
@@ -58,7 +56,6 @@ export default class extends React.Component {
           initialized: true
         }
       });
-      this.nexting = false;
     }
   }
 

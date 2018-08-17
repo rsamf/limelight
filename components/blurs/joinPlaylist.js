@@ -36,7 +36,6 @@ export default class Profile extends React.Component {
   }
 
   eachPlaylist(playlist, i) {
-    console.warn(playlist);
     return (
       <TouchableOpacity style={style.playlist} onPress={()=>this.addPlaylist(playlist.id)}>
         <Image style={style.playlistImage} source={{uri:playlist.image}}/>

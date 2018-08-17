@@ -22,7 +22,7 @@ class PlaylistComponent extends React.Component {
   componentDidUpdate() {
     if(this.props.subscribeToSongChanges && !this.state.subscribed) {
       console.warn("Subscribing");
-      this.props.subscribeToSongChanges();
+      // this.props.subscribeToSongChanges();
       this.setState({
         subscribed: true
       });
@@ -44,7 +44,6 @@ class PlaylistComponent extends React.Component {
         voted: (currentVotedState !== undefined) ? currentVotedState.voted : false
       };
     });
-    console.warn(newSongs);
     this.setState({
       mergedVotes: true,
       songs: newSongs
@@ -87,7 +86,7 @@ class PlaylistComponent extends React.Component {
     if(this.props.error) {
       return (
         <View>
-          <Text style={globals.style.text}>{JSON.stringify(this.props.error)}</Text>
+          <Text style={globals.style.smallText}>{JSON.stringify(this.props.error)}</Text>
         </View>
       );
     }
