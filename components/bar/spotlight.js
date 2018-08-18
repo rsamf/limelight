@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ProgressViewIOS, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Spotify from 'rn-spotify-sdk';
 import globals from '../helpers';
+import MusicControl from './ios-music-control';
 
 export default class extends React.Component {
 
@@ -18,65 +19,72 @@ export default class extends React.Component {
     };
   }
 
+  musicControlFunctions = [
+    ()=>this.play(), ()=>this.pause(), ()=>this.next(), ()=>this.seekStart()
+  ]
+
   setPlaybackState() {
     Spotify.getPlaybackStateAsync().then(state => {
       if(!state) return;
-      console.warn("trig");
       if(state.playing) {
         this.nexting = false;
         this.setState({
           track: {
-            ...this.state.track,
+            // ...this.state.track,
+            initialized: true,
             playing: true,
             position: state.position/this.props.children.duration
           }
         });
+        // MusicControl.updateSong(true, state.position);
       }
       else {
         this.setState({
-          ...this.state.track,
-          playing: false
+          track: {
+            ...this.state.track,
+            playing: false
+          }
         });
+        // MusicControl.updateSong(false, state.position);
         if (this.state.track.playing && !this.nexting) {
-          setTimeout(()=> {
-            if(this.state.track.playing && !this.nexting) {
-              this.next();
-            }
-          }, 500);
+          this.next();
         }
       }
     });
   }
   
   componentDidMount(){
-    if(this.props.owned && !this.interval) {
-      this.interval = setInterval(()=>this.setPlaybackState(), 1000)
+    if(this.props.owned) {
+      MusicControl.init(...this.musicControlFunctions);
+      if(!this.interval) {
+        this.interval = setInterval(()=>this.setPlaybackState(), 1000)
+      }
     }
-    if(this.props.children && this.props.owned) {
-      this.play();
+  }
+
+  componentWillReceiveProps(newProps) {
+    if(newProps.owned) {
+      if(!this.interval) {
+        this.interval = setInterval(()=>this.setPlaybackState(), 1000)
+      }
+      let song = newProps.children;
+      if(song && this.props.children && song.id !== this.props.children.id) {
+        MusicControl.setSong(newProps.children);
+        Spotify.playURI(`spotify:track:${song.id}`, 0, 0);
+        this.setState({
+          track: {
+            position: 0,
+            playing: true,
+            initialized: true
+          }
+        });
+      }
     }
   }
 
   next() {
     this.nexting = true;
     this.props.next();
-  }
-
-  componentWillReceiveProps(newProps) {
-    if(this.props.owned && !this.interval) {
-      this.interval = setInterval(()=>this.setPlaybackState(), 1000)
-    }
-    let song = newProps.children;
-    if(song && this.props.children && song.id != this.props.children.id) {
-      Spotify.playURI(`spotify:track:${song.id}`, 0, 0);
-      this.setState({
-        track: {
-          position: 0,
-          playing: true,
-          initialized: true
-        }
-      });
-    }
   }
 
   pause() {
@@ -99,13 +107,13 @@ export default class extends React.Component {
       if(!song) return;
       Spotify.playURI(`spotify:track:${song.id}`, 0, 0);
     }
-    this.setState({
-      track: {
-        position: this.state.track.position,
-        playing: true,
-        initialized: true
-      }
-    });
+    // this.setState({
+    //   track: {
+    //     position: this.state.track.position,
+    //     playing: true,
+    //     initialized: true
+    //   }
+    // });
   }
 
   seekStart(){
