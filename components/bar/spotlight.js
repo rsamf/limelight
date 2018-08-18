@@ -17,27 +17,40 @@ export default class extends React.Component {
       interval: null,
     };
   }
+
+  setPlaybackState() {
+    Spotify.getPlaybackStateAsync().then(state => {
+      if(!state) return;
+      console.warn("trig");
+      if(state.playing) {
+        this.nexting = false;
+        this.setState({
+          track: {
+            ...this.state.track,
+            playing: true,
+            position: state.position/this.props.children.duration
+          }
+        });
+      }
+      else {
+        this.setState({
+          ...this.state.track,
+          playing: false
+        });
+        if (this.state.track.playing && !this.nexting) {
+          setTimeout(()=> {
+            if(this.state.track.playing && !this.nexting) {
+              this.next();
+            }
+          }, 500);
+        }
+      }
+    });
+  }
   
   componentDidMount(){
-    const setPlaybackState = () => {
-      Spotify.getPlaybackStateAsync().then(state => {
-        if(!state) return;
-        if(state.playing) {
-          this.nexting = false;
-          this.setState({
-            track: {
-              ...this.state.track,
-              position: state.position/this.props.children.duration
-            }
-          });
-        }
-        else if (this.state.track.playing && !this.nexting) {
-          this.next();
-        }
-      });
-    }
-    if(this.props.owned) {
-      this.interval = setInterval(setPlaybackState, 1000)
+    if(this.props.owned && !this.interval) {
+      this.interval = setInterval(()=>this.setPlaybackState(), 1000)
     }
     if(this.props.children && this.props.owned) {
       this.play();
@@ -50,6 +63,9 @@ export default class extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
+    if(this.props.owned && !this.interval) {
+      this.interval = setInterval(()=>this.setPlaybackState(), 1000)
+    }
     let song = newProps.children;
     if(song && this.props.children && song.id != this.props.children.id) {
       Spotify.playURI(`spotify:track:${song.id}`, 0, 0);
