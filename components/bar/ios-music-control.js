@@ -12,7 +12,7 @@ export default {
     MusicControl.enableControl('seekBackward', true);
     MusicControl.enableControl('skipForward', false);
     MusicControl.enableControl('skipBackward', false);
-    MusicControl.on('play', () => {playFunction()});
+    MusicControl.on('play', () => {playFunction(true)});
     MusicControl.on('pause', () => {pauseFunction()});
     MusicControl.on('nextTrack', () => {nextFunction()});
     MusicControl.on('seekBackward', ()=> {seekBackwardFunction()});
@@ -37,5 +37,8 @@ export default {
       speed: 1, // Playback Rate
       elapsedTime: elapsedTime // (Seconds)
     });
+  },
+  turnOff: () => {
+    MusicControl.resetNowPlaying();
   }
 };

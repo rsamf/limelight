@@ -23,6 +23,11 @@ export default class extends React.Component {
     ()=>this.play(), ()=>this.pause(), ()=>this.next(), ()=>this.seekStart()
   ]
 
+  stop(){
+    Spotify.setPlaying(false);
+    Spotify.seek(0);
+  }
+
   setPlaybackState() {
     Spotify.getPlaybackStateAsync().then(state => {
       if(!state) return;
@@ -30,45 +35,28 @@ export default class extends React.Component {
         this.nexting = false;
         this.setState({
           track: {
-            // ...this.state.track,
-            initialized: true,
-            playing: true,
+            ...this.state.track,
             position: state.position/this.props.children.duration
           }
         });
-        // MusicControl.updateSong(true, state.position);
       }
       else {
-        this.setState({
-          track: {
-            ...this.state.track,
-            playing: false
-          }
-        });
-        // MusicControl.updateSong(false, state.position);
         if (this.state.track.playing && !this.nexting) {
           this.next();
         }
       }
     });
   }
-  
-  componentDidMount(){
-    if(this.props.owned) {
-      MusicControl.init(...this.musicControlFunctions);
-      if(!this.interval) {
-        this.interval = setInterval(()=>this.setPlaybackState(), 1000)
-      }
-    }
-  }
 
   componentWillReceiveProps(newProps) {
     if(newProps.owned) {
+      MusicControl.init(...this.musicControlFunctions);
       if(!this.interval) {
         this.interval = setInterval(()=>this.setPlaybackState(), 1000)
       }
       let song = newProps.children;
       if(song && this.props.children && song.id !== this.props.children.id) {
+        this.stop();
         MusicControl.setSong(newProps.children);
         Spotify.playURI(`spotify:track:${song.id}`, 0, 0);
         this.setState({
@@ -97,7 +85,7 @@ export default class extends React.Component {
     });
   }
 
-  play() {
+  play(fromBackground) {
     if(this.state.track.initialized) {
       // Play Already playing song
       Spotify.setPlaying(true);
@@ -105,15 +93,19 @@ export default class extends React.Component {
       // Play new song
       let song = this.props.children;
       if(!song) return;
+      if(!fromBackground) {
+        this.stop();
+        MusicControl.setSong(song);
+      }
       Spotify.playURI(`spotify:track:${song.id}`, 0, 0);
     }
-    // this.setState({
-    //   track: {
-    //     position: this.state.track.position,
-    //     playing: true,
-    //     initialized: true
-    //   }
-    // });
+    this.setState({
+      track: {
+        position: this.state.track.position,
+        playing: true,
+        initialized: true
+      }
+    });
   }
 
   seekStart(){
@@ -130,6 +122,7 @@ export default class extends React.Component {
     if(this.props.owned) {
       Spotify.setPlaying(false);
       clearInterval(this.interval);
+      MusicControl.turnOff();
     }
   }
 
