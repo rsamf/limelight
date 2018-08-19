@@ -2,6 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCalendarsUsageDescription</key>
+	<string>This app does not use NSCalendarsUsageDescription</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>This app does not use NSBluetoothPeripheralUsageDescription</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>This app does not use NSAppleMusicUsageDescription</string>
+	<key>NSMotionUsageDescription</key>
+	<string>This app does not use NSMotionUsageDescription</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>This app does not use NSSpeechRecognitionUsageDescription</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -23,14 +33,14 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSApplicationCategoryType</key>
-	<string/>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>localhost</key>
+			<key>*</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
 				<true/>
@@ -40,7 +50,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Hi, there! I want to borrow access to your camera for just a bit, so I can scan that QR thingy over there.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
