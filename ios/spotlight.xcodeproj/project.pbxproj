@@ -1619,6 +1619,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.richard.franklin.spotlight;
 				PRODUCT_NAME = spotlight;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1651,6 +1652,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.richard.franklin.spotlight;
 				PRODUCT_NAME = spotlight;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

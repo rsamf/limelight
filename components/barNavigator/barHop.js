@@ -45,8 +45,8 @@ export default class BarHop extends React.Component {
 
   render(){
     return (
-      <View style={{flex: 1}}>
-        <View style={{...globals.style.view, ...style.barHop,...globals.style.fullscreen}}>
+      <View style={globals.style.view}>
+        <View style={style.barHopView}>
           {
             this.state.qrInputActive ?
             this.renderQRScanner() :
@@ -74,7 +74,7 @@ export default class BarHop extends React.Component {
 
     const success = ({data}) => {
       cancel();
-      this.props.screenProps.localPlaylists.add(data, (list) => {
+      this.props.screenProps.localPlaylists.add(data, () => {
         this.props.navigation.navigate('BarList');
       });
     }
@@ -90,3 +90,11 @@ export default class BarHop extends React.Component {
     );
   }
 }
+
+const style = StyleSheet.create({
+  barHopView: {
+    ...globals.style.view,
+    ...globals.style.fullscreen,
+    ...globals.style.center
+  }
+});

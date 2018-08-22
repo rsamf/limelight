@@ -36,7 +36,7 @@ export default (Component) => compose(
               id: props.ownProps.playlist.id,
               playlist
             }
-          }).then(console.warn);
+          });
         }
       }
     }

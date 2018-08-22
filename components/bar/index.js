@@ -21,7 +21,6 @@ class PlaylistComponent extends React.Component {
 
   componentDidUpdate() {
     if(this.props.subscribeToSongChanges && !this.state.subscribed) {
-      console.warn("Subscribing");
       this.props.subscribeToSongChanges();
       this.setState({
         subscribed: true

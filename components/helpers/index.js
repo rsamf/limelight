@@ -1,6 +1,7 @@
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import React from 'react';
 import * as AWS from 'aws-sdk';
+import { AUTH_TYPE } from "aws-appsync/lib/link/auth-link";
 import AWSAppSyncClient from "aws-appsync/lib";
 import Spotify from 'rn-spotify-sdk';
 import StoredPlaylist from './StoredPlaylist';
@@ -62,6 +63,10 @@ const style = StyleSheet.create({
   },
   absolute: {
     position: 'absolute'
+  },
+  center: {
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });
 
@@ -109,26 +114,17 @@ const requireSpotifyAuthorizationAndInjectUserDetails = func => {
   }
 };
 
-const AppSync = {
-  "graphqlEndpoint": "https://347hiw7ofbe5jhcgcaz43mcszy.appsync-api.us-west-2.amazonaws.com/graphql",
-  "region": "us-west-2",
-  // "authenticationType": "AWS_IAM",
-  "authenticationType": "API_KEY",
-  "apiKey": "da2-2imiqred3nboxfzxjytwpxvvxu"
-};
-
 const client = new AWSAppSyncClient({
-  url: AppSync.graphqlEndpoint,
-  region: AppSync.region,
+  url: "https://347hiw7ofbe5jhcgcaz43mcszy.appsync-api.us-west-2.amazonaws.com/graphql",
+  region: "us-west-2",
   auth: {
-      type: AppSync.authenticationType,
-      apiKey: AppSync.apiKey,
+      type: AUTH_TYPE.AWS_IAM,
+      credentials: new AWS.Credentials({
+        accessKeyId: "AKIAJVF5BO4TV7IJIRYA",
+        secretAccessKey: "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"
+      })
   },
   disableOffline: true
-  // credentials: new AWS.Credentials({
-  //   accessKeyId: "AKIAJVF5BO4TV7IJIRYA",
-  //   secretAccessKey: "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"
-  // })
 });
 
 const globals = {
@@ -140,7 +136,6 @@ const globals = {
   sGrey,
   sSand,
   sWhite,
-  AppSync,
   Loader,
   client,
   getSongData,

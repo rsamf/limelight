@@ -4,6 +4,41 @@ import { Icon } from 'react-native-elements';
 import globals from '../helpers';
 import createPlaylists from '../../GQL/playlists';
 
+const style = StyleSheet.create({
+  bar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 0.5,
+    borderBottomColor: globals.sGrey,
+    height: 100,
+    marginLeft: 40,
+    marginRight: 40,
+    paddingLeft: 20,
+    paddingRight: 20
+  },
+  barText: {
+    ...globals.style.smallText,
+    width: 200,
+    marginLeft: 10,
+    marginRight: 10
+  },
+  barImage: {
+    width: 50,
+    height: 50
+  },
+  barIconsRight: {
+    flexDirection: 'row'
+  },
+  noPlaylistsText: {
+    ...globals.style.text,
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center',
+    margin: 50
+  }
+});
+
 class PlaylistsComponent extends React.Component {
   eachBar(bar){
     return (
@@ -38,7 +73,6 @@ class PlaylistsComponent extends React.Component {
   render(){
     if (this.props.loading) return <globals.Loader/>;
     if (this.props.error) {
-      console.warn(this.props.error);
       return <Text style={globals.style.text}>'Error'</Text>;
     }
     return (
@@ -86,38 +120,3 @@ export default class BarList extends React.Component {
     return <globals.Loader/>
   }
 }
-
-const style = StyleSheet.create({
-  bar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomWidth: 0.5,
-    borderBottomColor: globals.sGrey,
-    height: 100,
-    marginLeft: 40,
-    marginRight: 40,
-    paddingLeft: 20,
-    paddingRight: 20
-  },
-  barText: {
-    ...globals.style.smallText,
-    width: 200,
-    marginLeft: 10,
-    marginRight: 10
-  },
-  barImage: {
-    width: 50,
-    height: 50
-  },
-  barIconsRight: {
-    flexDirection: 'row'
-  },
-  noPlaylistsText: {
-    ...globals.style.text,
-    flex: 1, 
-    alignItems: 'center', 
-    justifyContent: 'center',
-    margin: 50
-  }
-});

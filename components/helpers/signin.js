@@ -51,15 +51,3 @@ export default class extends React.Component {
     );
   }
 }
-
-const style = StyleSheet.create({
-  view: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    padding: 40
-  },
-  icon: {
-    backgroundColor: globals.sBlack
-  }
-});

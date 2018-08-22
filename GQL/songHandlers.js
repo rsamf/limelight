@@ -25,7 +25,6 @@ export default {
     let songsCopy = songs.map(s => ({...s}));
     songsCopy[0].votes = 0;
     songsCopy[0].state++;
-    // console.warn("made new songs", songsCopy);
     return [...songsCopy.slice(1), songsCopy[0]];
   }
 };

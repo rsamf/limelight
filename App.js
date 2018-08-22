@@ -1,5 +1,5 @@
 import { createStackNavigator } from 'react-navigation';
-import { AppRegistry, Alert, View, findNodeHandle, Text } from 'react-native';
+import { AppRegistry, Alert, View, findNodeHandle } from 'react-native';
 import BarNavigator from './components/barNavigator';
 import Bar from './components/bar';
 import Spotify from 'rn-spotify-sdk';
@@ -45,14 +45,12 @@ export default class App extends React.Component {
   getUser(){
     Spotify.addListener("login", () => {
       Spotify.getMe().then(user => {
-        console.warn(user);
         this.setState({
           user: user
         });
       });
     });
     Spotify.addListener("logout", () => {
-      // Spotify.login();
       this.setState({
         user: null
       });
@@ -126,7 +124,7 @@ export default class App extends React.Component {
     return (
       <ApolloProvider client={globals.client}>
         <Rehydrated>
-          <View style={{flex:1}}>
+          <View style={globals.style.view}>
             <View style={globals.style.fullscreen} ref="view" onLayout={()=>this.setState({ viewRef: findNodeHandle(this.refs.view) })}>
               <Root screenProps={propsToPass}/>
               <Signin open={()=>this.setOpened(0)} user={this.state.user}/>
