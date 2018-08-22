@@ -90,10 +90,3 @@ export default class BarHop extends React.Component {
     );
   }
 }
-
-const style = StyleSheet.create({
-  barHop: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  }
-});

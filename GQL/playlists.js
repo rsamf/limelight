@@ -1,6 +1,5 @@
 import { graphql, compose } from 'react-apollo';
 import GetPlaylistsById from './queries/GetPlaylistsById';
-import playlist from './playlist';
 
 export default (Component) => compose(
   graphql(GetPlaylistsById, {

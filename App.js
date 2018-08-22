@@ -14,11 +14,9 @@ import PlaylistOptions from './components/blurs/playlistOptions';
 import StoredPlaylist from './components/helpers/StoredPlaylist';
 const localPlaylists = new StoredPlaylist();
 
-
 // AppSync
 import { Rehydrated } from 'aws-appsync-react';
 import { ApolloProvider } from 'react-apollo';
-
 
 const Root = createStackNavigator({
   BarNavigator: {

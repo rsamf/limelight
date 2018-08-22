@@ -1,10 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { Icon, Button, Avatar } from 'react-native-elements';
+import { View, StyleSheet} from 'react-native';
+import { Icon, Avatar } from 'react-native-elements';
 import Spotify from 'rn-spotify-sdk';
-import Shade from '../helpers/shade';
 import globals from '../helpers';
-import BlurView from 'react-native-blur';
 
 export default class extends React.Component {
 
@@ -24,15 +22,22 @@ export default class extends React.Component {
   }
 
   renderLoggedIn(){
-    let user = this.props.user;
-    return(
-      <Avatar
-        medium rounded
-        source={{uri: user.images[0].url}}
-        onPress={() => this.props.open()}
-        activeOpacity={0.7}
-      />
-    );
+    let images = this.props.user.images;
+    if(images[0] && images[0].url) {
+      return(
+        <Avatar
+          medium rounded
+          source={{uri: images[0] && images[0].url}}
+          onPress={() => this.props.open()}
+          activeOpacity={0.7}
+        />
+      );
+    } else {
+      return(
+        <Icon size={40} type="font-awesome" name="user-circle" 
+        color={globals.sWhite} underlayColor={globals.sBlack} onPress={()=>Spotify.login()}/>
+      );
+    }
   }
   render(){
     return (
