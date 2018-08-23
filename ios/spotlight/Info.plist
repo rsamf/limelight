@@ -29,13 +29,7 @@
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
-		<dict>
-			<key>localhost</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
-		</dict>
+		<dict/>
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>This app does not use NSAppleMusicUsageDescription</string>
@@ -46,7 +40,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Hi, there! I want to borrow access to your camera for just a bit, so I can scan that QR thingy over there.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Location not used</string>
 	<key>NSMotionUsageDescription</key>
 	<string>This app does not use NSMotionUsageDescription</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
