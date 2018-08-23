@@ -1,23 +1,44 @@
 import React from 'react';
-import { View, StyleSheet} from 'react-native';
+import { View, Alert } from 'react-native';
 import { Icon, Avatar } from 'react-native-elements';
 import Spotify from 'rn-spotify-sdk';
 import globals from '../helpers';
+const noPremiumMessage = "Make sure this is a Spotify Premium account. Hosting a playlist through Spotlight requires a Spotify Premium account";
 
 export default class extends React.Component {
-
   constructor(props){
     super(props);
 
     this.state = {
-      opened: false
+      opened: false,
+      loggingIn: false
     };
+  }
+
+  componentWillReceiveProps() {
+    if(this.state.loggingIn) {
+      Spotify.getMe().catch(() => {
+        Alert.alert("Login Error", noPremiumMessage, [{
+          text: 'Ok'
+        }]);
+      });
+      this.setState({
+        loggingIn: false
+      });
+    }
+  }
+
+  login() {
+    this.setState({
+      loggingIn: true
+    });
+    Spotify.login();
   }
 
   renderNotLoggedIn(){
     return(
       <Icon size={40} type="font-awesome" name="user" 
-      color={globals.sWhite} underlayColor={globals.sBlack} onPress={()=>Spotify.login()}/>
+      color={globals.sWhite} underlayColor={globals.sBlack} onPress={()=>this.login()}/>
     );
   }
 
@@ -35,7 +56,7 @@ export default class extends React.Component {
     } else {
       return(
         <Icon size={40} type="font-awesome" name="user-circle" 
-        color={globals.sWhite} underlayColor={globals.sBlack} onPress={()=>Spotify.login()}/>
+        color={globals.sWhite} underlayColor={globals.sBlack} onPress={()=>this.login()}/>
       );
     }
   }
