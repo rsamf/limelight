@@ -3,6 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import globals from '../helpers';
 import { Button } from 'react-native-elements';
 import QRCodeScanner from 'react-native-qrcode-scanner';
+import Spotify from 'rn-spotify-sdk';
 
 const qrIcon={
   name: "qrcode",
@@ -13,7 +14,7 @@ const codeIcon = {
   type: "font-awesome"
 };
 const hostIcon = {
-  name: "spotify",
+  name: "music",
   type: "font-awesome"
 };
 
@@ -50,14 +51,14 @@ export default class BarHop extends React.Component {
           {
             this.state.qrInputActive ?
             this.renderQRScanner() :
-            <Button style={globals.style.button} large raised backgroundColor={globals.sGrey} 
+            <Button buttonStyle={style.button} backgroundColor={globals.sBlue} 
             title="Join with QR Code" rightIcon={qrIcon} textStyle={globals.style.text} onPress={()=>this.openQRScanner()}/>
           }
         
-          <Button style={globals.style.button} large raised backgroundColor={globals.sGrey} 
+          <Button buttonStyle={style.button} backgroundColor={globals.sBlue} 
           title="Join with ID" rightIcon={codeIcon} textStyle={globals.style.text} onPress={()=>this.openJoinBlur()}/>
 
-          <Button style={globals.style.button} large raised backgroundColor={globals.sGreen} 
+          <Button buttonStyle={style.button} backgroundColor={Spotify.isLoggedIn() ? globals.sGreen : globals.sGrey} 
           title="Host Playlist" rightIcon={hostIcon} textStyle={globals.style.text}
           onPress={()=>this.openHostBlur()}/>
         </View>
@@ -96,5 +97,10 @@ const style = StyleSheet.create({
     ...globals.style.view,
     ...globals.style.fullscreen,
     ...globals.style.center
+  },
+  button: {
+    borderRadius: 5,
+    borderWidth: 0,
+    marginTop: 20
   }
 });

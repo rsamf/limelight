@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, ProgressViewIOS, Image } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { View, Text, StyleSheet, ProgressViewIOS, Image, TouchableOpacity, Linking, Alert } from 'react-native';
+import { Icon, Button } from 'react-native-elements';
+import Modal from "react-native-modal";
 import Spotify from 'rn-spotify-sdk';
 import globals from '../helpers';
 import MusicControl from './ios-music-control';
@@ -10,6 +11,7 @@ export default class extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      modalActive: false,
       track: {
         position: 0,
         playing: false,
@@ -45,6 +47,13 @@ export default class extends React.Component {
           this.next();
         }
       }
+    }).catch(() => {
+      this.setState({
+        track: {
+          ...this.state.track,
+          playing: false
+        }
+      });
     });
   }
 
@@ -137,10 +146,13 @@ export default class extends React.Component {
   renderForGuest(song){
     return (
       <View style={style.view}>
+        <TouchableOpacity style={style.spotifyIcon} onPress={()=>this.setState({modalActive:true})}>
+          <Icon color={globals.sWhite} name="spotify" type="font-awesome"/>
+        </TouchableOpacity>
         <Text style={style.text}>Currently Playing:</Text>
         <View style={style.title}>
           <Image style={style.image} source={{uri:song.image}}/>
-          <Text ellipsizeMode={'middle'} numberOfLines={1} style={style.text}>{song.artist} - {song.name}</Text>
+          <Text ellipsizeMode="middle" numberOfLines={1} style={style.text}>{song.artist} - {song.name}</Text>
         </View>
       </View>
     );
@@ -149,9 +161,12 @@ export default class extends React.Component {
   renderForHost(song){
     return (
       <View style={style.view}>
+        <TouchableOpacity style={style.spotifyIcon} onPress={()=>this.setState({modalActive:true})}>
+          <Icon color={globals.sWhite} name="spotify" type="font-awesome"/>
+        </TouchableOpacity>
         <View style={style.title}>
           <Image style={style.image} source={{uri:song.image}}/>
-          <Text ellipsizeMode={'middle'} numberOfLines={1} style={style.text}>{song.artist} - {song.name}</Text>
+          <Text ellipsizeMode="middle" numberOfLines={1} style={style.text}>{song.artist} - {song.name}</Text>
         </View>
         <View style={style.control}>
           <Icon onPress={()=>this.seekStart()} iconStyle={style.controlItem} underlayColor={globals.sBlack}
@@ -176,16 +191,59 @@ export default class extends React.Component {
   render(){
     const song = this.props.children;
     if(song) {
-      if(this.props.owned) {
-        return this.renderForHost(song);
-      }
-      return this.renderForGuest(song);
+      return (
+        <View>
+          <Modal isVisible={this.state.modalActive}>
+            <View style={style.modalView}>
+              <Text style={style.modalText}>See this song in Spotify?</Text>
+              <View style={style.control}>
+                <Button onPress={()=>this.visitSong()} title="Yes" backgroundColor={globals.spotifyGreen}
+                icon={{name:"spotify", type:"font-awesome"}}/>
+                <Button onPress={()=>this.setState({modalActive:false})} title="Cancel"/>
+              </View>
+            </View>
+          </Modal>
+          {
+            this.props.owned ?
+            this.renderForHost(song) :
+            this.renderForGuest(song)
+          }
+        </View>
+      );
     }
     return this.renderNotLive();
+  }
+
+  visitSong() {
+    let url = "https://open.spotify.com/track/"+this.props.children.id;
+    Linking.canOpenURL(url).then(supported => {
+      if (!supported) {
+        Alert.alert("Could not open the link to the song!");
+      } else {
+        Linking.openURL(url);
+      }
+    });
   }
 }
 
 const style = StyleSheet.create({
+  spotifyIcon: {
+    padding: 15,
+    position: "absolute",
+    right: 0,
+    top: 0
+  },
+  modalView: {
+    flex: 1, 
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    backgroundColor: globals.sWhite
+  },
+  modalText: {
+    ...globals.style.text,
+    color: globals.sBlack
+  },
   view: {
     padding: 20,
     backgroundColor: globals.sBlack,

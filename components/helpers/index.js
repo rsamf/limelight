@@ -13,7 +13,8 @@ const sBlue = '#43e5f8'//'#84bd00',
       sBlack = '#000000',
       sGrey = '#828282',
       sSand = '#ecebe8',
-      sWhite = '#ffffff';
+      sWhite = '#ffffff',
+      spotifyGreen = "#1DB954";
 
 const style = StyleSheet.create({
   view: {
@@ -136,6 +137,7 @@ const globals = {
   sGrey,
   sSand,
   sWhite,
+  spotifyGreen,
   Loader,
   client,
   getSongData,

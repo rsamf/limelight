@@ -12,13 +12,12 @@
 		00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
 		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
-		00E356F31AD99517003FC87E /* spotlightTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* spotlightTests.m */; };
+		00E356F31AD99517003FC87E /* limelightTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* limelightTests.m */; };
 		0B1A32807FFE4096BF8CAA41 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E6E5938CF6934F35BC97A24A /* EvilIcons.ttf */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1409DFD1F40D4387A62028E1 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 50E170AF4DF345A496C16C41 /* SimpleLineIcons.ttf */; };
@@ -29,6 +28,8 @@
 		223B96EA20FBE45E006CAC33 /* SpotifyAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223B96E720FBE45E006CAC33 /* SpotifyAuthentication.framework */; };
 		223B96EB20FBE45E006CAC33 /* SpotifyAudioPlayback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223B96E820FBE45E006CAC33 /* SpotifyAudioPlayback.framework */; };
 		223B96EC20FBE45E006CAC33 /* SpotifyMetadata.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223B96E920FBE45E006CAC33 /* SpotifyMetadata.framework */; };
+		2258D43F212F6DAB0064F60A /* Spotify_Logo_RGB_Green.png in Resources */ = {isa = PBXBuildFile; fileRef = 2258D43E212F6DAB0064F60A /* Spotify_Logo_RGB_Green.png */; };
+		2258D4FE212FA33E0064F60A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2258D4FC212FA33E0064F60A /* LaunchScreen.xib */; };
 		2298F0472123CDE400901262 /* iTunesArtwork@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2298F01A2123CDE400901262 /* iTunesArtwork@1x.png */; };
 		263FA745458442E1A42B9D2B /* libMusicControl-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EEDDC9A8F4724657A3E7EA15 /* libMusicControl-tvOS.a */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -42,7 +43,7 @@
 		2D02E4C71E0B4AEC006451C7 /* libRCTText-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E941DF850E9000B6D8A /* libRCTText-tvOS.a */; };
 		2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E991DF850E9000B6D8A /* libRCTWebSocket-tvOS.a */; };
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
-		2DCD954D1E0B4F2C00145EB5 /* spotlightTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* spotlightTests.m */; };
+		2DCD954D1E0B4F2C00145EB5 /* limelightTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* limelightTests.m */; };
 		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
 		427202C7AC2F453C9A6A8602 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 19F99EFED5D54F4D8006BCF2 /* Ionicons.ttf */; };
 		4DB00197C57C47C5907A0E44 /* libMusicControl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E27934E334C405CB2C81C45 /* libMusicControl.a */; };
@@ -104,7 +105,7 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = spotlight;
+			remoteInfo = limelight;
 		};
 		139105C01AF99BAD00B5F7CC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -195,7 +196,7 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
-			remoteInfo = "spotlight-tvOS";
+			remoteInfo = "limelight-tvOS";
 		};
 		2D16E6711FA4F8DC00B85C8A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -409,32 +410,33 @@
 		00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImage.xcodeproj; path = "../node_modules/react-native/Libraries/Image/RCTImage.xcodeproj"; sourceTree = "<group>"; };
 		00C302D31ABCB9D200DB3ED1 /* RCTNetwork.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTNetwork.xcodeproj; path = "../node_modules/react-native/Libraries/Network/RCTNetwork.xcodeproj"; sourceTree = "<group>"; };
 		00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTVibration.xcodeproj; path = "../node_modules/react-native/Libraries/Vibration/RCTVibration.xcodeproj"; sourceTree = "<group>"; };
-		00E356EE1AD99517003FC87E /* spotlightTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = spotlightTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356EE1AD99517003FC87E /* limelightTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = limelightTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* spotlightTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = spotlightTests.m; sourceTree = "<group>"; };
+		00E356F21AD99517003FC87E /* limelightTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = limelightTests.m; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* spotlight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = spotlight.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = spotlight/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = spotlight/AppDelegate.m; sourceTree = "<group>"; };
-		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = spotlight/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = spotlight/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = spotlight/main.m; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* limelight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = limelight.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = limelight/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = limelight/AppDelegate.m; sourceTree = "<group>"; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = limelight/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = limelight/Info.plist; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = limelight/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		19F99EFED5D54F4D8006BCF2 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		1CA8CA2D5B214F6EAFE34E91 /* libRNBlur.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBlur.a; sourceTree = "<group>"; };
 		223B96E720FBE45E006CAC33 /* SpotifyAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyAuthentication.framework; path = "../node_modules/rn-spotify-sdk/ios/external/SpotifySDK/SpotifyAuthentication.framework"; sourceTree = "<group>"; };
 		223B96E820FBE45E006CAC33 /* SpotifyAudioPlayback.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyAudioPlayback.framework; path = "../node_modules/rn-spotify-sdk/ios/external/SpotifySDK/SpotifyAudioPlayback.framework"; sourceTree = "<group>"; };
 		223B96E920FBE45E006CAC33 /* SpotifyMetadata.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyMetadata.framework; path = "../node_modules/rn-spotify-sdk/ios/external/SpotifySDK/SpotifyMetadata.framework"; sourceTree = "<group>"; };
+		2258D43E212F6DAB0064F60A /* Spotify_Logo_RGB_Green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Spotify_Logo_RGB_Green.png; sourceTree = "<group>"; };
+		2258D4FD212FA33E0064F60A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		2298F01A2123CDE400901262 /* iTunesArtwork@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@1x.png"; sourceTree = "<group>"; };
-		22C2BCBD2101594F004DFB30 /* spotlight.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = spotlight.entitlements; path = spotlight/spotlight.entitlements; sourceTree = "<group>"; };
+		22C2BCBD2101594F004DFB30 /* limelight.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = limelight.entitlements; path = limelight/limelight.entitlements; sourceTree = "<group>"; };
 		24FD0D7A60E14DB8909959BC /* libRNCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCamera.a; sourceTree = "<group>"; };
 		2580A20E30B349C2B20F59F8 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		258458CC13F14390A1E581CF /* RNBlur.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBlur.xcodeproj; path = "../node_modules/react-native-blur/ios/RNBlur.xcodeproj"; sourceTree = "<group>"; };
 		2B2A75BBCE874398BB43A7D1 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
-		2D02E47B1E0B4A5D006451C7 /* spotlight-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "spotlight-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D02E4901E0B4A5D006451C7 /* spotlight-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "spotlight-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D02E47B1E0B4A5D006451C7 /* limelight-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "limelight-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D02E4901E0B4A5D006451C7 /* limelight-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "limelight-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E27934E334C405CB2C81C45 /* libMusicControl.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libMusicControl.a; sourceTree = "<group>"; };
 		44CCD3132AE2499E971A95E7 /* libReactNativePermissions.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativePermissions.a; sourceTree = "<group>"; };
@@ -570,13 +572,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		00E356EF1AD99517003FC87E /* spotlightTests */ = {
+		00E356EF1AD99517003FC87E /* limelightTests */ = {
 			isa = PBXGroup;
 			children = (
-				00E356F21AD99517003FC87E /* spotlightTests.m */,
+				00E356F21AD99517003FC87E /* limelightTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
-			path = spotlightTests;
+			path = limelightTests;
 			sourceTree = "<group>";
 		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
@@ -607,20 +609,21 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* spotlight */ = {
+		13B07FAE1A68108700A75B9A /* limelight */ = {
 			isa = PBXGroup;
 			children = (
-				22C2BCBD2101594F004DFB30 /* spotlight.entitlements */,
+				22C2BCBD2101594F004DFB30 /* limelight.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
+				2258D4FB212FA33E0064F60A /* Base.lproj */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				2258D43E212F6DAB0064F60A /* Spotify_Logo_RGB_Green.png */,
 				2298F01A2123CDE400901262 /* iTunesArtwork@1x.png */,
 			);
-			name = spotlight;
+			name = limelight;
 			sourceTree = "<group>";
 		};
 		146834001AC3E56700842450 /* Products */ = {
@@ -708,6 +711,15 @@
 				223B972620FC0C21006CAC33 /* libRNVectorIcons.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		2258D4FB212FA33E0064F60A /* Base.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				2258D4FC212FA33E0064F60A /* LaunchScreen.xib */,
+			);
+			name = Base.lproj;
+			path = limelight/Base.lproj;
 			sourceTree = "<group>";
 		};
 		22C0F7922127A06800E828DB /* Products */ = {
@@ -804,9 +816,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				13B07FAE1A68108700A75B9A /* spotlight */,
+				13B07FAE1A68108700A75B9A /* limelight */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* spotlightTests */,
+				00E356EF1AD99517003FC87E /* limelightTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				223B96B720FBE3ED006CAC33 /* Recovered References */,
@@ -820,10 +832,10 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* spotlight.app */,
-				00E356EE1AD99517003FC87E /* spotlightTests.xctest */,
-				2D02E47B1E0B4A5D006451C7 /* spotlight-tvOS.app */,
-				2D02E4901E0B4A5D006451C7 /* spotlight-tvOSTests.xctest */,
+				13B07F961A680F5B00A75B9A /* limelight.app */,
+				00E356EE1AD99517003FC87E /* limelightTests.xctest */,
+				2D02E47B1E0B4A5D006451C7 /* limelight-tvOS.app */,
+				2D02E4901E0B4A5D006451C7 /* limelight-tvOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -840,9 +852,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* spotlightTests */ = {
+		00E356ED1AD99517003FC87E /* limelightTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "spotlightTests" */;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "limelightTests" */;
 			buildPhases = (
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
@@ -853,14 +865,14 @@
 			dependencies = (
 				00E356F51AD99517003FC87E /* PBXTargetDependency */,
 			);
-			name = spotlightTests;
-			productName = spotlightTests;
-			productReference = 00E356EE1AD99517003FC87E /* spotlightTests.xctest */;
+			name = limelightTests;
+			productName = limelightTests;
+			productReference = 00E356EE1AD99517003FC87E /* limelightTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* spotlight */ = {
+		13B07F861A680F5B00A75B9A /* limelight */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "spotlight" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "limelight" */;
 			buildPhases = (
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
@@ -871,14 +883,14 @@
 			);
 			dependencies = (
 			);
-			name = spotlight;
+			name = limelight;
 			productName = "Hello World";
-			productReference = 13B07F961A680F5B00A75B9A /* spotlight.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* limelight.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E47A1E0B4A5D006451C7 /* spotlight-tvOS */ = {
+		2D02E47A1E0B4A5D006451C7 /* limelight-tvOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "spotlight-tvOS" */;
+			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "limelight-tvOS" */;
 			buildPhases = (
 				2D02E4771E0B4A5D006451C7 /* Sources */,
 				2D02E4781E0B4A5D006451C7 /* Frameworks */,
@@ -889,14 +901,14 @@
 			);
 			dependencies = (
 			);
-			name = "spotlight-tvOS";
-			productName = "spotlight-tvOS";
-			productReference = 2D02E47B1E0B4A5D006451C7 /* spotlight-tvOS.app */;
+			name = "limelight-tvOS";
+			productName = "limelight-tvOS";
+			productReference = 2D02E47B1E0B4A5D006451C7 /* limelight-tvOS.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E48F1E0B4A5D006451C7 /* spotlight-tvOSTests */ = {
+		2D02E48F1E0B4A5D006451C7 /* limelight-tvOSTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "spotlight-tvOSTests" */;
+			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "limelight-tvOSTests" */;
 			buildPhases = (
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
 				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
@@ -907,9 +919,9 @@
 			dependencies = (
 				2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */,
 			);
-			name = "spotlight-tvOSTests";
-			productName = "spotlight-tvOSTests";
-			productReference = 2D02E4901E0B4A5D006451C7 /* spotlight-tvOSTests.xctest */;
+			name = "limelight-tvOSTests";
+			productName = "limelight-tvOSTests";
+			productReference = 2D02E4901E0B4A5D006451C7 /* limelight-tvOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -948,7 +960,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "spotlight" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "limelight" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -1039,10 +1051,10 @@
 			);
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* spotlight */,
-				00E356ED1AD99517003FC87E /* spotlightTests */,
-				2D02E47A1E0B4A5D006451C7 /* spotlight-tvOS */,
-				2D02E48F1E0B4A5D006451C7 /* spotlight-tvOSTests */,
+				13B07F861A680F5B00A75B9A /* limelight */,
+				00E356ED1AD99517003FC87E /* limelightTests */,
+				2D02E47A1E0B4A5D006451C7 /* limelight-tvOS */,
+				2D02E48F1E0B4A5D006451C7 /* limelight-tvOSTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1385,7 +1397,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				7D12F5C63450437C890D42EC /* Entypo.ttf in Resources */,
 				0B1A32807FFE4096BF8CAA41 /* EvilIcons.ttf in Resources */,
 				D42E9E1A9F474C62A9F049D3 /* Feather.ttf in Resources */,
@@ -1395,6 +1406,8 @@
 				4EF040DE9CA54B13891EA23C /* MaterialCommunityIcons.ttf in Resources */,
 				72B2DE7ED46F48B381E363D1 /* MaterialIcons.ttf in Resources */,
 				2298F0472123CDE400901262 /* iTunesArtwork@1x.png in Resources */,
+				2258D43F212F6DAB0064F60A /* Spotify_Logo_RGB_Green.png in Resources */,
+				2258D4FE212FA33E0064F60A /* LaunchScreen.xib in Resources */,
 				C1E3B00984204B4DAC61A30A /* Octicons.ttf in Resources */,
 				1409DFD1F40D4387A62028E1 /* SimpleLineIcons.ttf in Resources */,
 				15FB8DB5B39C413E9465C985 /* Zocial.ttf in Resources */,
@@ -1454,7 +1467,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00E356F31AD99517003FC87E /* spotlightTests.m in Sources */,
+				00E356F31AD99517003FC87E /* limelightTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1480,7 +1493,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DCD954D1E0B4F2C00145EB5 /* spotlightTests.m in Sources */,
+				2DCD954D1E0B4F2C00145EB5 /* limelightTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1489,24 +1502,23 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* spotlight */;
+			target = 13B07F861A680F5B00A75B9A /* limelight */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 		2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2D02E47A1E0B4A5D006451C7 /* spotlight-tvOS */;
+			target = 2D02E47A1E0B4A5D006451C7 /* limelight-tvOS */;
 			targetProxy = 2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		13B07FB11A68108700A75B9A /* LaunchScreen.xib */ = {
+		2258D4FC212FA33E0064F60A /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				13B07FB21A68108700A75B9A /* Base */,
+				2258D4FD212FA33E0064F60A /* Base */,
 			);
 			name = LaunchScreen.xib;
-			path = spotlight;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1530,7 +1542,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-music-control/ios",
 				);
-				INFOPLIST_FILE = spotlightTests/Info.plist;
+				INFOPLIST_FILE = limelightTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -1549,7 +1561,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/spotlight.app/spotlight";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/limelight.app/limelight";
 			};
 			name = Debug;
 		};
@@ -1568,7 +1580,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-music-control/ios",
 				);
-				INFOPLIST_FILE = spotlightTests/Info.plist;
+				INFOPLIST_FILE = limelightTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -1587,7 +1599,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/spotlight.app/spotlight";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/limelight.app/limelight";
 			};
 			name = Release;
 		};
@@ -1595,8 +1607,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = spotlight/spotlight.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_ENTITLEMENTS = limelight/limelight.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
@@ -1612,7 +1624,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-music-control/ios",
 				);
-				INFOPLIST_FILE = spotlight/Info.plist;
+				INFOPLIST_FILE = limelight/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -1621,7 +1633,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.richard.franklin.spotlight;
-				PRODUCT_NAME = spotlight;
+				PRODUCT_NAME = limelight;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1633,8 +1645,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = spotlight/spotlight.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_ENTITLEMENTS = limelight/limelight.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 8CSA2CLT9T;
@@ -1649,7 +1661,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-music-control/ios",
 				);
-				INFOPLIST_FILE = spotlight/Info.plist;
+				INFOPLIST_FILE = limelight/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -1658,7 +1670,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.richard.franklin.spotlight;
-				PRODUCT_NAME = spotlight;
+				PRODUCT_NAME = limelight;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1687,7 +1699,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-music-control/ios",
 				);
-				INFOPLIST_FILE = "spotlight-tvOS/Info.plist";
+				INFOPLIST_FILE = "limelight-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1704,7 +1716,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.richard.franklin.spotlight;
+				PRODUCT_BUNDLE_IDENTIFIER = org.richard.franklin.limelight;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -1734,7 +1746,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-music-control/ios",
 				);
-				INFOPLIST_FILE = "spotlight-tvOS/Info.plist";
+				INFOPLIST_FILE = "limelight-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1751,7 +1763,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.richard.franklin.spotlight;
+				PRODUCT_BUNDLE_IDENTIFIER = org.richard.franklin.limelight;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -1780,7 +1792,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-music-control/ios",
 				);
-				INFOPLIST_FILE = "spotlight-tvOSTests/Info.plist";
+				INFOPLIST_FILE = "limelight-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1797,10 +1809,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.spotlight-tvOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.limelight-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/spotlight-tvOS.app/spotlight-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/limelight-tvOS.app/limelight-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Debug;
@@ -1826,7 +1838,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-music-control/ios",
 				);
-				INFOPLIST_FILE = "spotlight-tvOSTests/Info.plist";
+				INFOPLIST_FILE = "limelight-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1843,10 +1855,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.spotlight-tvOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.limelight-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/spotlight-tvOS.app/spotlight-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/limelight-tvOS.app/limelight-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Release;
@@ -1932,7 +1944,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "spotlightTests" */ = {
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "limelightTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
@@ -1941,7 +1953,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "spotlight" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "limelight" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -1950,7 +1962,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "spotlight-tvOS" */ = {
+		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "limelight-tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4971E0B4A5E006451C7 /* Debug */,
@@ -1959,7 +1971,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "spotlight-tvOSTests" */ = {
+		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "limelight-tvOSTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4991E0B4A5E006451C7 /* Debug */,
@@ -1968,7 +1980,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "spotlight" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "limelight" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, Text, StyleSheet, View, Image, TouchableOpacity } from 'react-native';
+import { FlatList, Text, StyleSheet, View, Image, TouchableOpacity, Linking, Alert } from 'react-native';
 import Modal from "react-native-modal";
 import { Icon, Button } from 'react-native-elements';
 import globals from '../helpers';
@@ -11,27 +11,20 @@ export default class extends React.Component {
 
     this.state = {
       addingSong: false,
-      deletingSong: null
+      viewingSong: null
     };
   }
 
   eachSong(song, i) {
-    const renderSong = () => {
-      return (
+    return (
+      <TouchableOpacity onLongPress={()=>this.setState({viewingSong:song})}>
         <View style={style.song}>
           <Icon iconStyle={style.voteIcon} type="entypo" name="chevron-with-circle-up" color={song.voted ? globals.sGreen : globals.sGrey} underlayColor={globals.sBlack} onPress={()=>this.props.vote(song, i)}/>
           <Text style={{...style.voteText, ...globals.style.smallText, color: song.voted ? globals.sGreen : globals.sGrey}}>{song.votes}</Text>
           <Image style={style.image} source={{uri:song.image}}/>
           <Text style={{...style.songDescription, ...globals.style.smallText}}>{song.artist} - {song.name}</Text>
         </View>
-      );
-    }
-    return (
-      this.props.owned ?
-      <TouchableOpacity onLongPress={()=>this.setState({deletingSong:song})}>
-        {renderSong()}
-      </TouchableOpacity> :
-      renderSong()
+      </TouchableOpacity>
     );
   }
 
@@ -46,9 +39,23 @@ export default class extends React.Component {
   }
 
   deleteSong() {
-    this.props.deleteSong(this.state.deletingSong.id);
+    this.props.deleteSong(this.state.viewingSong.id);
     this.setState({
-      deletingSong: null
+      viewingSong: null
+    });
+  }
+
+  visitSong() {
+    let url = "https://open.spotify.com/track/"+this.state.viewingSong.id;
+    Linking.canOpenURL(url).then(supported => {
+      if (!supported) {
+        Alert.alert("Could not open the link to the song!");
+      } else {
+        Linking.openURL(url);
+      }
+      this.setState({
+        viewingSong: null
+      });
     });
   }
 
@@ -56,15 +63,23 @@ export default class extends React.Component {
     const songs = this.props.children;
     return (
       <View style={style.view}>
-        <Modal isVisible={this.state.deletingSong !== null}>
-          <View style={style.deleteView}>
-            <Text style={style.deleteConfirmation}>Delete "{this.state.deletingSong && this.state.deletingSong.name}" from your playlist?</Text>
-            <View style={style.deleteOptions}>
-              <Button onPress={()=>this.deleteSong()} title="Delete" backgroundColor={'red'}/>
-              <Button onPress={()=>this.setState({deletingSong:null})} title="Cancel"/>
+        {
+          this.state.viewingSong &&
+          <Modal isVisible={true}>
+            <View style={style.modalView}>
+              <Text style={style.modalText}>{this.state.viewingSong.name} - {this.state.viewingSong.artist}</Text>
+              <View style={style.modalOptions}>
+                {
+                  this.props.owned &&
+                  <Button onPress={()=>this.deleteSong()} title="Delete" backgroundColor="red"/>
+                }
+                <Button onPress={()=>this.visitSong(this.state.viewingSong.id)} title="Spotify" backgroundColor={globals.spotifyGreen}
+                 icon={{name:"spotify", type:"font-awesome"}}/>
+                <Button onPress={()=>this.setState({viewingSong:null})} title="Cancel"/>
+              </View>
             </View>
-          </View>
-        </Modal>
+          </Modal>
+        }
         <View style={style.view}>
           <FlatList data={songs} keyExtractor={(item, index)=>String(index)} renderItem={({item, index})=>this.eachSong(item, index)}>
           </FlatList>
@@ -92,8 +107,6 @@ const style = StyleSheet.create({
     marginRight: 5,
     alignItems: 'center'
   },
-  songDescription: {
-  },
   voteIcon: {
     marginRight: 5
   },
@@ -110,19 +123,19 @@ const style = StyleSheet.create({
     width: 30,
     marginRight: 7
   },
-  deleteOptions: {
+  modalOptions: {
     marginTop: 20,
     flexDirection: 'row'
   },
-  deleteView: {
+  modalView: {
     flex: 1, 
     alignItems: 'center',
     justifyContent: 'center',
     padding: 10,
     backgroundColor: globals.sWhite
   },
-  deleteConfirmation: {
-    ...globals.style.text,
+  modalText: {
+    ...globals.style.smallText,
     color: globals.sBlack
   }
 });
