@@ -15,49 +15,14 @@ export default class Profile extends React.Component {
     };
   }
 
-  addPlaylist(id) {
-    this.props.localPlaylists.add(id, () => {
-      this.props.close();
-      this.props.navigation.navigate('BarList');
-    });
-  }
 
-  searchPlaylists() {
-    globals.client.query({
-      query: GetPlaylistsByCode,
-      variables: {
-        shortCode: this.state.input
-      }
-    }).then(({data: {getPlaylistsByCode:{playlists}}})=>{
-      this.setState({
-        searchedPlaylists: playlists
-      });
-    });
-  }
-
-  eachPlaylist(playlist, i) {
-    return (
-      <TouchableOpacity style={style.playlist} onPress={()=>this.addPlaylist(playlist.id)}>
-        <Image style={style.playlistImage} source={{uri:playlist.image}}/>
-        <Text style={globals.style.smallText}> {playlist.playlistName}</Text>
-        <Text style={globals.style.smallText}> {playlist.ownerName}</Text>
-      </TouchableOpacity>
-    );
-  }
 
   render(){
     return (
       <View style={globals.style.fullscreen}>
         <BlurView style={globals.style.fullscreen} viewRef={this.props.viewRef} blurType="dark" blurAmount={3}/>
         <View style={style.view}>
-          <View style={style.inputContainer}>
-            <TextInput style={globals.style.textInput} placeholder="Code" onChangeText={(input) => this.setState({input})}
-            blurOnSubmit={true} enablesReturnKeyAutomatically={true} onSubmitEditing={()=>this.searchPlaylists()}
-            autoCapitalize="none" spellCheck={false}>
-            </TextInput>
-          </View>
-          <FlatList data={this.state.searchedPlaylists} keyExtractor={(item, index)=>String(index)} renderItem={({item, index})=>this.eachPlaylist(item, index)}>
-          </FlatList>
+
           <View style={style.cancel}>
             <Button title="Cancel" onPress={()=>this.props.close()}></Button>
           </View>
@@ -77,21 +42,7 @@ const style = StyleSheet.create({
     ...globals.style.fullscreen,
     paddingTop: 50
   },
-  playlist: {
-    paddingTop: 20,
-    paddingBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: globals.sGrey,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginLeft: 20,
-    marginRight: 20
-  },
-  playlistImage: {
-    width: 50,
-    height: 50
-  },
+
   inputContainer: {
     flexDirection: 'row',
     justifyContent: 'center'

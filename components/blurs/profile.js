@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import { Icon, Avatar, Button } from 'react-native-elements';
-import { BlurView } from 'react-native-blur';
+import { View, StyleSheet, Text } from 'react-native';
+import { Avatar, Button } from 'react-native-elements';
 import Spotify from 'rn-spotify-sdk';
 import globals from '../helpers';
 
@@ -10,35 +9,38 @@ export default class Profile extends React.Component {
     super(props);
   }
 
+
   render(){
-    let user = this.props.user;
     return (
-      <View style={globals.style.fullscreen}>
-        <BlurView style={globals.style.fullscreen} viewRef={this.props.viewRef} blurType="dark" blurAmount={3}/>
-        <View style={style.view}>
-          <View style={style.item}>
-            <Avatar style={style.innerItem}
-              large rounded
-              source={{uri: user.images[0].url}}
-            />
-            <Text style={{...globals.style.text, ...style.innerItem}}>{user.display_name}</Text>
-          </View>
-          <Button style={style.item} onPress={()=>{Spotify.logout();this.props.close();}} title="Logout"/>
-        </View>
-        <TouchableOpacity style={style.cancel} onPress={()=>this.props.close()}>
-          <Icon size={30} color={globals.sWhite} name="x" type="feather"/>
-        </TouchableOpacity>
+      <View style={style.view}>
+
       </View>
+    );
+  }
+
+  renderSelected() {
+    const user = this.props.user;
+    return (
+      user ?
+      <View>
+        <View style={style.item}>
+          <Avatar style={style.innerItem}
+            large rounded
+            source={{uri: user.images[0].url}}
+          />
+          <Text style={{...globals.style.text, ...style.innerItem}}>{user.display_name}</Text>
+        </View>
+        <Button style={style.item} onPress={()=>{Spotify.logout();this.close();}} title="Logout"/>
+      </View>  
+      :
+      <View>
+        <Text>Not logged in</Text>
+      </View>    
     );
   }
 }
 
 const style = StyleSheet.create({
-  cancel: {
-    position: 'absolute',
-    top: 20,
-    left: 20
-  },
   view: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -52,10 +54,14 @@ const style = StyleSheet.create({
   innerItem: {
     margin: 10
   },
-  title: {
-    marginBottom: 40
+  buttonContainer: {
+    backgroundColor: 'rgba(33,33,33,.3)',
+    height: 50
   },
-  delete: {
-    marginTop: 40
+  text: {
+    color: globals.sWhite,
+  },
+  button: {
+    padding: 10
   }
 });

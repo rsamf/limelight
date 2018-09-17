@@ -1,17 +1,13 @@
 import { createStackNavigator } from 'react-navigation';
 import { AppRegistry, Alert, View, findNodeHandle } from 'react-native';
-import BarNavigator from './components/barNavigator';
+import BarList from './components/barNavigator/barList';
 import Bar from './components/bar';
 import Spotify from 'rn-spotify-sdk';
 import React from 'react';
-import Signin from './components/helpers/signin';
 import globals from './components/helpers';
-import Profile from './components/blurs/profile';
-import HostPlaylist from './components/blurs/hostPlaylist';
-import JoinPlaylist from './components/blurs/joinPlaylist';
-import AddSong from './components/blurs/addSong';
-import PlaylistOptions from './components/blurs/playlistOptions';
 import StoredPlaylist from './components/helpers/StoredPlaylist';
+import Blur from './components/blurs/blur';
+import ProfileBlur from './components/blurs/profile';
 const localPlaylists = new StoredPlaylist();
 
 // AppSync
@@ -19,14 +15,14 @@ import { Rehydrated } from 'aws-appsync-react';
 import { ApolloProvider } from 'react-apollo';
 
 const Root = createStackNavigator({
-  BarNavigator: {
-    screen: BarNavigator
+  BarList: {
+    screen: BarList
   },
   Bar: {
     screen: Bar
   }
 }, {
-  initialRouteName: 'BarNavigator',
+  initialRouteName: 'BarList',
   headerMode: 'none',
   gesturesEnabled: false
 });
@@ -37,23 +33,31 @@ export default class App extends React.Component {
     this.state = {
       user: null,
       playlists: null,
-      opened: [false, false, false, false, false],
-      props: {}
+      blur: null,
+      blurProps: {
+        close: ()=>this.setOpenedBlur(null)
+      }
     };
   }
 
+
   getUser(){
+    const setUser = (user) => {
+      this.setState({
+        user,
+        blurProps: {
+          ...this.state.blurProps,
+          user
+        }
+      });
+    }
     Spotify.addListener("login", () => {
       Spotify.getMe().then(user => {
-        this.setState({
-          user: user
-        });
+        setUser(user);
       });
     });
     Spotify.addListener("logout", () => {
-      this.setState({
-        user: null
-      });
+      setUser(null);
     });
   }
 
@@ -64,29 +68,32 @@ export default class App extends React.Component {
           stored: list,
           add: (id, callback) => {
             localPlaylists.push(id, ids => {
-              this.setState({
-                playlists: {
-                  ...this.state.playlists,
-                  stored: ids
-                }
-              });
+              setPlaylists(ids);
               if(callback) callback(ids);
             });
           },
           remove: (id, callback) => {
             localPlaylists.remove(id, ids => {
-              this.setState({
-                playlists: {
-                  ...this.state.playlists,
-                  stored: ids
-                }
-              });
+              setPlaylists(ids);
               if(callback) callback(ids);
             });
           }
         }
       })
     });
+    const setPlaylists = (ids) => {
+      const playlists = {
+        ...this.state.playlists,
+        stored: ids
+      };
+      this.setState({
+        playlists,
+        blurProps: {
+          ...this.state.blurProps,
+          localPlaylists: playlists
+        }
+      });
+    }
   }
 
   componentDidMount(){
@@ -106,12 +113,13 @@ export default class App extends React.Component {
 		}
   }
 
-  setOpened(which, props) {
-    let opened = this.state.opened;
-    opened[which] = !opened[which];
+  setOpenedBlur(blur, props) {
     this.setState({ 
-      opened,
-      props
+      blur,
+      blurProps: {
+        ...props,
+        ...this.state.blurProps
+      }
     });
   }
 
@@ -119,7 +127,8 @@ export default class App extends React.Component {
     let propsToPass = {
       user: this.state.user,
       localPlaylists: this.state.playlists,
-      setOpenedBlur: (i, props) => this.setOpened(i, props),
+      openBlur: (blur, props) => this.setOpenedBlur(blur, props),
+      goToLogin: () => this.setOpenedBlur(ProfileBlur)
     };
     return (
       <ApolloProvider client={globals.client}>
@@ -127,7 +136,6 @@ export default class App extends React.Component {
           <View style={globals.style.view}>
             <View style={globals.style.fullscreen} ref="view" onLayout={()=>this.setState({ viewRef: findNodeHandle(this.refs.view) })}>
               <Root screenProps={propsToPass}/>
-              <Signin open={()=>this.setOpened(0)} user={this.state.user}/>
             </View>
             {this.renderBlurs()}
           </View>
@@ -135,36 +143,19 @@ export default class App extends React.Component {
       </ApolloProvider>
     );
   }
+  
   renderBlurs() {
-    const which = this.state.opened.indexOf(true);
-    const props = {
-      ...this.state.props,
-      viewRef: this.state.viewRef,
-      user: this.state.user,
-      close: ()=>this.setOpened(which),
-      localPlaylists: this.state.playlists
-    };
-    switch(which) {
-      case 0:
-        return (
-          <Profile {...props}/>
-        );
-      case 1: 
-        return (
-          <HostPlaylist {...props}/>
-        );
-      case 2:
-        return (
-          <AddSong {...props}/>
-        );
-      case 3:
-        return (
-          <PlaylistOptions {...props}/>
-        );
-      case 4:
-        return (
-          <JoinPlaylist {...props}/>
-        );
+    const InnerContent = this.state.blur;
+    if(InnerContent) {
+      return (
+        <Blur 
+          viewRef={this.state.viewRef}
+          close={()=>this.setOpenedBlur(null)}
+          goToProfile={()=>this.setOpenedBlur(ProfileBlur)}
+        >
+          <InnerContent {...this.state.blurProps}/>
+        </Blur>
+      );
     }
   }
 }

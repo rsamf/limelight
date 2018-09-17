@@ -16,7 +16,7 @@ export default (Component) => compose(
       if(!props.data.loading) {
         // remove null or undefined playlists
         playlists = playlists.filter(p => p);
-        // also removed them from local storage
+        // also remove them from local storage
         let playlistsIds = playlists.map(p => p.id);
         let localPlaylists = props.ownProps.localPlaylists;
         localPlaylists.stored.forEach(p => {

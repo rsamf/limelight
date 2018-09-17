@@ -1,4 +1,5 @@
-import { StyleSheet, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, TextInput, ActivityIndicator } from 'react-native';
+import { Icon } from 'react-native-elements';
 import React from 'react';
 import * as AWS from 'aws-sdk';
 import { AUTH_TYPE } from "aws-appsync/lib/link/auth-link";
@@ -12,6 +13,7 @@ const sBlue = '#43e5f8'//'#84bd00',
       sGreen = '#04fea6'
       sBlack = '#000000',
       sGrey = '#828282',
+      darkGrey = '#333333',
       sSand = '#ecebe8',
       sWhite = '#ffffff',
       spotifyGreen = "#1DB954";
@@ -24,35 +26,14 @@ const style = StyleSheet.create({
   text: {
     color: sWhite,
     fontFamily: 'Futura',
-    fontSize: 24
+    fontSize: 18
   },
   smallText:{
     color: sSand,
     fontFamily: 'Futura',
-    fontSize: 16
-  },
-  textInput: {
-    backgroundColor: sWhite,
-    fontFamily: 'Futura',
-    fontSize: 24,
-    width: 200,
-    padding: 20
-  },
-  smallTextInput: {
-    backgroundColor: sWhite,
-    fontFamily: 'Futura',
-    fontSize: 16,
-    width: 100,
-    padding: 5
+    fontSize: 12
   },
   textInputFailed: {
-    backgroundColor: sWhite,
-    fontFamily: 'Futura',
-    fontSize: 24,
-    width: 200,
-    borderBottomColor: 'red',
-    borderBottomWidth: 3,
-    padding: 20
   },
   button: {
     margin: 10
@@ -68,9 +49,45 @@ const style = StyleSheet.create({
   center: {
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  centerColumn: {
+    justifyContent: 'center'
+  },
+  centerRow: {
+    alignItems: 'center'
+  },
+  textInputContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  textInput: {
+    fontFamily: 'Futura',
+    fontSize: 18,
+    padding: 10,
+    color: sWhite,
+    borderBottomColor: sWhite,
+    borderBottomWidth: 2,
+    marginLeft: 10,
+    flex: .75
   }
 });
 
+const createSearchTextInput = (onChangeText, onSubmitEditing) => {
+  return () => (
+    <View style={style.textInputContainer}>
+      <Icon type="evilicons" name="search" color={sWhite}/>
+      <TextInput 
+        style={style.textInput} 
+        blurOnSubmit={true} 
+        enablesReturnKeyAutomatically={true} 
+        autoCapitalize="none" 
+        spellCheck={false}
+        onChangeText={onChangeText}
+        onSubmitEditing={onSubmitEditing}
+      />
+    </View>
+  );
+};
 const Loader = () => {
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -135,10 +152,12 @@ const globals = {
   sGreen,
   sBlack,
   sGrey,
+  darkGrey,
   sSand,
   sWhite,
   spotifyGreen,
   Loader,
+  createSearchTextInput,
   client,
   getSongData,
   getSongsDataHTTP,

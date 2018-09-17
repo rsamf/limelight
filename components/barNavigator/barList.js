@@ -3,6 +3,7 @@ import { View, FlatList, StyleSheet, Text, Image, TouchableOpacity } from 'react
 import { Icon } from 'react-native-elements';
 import globals from '../helpers';
 import createPlaylists from '../../GQL/playlists';
+import Header from './header';
 
 const style = StyleSheet.create({
   bar: {
@@ -94,6 +95,7 @@ export default class BarList extends React.Component {
   render(){
     return (
       <View style={globals.style.view}>
+        <Header {...this.props.screenProps}/>
         {this.renderList()}    
       </View>
     );
