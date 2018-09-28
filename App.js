@@ -6,7 +6,7 @@ import Spotify from 'rn-spotify-sdk';
 import React from 'react';
 import globals from './components/helpers';
 import StoredPlaylist from './components/helpers/StoredPlaylist';
-import Blur from './components/blurs/blur';
+import Blur from './components/blurs';
 import ProfileBlur from './components/blurs/profile';
 const localPlaylists = new StoredPlaylist();
 
