@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { Icon, Avatar } from 'react-native-elements';
 import ProfileBlur from '../blurs/profile';
 import BarhopBlur from '../blurs/barHop';
 import globals from '../helpers';
@@ -18,25 +18,26 @@ export default class Header extends React.Component {
   }
 
   renderSignin() {
+    const signinSize = 25;
     if(this.props.user) {
-      let images = this.props.user.images;
+      const image = this.props.user.images[0];
       return (
         <TouchableOpacity onPress={()=>this.props.openBlur(ProfileBlur)}>
         {
-           images[0] && images[0].url ?
-           <Avatar
-             medium rounded
-             source={images[0].url}
-             activeOpacity={0.7}
-           /> :
-           <Icon size={20} type="feather" name="user" color={globals.sWhite} underlayColor={globals.sBlack}/>
+          image && image.url ?
+          <Avatar
+            rounded
+            source={{uri:image.url}}
+            height={signinSize}
+          /> :
+          <Icon size={signinSize} type="feather" name="user" color={globals.sWhite} underlayColor={globals.sBlack}/>
         }
         </TouchableOpacity>
       );
     } else {
       return (
         <TouchableOpacity onPress={()=>Spotify.login()}>
-          <Icon size={20} type="font-awesome" name="user-circle" color={globals.sWhite} underlayColor={globals.sBlack}/>
+          <Icon size={signinSize} type="font-awesome" name="user-circle" color={globals.sWhite} underlayColor={globals.sBlack}/>
         </TouchableOpacity>
       )
     }

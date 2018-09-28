@@ -35,7 +35,8 @@ export default class App extends React.Component {
       playlists: null,
       blur: null,
       blurProps: {
-        close: ()=>this.setOpenedBlur(null)
+        close: ()=>this.setOpenedBlur(null),
+        goToProfile: ()=>this.setOpenedBlur(ProfileBlur)
       }
     };
   }
@@ -62,25 +63,6 @@ export default class App extends React.Component {
   }
 
   getLocalPlaylistsInterface() {
-    localPlaylists.getAll(list => {
-      this.setState({
-        playlists: {
-          stored: list,
-          add: (id, callback) => {
-            localPlaylists.push(id, ids => {
-              setPlaylists(ids);
-              if(callback) callback(ids);
-            });
-          },
-          remove: (id, callback) => {
-            localPlaylists.remove(id, ids => {
-              setPlaylists(ids);
-              if(callback) callback(ids);
-            });
-          }
-        }
-      })
-    });
     const setPlaylists = (ids) => {
       const playlists = {
         ...this.state.playlists,
@@ -94,6 +76,30 @@ export default class App extends React.Component {
         }
       });
     }
+    localPlaylists.getAll(list => {
+      const playlists = {
+        stored: list,
+        add: (id, callback) => {
+          localPlaylists.push(id, ids => {
+            setPlaylists(ids);
+            if(callback) callback(ids);
+          });
+        },
+        remove: (id, callback) => {
+          localPlaylists.remove(id, ids => {
+            setPlaylists(ids);
+            if(callback) callback(ids);
+          });
+        }
+      };
+      this.setState({
+        playlists,
+        blurProps: {
+          ...this.state.blurProps,
+          localPlaylists: playlists
+        }
+      });
+    });
   }
 
   componentDidMount(){
@@ -117,8 +123,8 @@ export default class App extends React.Component {
     this.setState({ 
       blur,
       blurProps: {
+        ...this.state.blurProps,
         ...props,
-        ...this.state.blurProps
       }
     });
   }
@@ -151,7 +157,6 @@ export default class App extends React.Component {
         <Blur 
           viewRef={this.state.viewRef}
           close={()=>this.setOpenedBlur(null)}
-          goToProfile={()=>this.setOpenedBlur(ProfileBlur)}
         >
           <InnerContent {...this.state.blurProps}/>
         </Blur>

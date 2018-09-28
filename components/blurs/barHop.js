@@ -65,8 +65,8 @@ export default class BarHop extends React.Component {
     )
   }]
 
-  joinPlaylist(id) {
-    this.props.localPlaylists.add(id, () => {
+  joinPlaylist(playlist) {
+    this.props.localPlaylists.add(playlist.id, () => {
       this.props.close();
     });
   }

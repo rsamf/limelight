@@ -12,8 +12,8 @@ export default (Component) => compose(
       };
     },
     props: props => {
-      let playlists = props.data.getPlaylistsOf; 
-      if(!props.data.loading) {
+      let playlists = props.data.getPlaylistsOf;
+      if(!props.data.loading && !props.data.error) {
         // remove null or undefined playlists
         playlists = playlists.filter(p => p);
         // also remove them from local storage

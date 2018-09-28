@@ -40,11 +40,6 @@ export default class Blur extends React.Component {
     });
   }
 
-  goToProfile() {
-    console.warn('going');
-    this.props.goToProfile();
-  }
-  
   render(){
     return (
       <Animated.View style={{...globals.style.fullscreen, top: this.state.position}} opacity={this.state.opacity}>
