@@ -257,7 +257,8 @@ const style = StyleSheet.create({
     alignItems: 'center'
   },
   playlistDetails: {
-    marginLeft: 5
+    marginLeft: 5,
+    color: globals.style.darkGrey
   },
   playlistImage: {
     width: 40,

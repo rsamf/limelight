@@ -62,7 +62,14 @@ const style = StyleSheet.create({
     paddingTop: 30,
     paddingLeft: 10,
     paddingRight: 10,
-    paddingBottom: 10
+    paddingBottom: 10,
+    shadowRadius: 5,
+    shadowOffset: {
+      height: 15
+    },
+    shadowOpacity: .9,
+    shadowColor: globals.sBlack,
+    zIndex: 5
   },
   item: {
     marginRight: 20

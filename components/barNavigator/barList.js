@@ -37,26 +37,44 @@ const style = StyleSheet.create({
     alignItems: 'center', 
     justifyContent: 'center',
     margin: 50
+  },
+  playlists: {
+    marginLeft: 20,
+    marginRight: 20
+  },
+  playlist: {
+    marginTop: 13,
+    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  playlistDetails: {
+    marginLeft: 5
+  },
+  playlistImage: {
+    width: 40,
+    height: 40
+  },
+  playlistOwner: {
+    ...globals.style.smallText,
+    color: globals.sGrey
   }
 });
 
 class PlaylistsComponent extends React.Component {
-  eachBar(bar){
+  eachPlaylist(playlist) {
     return (
-      <TouchableOpacity style={style.bar} onPress={()=>this.props.navigation.navigate('Bar', bar)}>
-        {
-          bar.image ?
-          <Image style={style.barImage} source={{uri:bar.image}}/> :
-          <Icon size={50} type="feather" name="music" color={globals.sGrey}/>
-        }
-        <Text ellipsizeMode={'tail'} numberOfLines={1} style={style.barText}>
-          {bar.playlistName}
-        </Text>
-        <View style={style.barIconsRight}>
-          <Icon size={14} color={globals.sMiddle} name="sound" type="entypo"/>
-          <Icon size={14} color={globals.sBlue} name="chevron-thin-right" type="entypo"/>
+      <TouchableOpacity style={style.playlist} onPress={()=>this.props.navigation.navigate('Bar', playlist)}>
+        <View style={{flexDirection: 'row'}}>
+          <Image style={style.playlistImage} source={{uri:playlist.image || playlist.images[0].url}}/>
+          <View style={style.playlistDetails}>
+            <Text ellipsizeMode={'tail'} style={globals.style.text}>{playlist.playlistName || playlist.name}</Text>
+            <Text ellipsizeMode={'tail'} style={style.playlistOwner}>{playlist.ownerName || playlist.owner.display_name }</Text>
+          </View>
         </View>
-      </TouchableOpacity>
+        <Icon size={14} color={globals.sBlue} name="chevron-thin-right" type="entypo"/>
+      </TouchableOpacity>      
     );
   }
 
@@ -77,8 +95,13 @@ class PlaylistsComponent extends React.Component {
       return <Text style={globals.style.text}>'Error'</Text>;
     }
     return (
-      <FlatList data={this.getSortedPlaylists(this.props.playlists)} keyExtractor={(item, index)=>String(index)} 
-      renderItem={({item})=>this.eachBar(item)}/>
+      <View style={style.playlists}>
+        <FlatList 
+          data={this.getSortedPlaylists(this.props.playlists)} 
+          keyExtractor={(item, index)=>String(index)} 
+          renderItem={({item})=>this.eachPlaylist(item)}
+        />
+      </View>
     );
   }
 }
