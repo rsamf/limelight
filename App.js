@@ -5,10 +5,9 @@ import Bar from './components/bar';
 import Spotify from 'rn-spotify-sdk';
 import React from 'react';
 import globals from './components/helpers';
-import StoredPlaylist from './components/helpers/StoredPlaylist';
 import Blur from './components/blurs';
 import ProfileBlur from './components/blurs/profile';
-const localPlaylists = new StoredPlaylist();
+const localPlaylists = globals.localPlaylists;
 
 // AppSync
 import { Rehydrated } from 'aws-appsync-react';
