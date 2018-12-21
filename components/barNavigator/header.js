@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Icon, Avatar } from 'react-native-elements';
 import ProfileBlur from '../blurs/profile';
-import BarhopBlur from '../blurs/barHop';
+import AddPlaylistBlur from '../blurs/addPlaylist';
 import globals from '../helpers';
 import Spotify from 'rn-spotify-sdk';
 
@@ -45,7 +45,7 @@ export default class Header extends React.Component {
 
   renderAdd() {
     return (
-      <TouchableOpacity onPress={()=>this.props.openBlur(BarhopBlur)}>
+      <TouchableOpacity onPress={()=>this.props.openBlur(AddPlaylistBlur, {selected: 0})}>
         <Icon color={globals.sWhite} type="entypo" name="plus"/>
       </TouchableOpacity>
     );
@@ -63,13 +63,13 @@ const style = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     paddingBottom: 10,
-    shadowRadius: 5,
-    shadowOffset: {
-      height: 15
-    },
-    shadowOpacity: .9,
-    shadowColor: globals.sBlack,
-    zIndex: 5
+    // shadowRadius: 5,
+    // shadowOffset: {
+    //   height: 15
+    // },
+    // shadowOpacity: .9,
+    // shadowColor: globals.sBlack,
+    // zIndex: 5
   },
   item: {
     marginRight: 20

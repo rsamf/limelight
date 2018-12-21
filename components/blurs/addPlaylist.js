@@ -6,11 +6,11 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import GetPlaylistsByCode from '../../GQL/queries/GetPlaylistsByCode';
 import Spotify from 'rn-spotify-sdk';
 
-export default class BarHop extends React.Component {
+export default class AddPlaylistBlur extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      selectedButton: 0,
+      selectedButton: this.props.selected || 0,
       input: "",
       searchedPlaylists: [],
       playlists: []
@@ -18,26 +18,9 @@ export default class BarHop extends React.Component {
   }
 
   setSelected(i) {
-    if(i !== 2) return this.setState({selectedButton: i});
+    // TODO: Impl the create playlist from scractj here
 
-    const getMyPlaylists = () => {
-      this.setState({selectedButton: 2});
-      Spotify.sendRequest("v1/me/playlists", "GET", {}, true).then(({items}) => {
-        this.setState({
-          playlists: items
-        });
-      });
-    };
-
-    if(this.props.user) {
-      getMyPlaylists();
-    } else {
-      Spotify.login().then(isLoggedIn => {
-        if(isLoggedIn) {
-          getMyPlaylists();
-        }
-      });
-    }
+    return this.setState({selectedButton: i});
   }
   
   TextInput = globals.createSearchTextInput((input)=>this.setState({input}), ()=>this.searchPlaylists());
@@ -60,7 +43,7 @@ export default class BarHop extends React.Component {
     element: () => (
       <View>
         <Icon color={globals.sWhite} type="entypo" name="spotify"/>
-        <Text style={globals.style.smallText}>Host</Text>
+        <Text style={globals.style.smallText}>Create New</Text>
       </View>
     )
   }]
@@ -244,7 +227,7 @@ const style = StyleSheet.create({
     color: globals.sBlack
   },
   selectedButton: {
-    backgroundColor: 'rgba(33,33,33,1)',
+    backgroundColor: 'rgba(55,55,55,1)',
   },
   playlists: {
     flex: .8,

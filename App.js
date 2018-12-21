@@ -1,5 +1,5 @@
 import { createStackNavigator } from 'react-navigation';
-import { AppRegistry, Alert, View, findNodeHandle } from 'react-native';
+import { AppRegistry, Alert, View, StatusBar, StatusBarStyle, findNodeHandle } from 'react-native';
 import BarList from './components/barNavigator/barList';
 import Bar from './components/bar';
 import Spotify from 'rn-spotify-sdk';
@@ -29,6 +29,7 @@ const Root = createStackNavigator({
 export default class App extends React.Component {
   constructor(props){
     super(props);
+    StatusBar.setBarStyle('light-content', true);
     this.state = {
       user: null,
       playlists: null,

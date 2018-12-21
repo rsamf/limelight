@@ -30,7 +30,7 @@ export default class Profile extends React.Component {
           </View>
           <Button 
             style={style.item} 
-            onPress={()=>{Spotify.logout();this.close();}}
+            onPress={()=>{Spotify.logout();this.props.close();}}
             title="Logout"
             backgroundColor={globals.darkGrey}
             borderRadius={20}

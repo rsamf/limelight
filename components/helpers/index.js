@@ -14,6 +14,7 @@ const sBlue = '#43e5f8'//'#84bd00',
       sBlack = '#000000',
       sGrey = '#929292',
       darkGrey = '#333333',
+      darkerGrey = '#282828',
       sSand = '#ecebe8',
       sWhite = '#ffffff',
       spotifyGreen = "#1DB954";
@@ -21,7 +22,8 @@ const sBlue = '#43e5f8'//'#84bd00',
 const style = StyleSheet.create({
   view: {
     backgroundColor: sBlack,
-    flex: 1
+    flex: 1,
+    justifyContent: 'flex-start'
   },
   text: {
     color: sWhite,
@@ -133,7 +135,7 @@ const requireSpotifyAuthorizationAndInjectUserDetails = func => {
 };
 
 const client = new AWSAppSyncClient({
-  url: "https://347hiw7ofbe5jhcgcaz43mcszy.appsync-api.us-west-2.amazonaws.com/graphql",
+  url: "https://oiywd3csqfenhjw7d6p3k6qepe.appsync-api.us-west-2.amazonaws.com/graphql",
   region: "us-west-2",
   auth: {
       type: AUTH_TYPE.AWS_IAM,
@@ -153,6 +155,7 @@ const globals = {
   sBlack,
   sGrey,
   darkGrey,
+  darkerGrey,
   sSand,
   sWhite,
   spotifyGreen,

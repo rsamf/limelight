@@ -135,7 +135,7 @@ export default class extends React.Component {
     }
   }
 
-  renderNotLive(){
+  renderEmpty(){
     return (
       <View style={style.view}>
         <Text style={globals.style.smallText}>Add some songs!</Text>
@@ -211,7 +211,7 @@ export default class extends React.Component {
         </View>
       );
     }
-    return this.renderNotLive();
+    return this.renderNotEmpty();
   }
 
   visitSong() {

@@ -7,9 +7,6 @@ query GetSomePlaylists($ids: [ID]!) {
     ownerName
     ownerURI
     playlistName
-    live
     image
-    songs
-    shortCode
   }
 }`;
