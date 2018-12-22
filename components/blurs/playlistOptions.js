@@ -33,7 +33,7 @@ export default class PlaylistOptions extends React.Component {
   deletePlaylist() {
     this.props.deleteSongs();
     this.props.deletePlaylist();
-    this.props.localPlaylists.remove(this.props.playlist.id);
+    this.props.playlists.remove(this.props.playlist.id);
     this.props.close();
     this.props.navigation.navigate('BarList');
   }

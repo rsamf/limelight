@@ -23,6 +23,7 @@
     "react-native-permissions": "^1.1.1",
     "react-native-qrcode": "^0.2.7",
     "react-native-qrcode-scanner": "^1.0.1",
+    "react-native-swipeout": "^2.3.6",
     "react-native-vector-icons": "^4.6.0",
     "react-navigation": "^2.9.1",
     "rn-spotify-sdk": "^1.1.1"

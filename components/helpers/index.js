@@ -17,7 +17,8 @@ const sBlue = '#43e5f8'//'#84bd00',
       darkerGrey = '#282828',
       sSand = '#ecebe8',
       sWhite = '#ffffff',
-      spotifyGreen = "#1DB954";
+      spotifyGreen = "#1DB954",
+      darkRed = '#992311';
 
 const style = StyleSheet.create({
   view: {
@@ -27,6 +28,11 @@ const style = StyleSheet.create({
   },
   text: {
     color: sWhite,
+    fontFamily: 'Futura',
+    fontSize: 18
+  },
+  errorText: {
+    color: sGrey,
     fontFamily: 'Futura',
     fontSize: 18
   },
@@ -49,6 +55,7 @@ const style = StyleSheet.create({
     position: 'absolute'
   },
   center: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -69,31 +76,54 @@ const style = StyleSheet.create({
     color: sWhite,
     borderBottomColor: sWhite,
     borderBottomWidth: 2,
-    marginLeft: 10,
     flex: .75
+  },
+  textInputAlt: {
+    fontFamily: 'Futura',
+    fontSize: 18,
+    padding: 10,
+    color: sWhite,
+    borderBottomColor: sWhite,
+    borderBottomWidth: 2,
+    flex: 1
   }
 });
 
 const createSearchTextInput = (onChangeText, onSubmitEditing) => {
   return () => (
     <View style={style.textInputContainer}>
-      <Icon type="evilicons" name="search" color={sWhite}/>
+      <Icon name="search" color={sWhite}/>
       <TextInput 
         style={style.textInput} 
         blurOnSubmit={true} 
         enablesReturnKeyAutomatically={true} 
         autoCapitalize="none" 
         spellCheck={false}
-        onChangeText={onChangeText}
+        onChangeText={(text)=>onChangeText(text)}
         onSubmitEditing={onSubmitEditing}
       />
     </View>
   );
 };
+const createTextInput = (onChangeText, onSubmitEditing) => {
+  return () => (
+    <View style={style.textInputContainer}>
+      <TextInput 
+        style={style.textInputAlt} 
+        blurOnSubmit={true} 
+        enablesReturnKeyAutomatically={true} 
+        autoCapitalize="words" 
+        spellCheck={false}
+        onChangeText={(text)=>onChangeText(text)}
+        onSubmitEditing={onSubmitEditing}
+      />
+    </View>
+  )
+};
 const Loader = () => {
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <ActivityIndicator size="large" color={globals.sWhite}/>
+      <ActivityIndicator size="large" color={globals.sGrey}/>
     </View>
   );
 };
@@ -158,9 +188,11 @@ const globals = {
   darkerGrey,
   sSand,
   sWhite,
+  darkRed,
   spotifyGreen,
   Loader,
   createSearchTextInput,
+  createTextInput,
   client,
   getSongData,
   getSongsDataHTTP,

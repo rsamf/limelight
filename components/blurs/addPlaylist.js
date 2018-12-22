@@ -1,30 +1,23 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, FlatList, Image } from 'react-native';
 import globals from '../helpers';
-import { Button, ButtonGroup, Icon  } from 'react-native-elements';
+import { ButtonGroup, Icon, Badge } from 'react-native-elements';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import GetPlaylistsByCode from '../../GQL/queries/GetPlaylistsByCode';
-import Spotify from 'rn-spotify-sdk';
 
 export default class AddPlaylistBlur extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       selectedButton: this.props.selected || 0,
-      input: "",
+      iDinput: "",
+      nameInput: "",
       searchedPlaylists: [],
-      playlists: []
+      searching: false,
+      showNoneMessage: false
     };
   }
-
-  setSelected(i) {
-    // TODO: Impl the create playlist from scractj here
-
-    return this.setState({selectedButton: i});
-  }
   
-  TextInput = globals.createSearchTextInput((input)=>this.setState({input}), ()=>this.searchPlaylists());
-
   buttons = [{
     element: () => (
       <View>
@@ -48,72 +41,48 @@ export default class AddPlaylistBlur extends React.Component {
     )
   }]
 
+  setSelected(i) {
+    this.setState({selectedButton: i});
+  }
+
   joinPlaylist(playlist) {
-    this.props.localPlaylists.add(playlist.id, () => {
+    this.props.playlists.push(playlist.id, () => {
       this.props.close();
     });
   }
 
-  addPlaylist(playlist){
-    const { user } = this.props;
-    const variables = {
-      ownerURI: user.id,
-      ownerName: user.display_name,
-      image: (playlist && playlist.images[0] && playlist.images[0].url) || (user.images[0] && user.images[0].url),
-      playlistName: playlist ? playlist.name : user.display_name
-    };
-    const sendPlaylistMutation = (variables, callback) => {
-      globals.client.mutate({
-        mutation: AddPlaylistMutation,
-        variables
-      }).then(({data})=>{callback(data)});
-    }
-    const sendSongsMutation = (variables, callback) => {
-      globals.client.mutate({
-        mutation: CreateSongsMutation,
-        variables
-      }).then(({data})=>{callback(data)});
-    };
-    const switchView = (id) => {
-      this.props.localPlaylists.add(id, ()=>{
-        this.props.close();
-        this.props.navigation.navigate('BarList');
-      });
-    };
-    sendPlaylistMutation(variables, data => {
-      const id = data.addPlaylist.id;
-      let songVariables = { id: id, songs: [] };
-      if(playlist) {
-        globals.getSongsDataHTTP(user.id, playlist.id, songs => {
-          songVariables.songs = songs;
-          sendSongsMutation(songVariables, ({createSongs: {id}})=>switchView(id));
-        });
-      } else {
-        sendSongsMutation(songVariables, ({createSongs: {id}})=>switchView(id));
-      }
-    });
-  }
-
   searchPlaylists() {
+    this.setState({
+      loading: true
+    });
     globals.client.query({
       query: GetPlaylistsByCode,
       variables: {
-        shortCode: this.state.input
+        shortCode: this.state.iDinput
       }
     }).then(({data: {getPlaylistsByCode:{playlists}}})=>{
       this.setState({
-        searchedPlaylists: playlists
+        searchedPlaylists: playlists,
+        loading: false,
+        showNoneMessage: playlists.length === 0
       });
     });
   }
 
   eachPlaylist(playlist, onPress) {
+    let disabled = this.props.playlists.contains(playlist.id);
     return (
-      <TouchableOpacity style={style.playlist} onPress={()=>onPress(playlist)}>
+      <TouchableOpacity disabled={disabled} style={{...style.playlist, opacity: 1-disabled*.5}} onPress={()=>onPress(playlist)}>
         <Image style={style.playlistImage} source={{uri:playlist.image || playlist.images[0].url}}/>
-        <View style={style.playlistDetails}>
-          <Text style={globals.style.text}>{playlist.playlistName || playlist.name}</Text>
-          <Text style={globals.style.smallText}>{playlist.ownerName || playlist.owner.display_name }</Text>
+        <View style={style.playlistContent}>
+          <View style={style.playlistDetails}>
+            <Text ellipsizeMode={'tail'} numberOfLines={1} style={globals.style.text}>{playlist.playlistName || playlist.name}</Text>
+            <Text ellipsizeMode={'tail'} numberOfLines={1} style={globals.style.smallText}>{playlist.ownerName || playlist.owner.display_name}</Text>
+          </View>
+          {
+            disabled &&
+            <Badge value="Added" textStyle={{ color: globals.sWhite }}/>
+          }
         </View>
       </TouchableOpacity>
     );
@@ -138,19 +107,54 @@ export default class AddPlaylistBlur extends React.Component {
     );
   }
 
+  SearchTextInput = globals.createSearchTextInput((iDinput) => {
+    this.setState({iDinput});
+  }, () => {
+    this.searchPlaylists();
+  });
+
+  TextInput = globals.createTextInput((nameInput) => {
+    this.setState({nameInput});
+  }, () => {
+    this.createAndGoToBar();
+  });
+
+  createAndGoToBar = () => {
+    // this.props.navigation.navigate('Bar');
+  };
+
   renderSelected() {
     if(this.state.selectedButton === 0) {
+      let toRender;
+      if(this.state.loading) {
+        toRender = (
+          <View style={style.message}>
+            <globals.Loader/>
+          </View>
+        );
+      } else if(this.state.showNoneMessage) {
+        toRender = (
+          <View style={style.message}>
+            <Icon name="emoji-sad" type="entypo" color={globals.sGrey}/>
+            <Text style={globals.style.errorText}>Sorry, I couldn't find a playlist that matched that code. Try again soon.</Text>
+          </View>
+        );
+      } else {
+        toRender = (
+          <FlatList 
+            data={this.state.searchedPlaylists} 
+            keyExtractor={(item, index) => String(index)} 
+            renderItem={({item}) => 
+              this.eachPlaylist(item, (playlist)=>this.joinPlaylist(playlist))
+            }
+          />
+        );
+      }
       return (
         <View style={style.selectedRender}>
-          <this.TextInput/>
+          <this.SearchTextInput/>
           <View style={style.playlists}>
-            <FlatList 
-              data={this.state.searchedPlaylists} 
-              keyExtractor={(item, index) => String(index)} 
-              renderItem={({item}) => 
-                this.eachPlaylist(item, (playlist)=>this.joinPlaylist(playlist))
-              }
-            />
+            {toRender}
           </View>
         </View>
       );
@@ -162,22 +166,21 @@ export default class AddPlaylistBlur extends React.Component {
       );
     } else {
       return (
-        <View style={style.selectedRender}>
-          <View style={globals.style.centerRow}>
-            <Text style={globals.style.text}>Use songs from one of your playlists:</Text>
-          </View>
-          <View style={style.playlists}>
-            <FlatList
-              data={this.state.playlists} 
-              keyExtractor={(item, index) => String(index)} 
-              renderItem={({item}) =>
-                this.eachPlaylist(item, (playlist) => this.addPlaylist(playlist))
-              }
-            />
-          </View>
-          <View style={globals.style.centerRow}>
-            <Text style={globals.style.text}>Or create one from scratch:</Text>
-            <Button style={globals.style.button} title="Create New" onPress={()=>this.addPlaylist()}/>
+        <View style={{...style.selectedRender, justifyContent: 'center', marginLeft: 20, marginRight: 20}}>
+          <View style={{flexDirection: 'row'}}>
+            <View style={{flexDirection: 'column', flex: 1}}>
+              <Text style={globals.style.text}>Playlist Name:</Text>
+                <View style={{flexDirection: 'row'}}>
+                  <View style={{flex: .8}}>
+                    <this.TextInput/>
+                  </View>
+                  <View style={{flex: .2}}>
+                    <TouchableOpacity onPress={()=>createAndGoToBar()}>
+                      <Icon name="arrow-right" type="evilicon" size={55} color={globals.sWhite}/>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+            </View>
           </View>
         </View>
       );
@@ -186,7 +189,7 @@ export default class AddPlaylistBlur extends React.Component {
 
   renderQRScanner(){
     const success = ({data}) => {
-      this.props.screenProps.localPlaylists.add(data, () => {
+      this.props.playlists.push(data, () => {
         this.props.close();
       });
     };
@@ -231,13 +234,20 @@ const style = StyleSheet.create({
   },
   playlists: {
     flex: .8,
-    marginLeft: 20
+    marginLeft: 20,
+    marginRight: 20
   },
   playlist: {
     marginTop: 10,
     marginBottom: 10,
     flexDirection: 'row',
     alignItems: 'center'
+  },
+  playlistContent: {
+    flexDirection:'row',
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'space-between'
   },
   playlistDetails: {
     marginLeft: 5,
@@ -246,5 +256,12 @@ const style = StyleSheet.create({
   playlistImage: {
     width: 40,
     height: 40
+  },
+  createLabel: {
+    ...globals.style.text
+  },
+  message: {
+    margin: 10,
+    ...globals.style.center
   }
 });

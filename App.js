@@ -1,14 +1,13 @@
 import { createStackNavigator } from 'react-navigation';
 import { AppRegistry, Alert, View, StatusBar, StatusBarStyle, findNodeHandle } from 'react-native';
-import BarList from './components/barNavigator/barList';
+import BarList from './components/barList';
 import Bar from './components/bar';
 import Spotify from 'rn-spotify-sdk';
 import React from 'react';
 import globals from './components/helpers';
 import Blur from './components/blurs';
 import ProfileBlur from './components/blurs/profile';
-const localPlaylists = globals.localPlaylists;
-
+import LocalPlaylists from './util/LocalPlaylists';
 // AppSync
 import { Rehydrated } from 'aws-appsync-react';
 import { ApolloProvider } from 'react-apollo';
@@ -30,17 +29,18 @@ export default class App extends React.Component {
   constructor(props){
     super(props);
     StatusBar.setBarStyle('light-content', true);
+    const playlists = new LocalPlaylists(this);
     this.state = {
       user: null,
-      playlists: null,
+      playlists,
       blur: null,
       blurProps: {
         close: ()=>this.setOpenedBlur(null),
-        goToProfile: ()=>this.setOpenedBlur(ProfileBlur)
+        goToProfile: ()=>this.setOpenedBlur(ProfileBlur),
+        playlists
       }
     };
   }
-
 
   getUser(){
     const setUser = (user) => {
@@ -62,48 +62,7 @@ export default class App extends React.Component {
     });
   }
 
-  getLocalPlaylistsInterface() {
-    const setPlaylists = (ids) => {
-      const playlists = {
-        ...this.state.playlists,
-        stored: ids
-      };
-      this.setState({
-        playlists,
-        blurProps: {
-          ...this.state.blurProps,
-          localPlaylists: playlists
-        }
-      });
-    }
-    localPlaylists.getAll(list => {
-      const playlists = {
-        stored: list,
-        add: (id, callback) => {
-          localPlaylists.push(id, ids => {
-            setPlaylists(ids);
-            if(callback) callback(ids);
-          });
-        },
-        remove: (id, callback) => {
-          localPlaylists.remove(id, ids => {
-            setPlaylists(ids);
-            if(callback) callback(ids);
-          });
-        }
-      };
-      this.setState({
-        playlists,
-        blurProps: {
-          ...this.state.blurProps,
-          localPlaylists: playlists
-        }
-      });
-    });
-  }
-
   componentDidMount(){
-    this.getLocalPlaylistsInterface();
     this.getUser();
 		if(!Spotify.isInitialized())
 		{
@@ -132,7 +91,7 @@ export default class App extends React.Component {
   render(){
     let propsToPass = {
       user: this.state.user,
-      localPlaylists: this.state.playlists,
+      playlists: this.state.playlists,
       openBlur: (blur, props) => this.setOpenedBlur(blur, props),
       goToLogin: () => this.setOpenedBlur(ProfileBlur)
     };

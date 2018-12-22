@@ -3,7 +3,6 @@ import { View, ScrollView, Text, Image, StyleSheet, TouchableOpacity } from 'rea
 import { Icon } from 'react-native-elements';
 import globals from '../helpers'
 import Spotify from 'rn-spotify-sdk';
-import AddPlaylistBlur from '../blurs/addPlaylist';
 
 class Side extends React.Component {
   constructor(props) {
@@ -78,7 +77,7 @@ export default class OwnedList extends React.Component {
           {
             this.state.playlists.map((p, i)=>this.eachPlaylist(p, i))
           }
-          <TouchableOpacity onPress={()=>this.props.openBlur(AddPlaylistBlur, {selected: 2})} style={{...style.playlist, marginLeft: 20}}>
+          <TouchableOpacity onPress={()=>this.props.addPlaylist(2)} style={{...style.playlist, marginLeft: 20}}>
             <Icon raised name='add' color={globals.sBlack} containerStyle={style.createIcon}/>
             <Text style={globals.style.smallText}>Create New</Text>
           </TouchableOpacity>
