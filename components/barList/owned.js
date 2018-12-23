@@ -39,34 +39,25 @@ class Side extends React.Component {
 export default class OwnedList extends React.Component {
   constructor(props){
     super(props);
-
-    this.state = {
-      playlists: []
-    };
-    this.getPlaylists();
   }
 
-  getPlaylists() {
-    Spotify.sendRequest('v1/me/playlists', "GET", {}, true).then(({items}) => {
-      let filtered = items.filter((playlist)=>playlist.owner.id===this.props.user.id);
-      let mapped = filtered.map(playlist => ({
-        image: playlist.images[0] && playlist.images[0].url,
-        name: playlist.name
-      }));
-      this.setState({
-        playlists: mapped
-      });
-    });
-  }
+  onClick = (playlist) => globals.goToBar(playlist.id, playlist.ownerId, this.props.user.id, this.props.navigation);
 
   eachPlaylist(playlist, i) {
+    if(playlist === "LOADING") {
+      return (
+        <View key={i} style={style.playlist}>
+          <globals.Loader/>
+        </View>
+      );
+    }
     return (
-      <TouchableOpacity onPress={()=>this.props.navigation.navigate('Bar', playlist)} key={i} style={style.playlist}>
+      <TouchableOpacity onPress={()=>this.onClick(playlist)} key={i} style={style.playlist}>
         {/* <Image source={{uri:playlist.image}} defaultSource={{uri:require('../../images/notes.png')}} style={style.playlistImage}/> */}
         <Image source={{uri:playlist.image}} style={style.playlistImage}/>
         <Text ellipsizeMode={'tail'} numberOfLines={1} style={globals.style.smallText}>{playlist.name}</Text>
       </TouchableOpacity>
-    )
+    );
   }
 
   render() {
@@ -75,11 +66,11 @@ export default class OwnedList extends React.Component {
         <Side value={"left"}/>
         <ScrollView horizontal={true} style={style.scroll}>
           {
-            this.state.playlists.map((p, i)=>this.eachPlaylist(p, i))
+            this.props.user.playlists.map((p, i)=>this.eachPlaylist(p, i))
           }
-          <TouchableOpacity onPress={()=>this.props.addPlaylist(2)} style={{...style.playlist, marginLeft: 20}}>
+          <TouchableOpacity onPress={()=>this.props.addPlaylist(2)} style={style.createButton}>
             <Icon raised name='add' color={globals.sBlack} containerStyle={style.createIcon}/>
-            <Text style={globals.style.smallText}>Create New</Text>
+            <Text ellipsizeMode={'tail'} numberOfLines={1} style={globals.style.smallText}>Create New</Text>
           </TouchableOpacity>
         </ScrollView>
         <Side value={"right"}/>
@@ -89,6 +80,15 @@ export default class OwnedList extends React.Component {
 }
 
 const style = StyleSheet.create({
+  createButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingLeft: 10,
+    marginLeft: 10,
+    marginRight: 80,
+    borderLeftWidth: .5,
+    borderLeftColor: globals.sGrey
+  },
   createIcon: {
     opacity: .6, 
     width: 50,

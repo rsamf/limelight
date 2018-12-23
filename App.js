@@ -5,6 +5,7 @@ import Bar from './components/bar';
 import Spotify from 'rn-spotify-sdk';
 import React from 'react';
 import globals from './components/helpers';
+import Header from './components/header';
 import Blur from './components/blurs';
 import ProfileBlur from './components/blurs/profile';
 import LocalPlaylists from './util/LocalPlaylists';
@@ -37,13 +38,34 @@ export default class App extends React.Component {
       blurProps: {
         close: ()=>this.setOpenedBlur(null),
         goToProfile: ()=>this.setOpenedBlur(ProfileBlur),
+        addToUserPlaylists: (playlist)=>this.addToUserPlaylists(playlist),
         playlists
       }
     };
   }
 
+  addToUserPlaylists(playlist) {
+    console.warn(playlist);
+    let playlists = this.state.user.playlists;
+    if(playlist === "LOADING") {
+      playlists.push("LOADING");
+    } else {
+      playlists.pop();
+      if(playlist !== "ERROR") {
+        playlists.push(playlist);
+      }
+    }
+    this.setState({
+      user: {
+        ...this.state.user,
+        playlists
+      }
+    });
+  }
+
   getUser(){
     const setUser = (user) => {
+      user.playlists = user.playlists || [];
       this.setState({
         user,
         blurProps: {
@@ -51,10 +73,22 @@ export default class App extends React.Component {
           user
         }
       });
-    }
+    };
     Spotify.addListener("login", () => {
       Spotify.getMe().then(user => {
         setUser(user);
+        Spotify.sendRequest('v1/me/playlists', "GET", {}, true).then(({items}) => {
+          let filtered = items.filter((playlist) => playlist.owner.id === user.id);
+          let mapped = filtered.map(playlist => ({
+            id: playlist.uri,
+            ownerId: playlist.owner.id,
+            image: playlist.images && playlist.images[0] && playlist.images[0].url,
+            name: playlist.name
+          }));
+          user.playlists = mapped;
+          console.warn(mapped);
+          setUser(user);
+        });
       });
     });
     Spotify.addListener("logout", () => {
@@ -70,7 +104,7 @@ export default class App extends React.Component {
 			  clientID: "65a08501d9e64abfb003fb795ee1a540",
 				sessionUserDefaultsKey: "SpotifySession",
 				redirectURL: "spotlight://auth",
-				scopes: ["user-read-private", "playlist-read", "playlist-read-private", "streaming"],
+				scopes: ["user-read-private", "playlist-read", "playlist-modify-public", "streaming"],
 			};
 			Spotify.initialize(spotifyOptions).catch((error) => {
 				Alert.alert("Error in initializing Spotify");

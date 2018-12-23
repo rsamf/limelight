@@ -21,7 +21,7 @@ export default class PlaylistOptions extends React.Component {
   }
 
   submitEditingTitle() {
-    this.props.updatePlaylist({ playlistName: this.state.editingTitle });
+    this.props.updatePlaylist({ name: this.state.editingTitle });
     this.props.close();
   }
 
@@ -46,11 +46,11 @@ export default class PlaylistOptions extends React.Component {
           <View style={style.title}>
             {
               this.state.editingTitle !== null ?
-              <TextInput onChangeText={(input)=>this.setState({editingTitle:input})} defaultValue={this.props.playlist.playlistName}
+              <TextInput onChangeText={(input)=>this.setState({editingTitle:input})} defaultValue={this.props.playlist.name}
               blurOnSubmit={true} enablesReturnKeyAutomatically={true} onSubmitEditing={()=>this.submitEditingTitle()}
               style={globals.style.textInput} onBlur={()=>this.setState({editingTitle:null})}/> :
-              <TouchableOpacity onPress={()=>this.setState({editingTitle:this.props.playlist.playlistName})}>
-                <Text style={globals.style.text}>{this.props.playlist.playlistName}</Text>
+              <TouchableOpacity onPress={()=>this.setState({editingTitle:this.props.playlist.name})}>
+                <Text style={globals.style.text}>{this.props.playlist.name}</Text>
               </TouchableOpacity>
             }
             {
@@ -58,7 +58,7 @@ export default class PlaylistOptions extends React.Component {
               <TextInput onChangeText={(input)=>this.setState({editingCode:input})} defaultValue={this.props.playlist.shortCode}
               blurOnSubmit={true} enablesReturnKeyAutomatically={true} onSubmitEditing={()=>this.submitEditingCode()}
               style={globals.style.smallTextInput} onBlur={()=>this.setState({editingCode:null})}/> :
-              <TouchableOpacity onPress={()=>this.setState({editingCode:this.props.playlist.playlistName})}>
+              <TouchableOpacity onPress={()=>this.setState({editingCode:this.props.playlist.name})}>
                 <Text style={globals.style.smallText}>{this.props.playlist.shortCode || "Create a Code for People to Join"}</Text>
               </TouchableOpacity>
             }

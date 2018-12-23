@@ -4,6 +4,7 @@ import globals from '../helpers';
 import { ButtonGroup, Icon, Badge } from 'react-native-elements';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import GetPlaylistsByCode from '../../GQL/queries/GetPlaylistsByCode';
+import Spotify from 'rn-spotify-sdk';
 
 export default class AddPlaylistBlur extends React.Component {
   constructor(props){
@@ -42,7 +43,12 @@ export default class AddPlaylistBlur extends React.Component {
   }]
 
   setSelected(i) {
-    this.setState({selectedButton: i});
+    const go = () => this.setState({selectedButton: i});
+    if(i === 2) {
+      globals.rsa(() => go());
+    } else {
+      go();
+    }
   }
 
   joinPlaylist(playlist) {
@@ -76,8 +82,8 @@ export default class AddPlaylistBlur extends React.Component {
         <Image style={style.playlistImage} source={{uri:playlist.image || playlist.images[0].url}}/>
         <View style={style.playlistContent}>
           <View style={style.playlistDetails}>
-            <Text ellipsizeMode={'tail'} numberOfLines={1} style={globals.style.text}>{playlist.playlistName || playlist.name}</Text>
-            <Text ellipsizeMode={'tail'} numberOfLines={1} style={globals.style.smallText}>{playlist.ownerName || playlist.owner.display_name}</Text>
+            <Text ellipsizeMode={'tail'} numberOfLines={1} style={globals.style.text}>{playlist.name}</Text>
+            <Text ellipsizeMode={'tail'} numberOfLines={1} style={globals.style.smallText}>{playlist.ownerName}</Text>
           </View>
           {
             disabled &&
@@ -119,9 +125,31 @@ export default class AddPlaylistBlur extends React.Component {
     this.createAndGoToBar();
   });
 
-  createAndGoToBar = () => {
-    // this.props.navigation.navigate('Bar');
-  };
+  createAndGoToBar() {
+    this.props.close();
+    this.props.addToUserPlaylists("LOADING");
+    const name = this.state.nameInput;
+    globals.rsa(() => {
+      Spotify.sendRequest(`v1/users/${this.props.user.id}/playlists`, 'POST', {name}, true)
+      .then((data) => {
+        console.warn("DATA", data);
+        globals.addPlaylist({name, id: data.uri}, this.props.user, playlist => {
+          if(playlist) {
+            console.warn("playlist:", playlist);
+            console.warn(data.owner.id);
+            this.props.addToUserPlaylists({
+              id: playlist.id,
+              ownerId: data.owner.id,
+              name: playlist.name
+            });
+          }
+        });
+      })
+      .catch(error => {
+        this.props.addToUserPlaylists("ERROR");
+      });
+    });
+  }
 
   renderSelected() {
     if(this.state.selectedButton === 0) {
@@ -175,7 +203,7 @@ export default class AddPlaylistBlur extends React.Component {
                     <this.TextInput/>
                   </View>
                   <View style={{flex: .2}}>
-                    <TouchableOpacity onPress={()=>createAndGoToBar()}>
+                    <TouchableOpacity onPress={()=>this.createAndGoToBar()}>
                       <Icon name="arrow-right" type="evilicon" size={55} color={globals.sWhite}/>
                     </TouchableOpacity>
                   </View>

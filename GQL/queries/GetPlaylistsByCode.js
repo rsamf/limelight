@@ -5,7 +5,7 @@ query GetPlaylistsByCode($shortCode: ID!) {
   getPlaylistsByCode(shortCode: $shortCode) {
     playlists {
       id
-      playlistName
+      name
       ownerName
       image
     }

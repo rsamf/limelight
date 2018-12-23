@@ -6,6 +6,9 @@ import { AUTH_TYPE } from "aws-appsync/lib/link/auth-link";
 import AWSAppSyncClient from "aws-appsync/lib";
 import Spotify from 'rn-spotify-sdk';
 import StoredPlaylist from './StoredPlaylist';
+import AddPlaylistMutation from '../../GQL/mutations/AddPlaylist';
+import CreateSongsMutation from '../../GQL/mutations/CreateSongs';
+import DeletePlaylistMutation from '../../GQL/mutations/DeletePlaylist';
 
 
 const sBlue = '#43e5f8'//'#84bd00',
@@ -148,7 +151,7 @@ const getSongsDataHTTP = (userId, playlistId, callback) => {
   });
 };
 
-const requireSpotifyAuthorization = func => {
+const rsa = func => {
   if(!Spotify.isLoggedIn()){
     Spotify.login();
   } else {
@@ -156,11 +159,77 @@ const requireSpotifyAuthorization = func => {
   }
 };
 
-const requireSpotifyAuthorizationAndInjectUserDetails = func => {
+const rsa_ud = func => {
   if(!Spotify.isLoggedIn()){
     Spotify.login();
   } else {
     Spotify.getMe().then(func);
+  }
+};
+
+const addPlaylist = (playlist, user, callback) => {
+  const sendPlaylistMutation = (callback) => {
+    const playlistVariables = {
+      id: playlist.id,
+      ownerId: user.id,
+      ownerName: user.display_name,
+      // Elvis-operator plz xD
+      image: (playlist.images && playlist.images[0] && playlist.images[0].url) || (user.images && user.images[0] && user.images[0].url),
+      name: playlist ? playlist.name : user.display_name
+    };
+    console.warn(playlistVariables);
+    client.mutate({
+      mutation: AddPlaylistMutation,
+      variables: playlistVariables
+    }).then(({data})=>{callback(data)});
+  }
+  const sendSongsMutation = (callback) => {
+    const songVariables = { id: playlist.id, songs: [] };
+    client.mutate({
+      mutation: CreateSongsMutation,
+      variables: songVariables
+    }).then(({data})=>{callback(data)});
+  };
+  sendPlaylistMutation(data => {
+    sendSongsMutation(() => {
+      callback(data.addPlaylist);
+    });
+    // const id = data.addPlaylist.id;
+    // let songVariables = { id: id, songs: [] };
+    // if(playlist) {
+    //   getSongsDataHTTP(user.id, playlist.id, songs => {
+    //     songVariables.songs = songs;
+    //     sendSongsMutation(songVariables, ({createSongs: {id}})=>switchView(id));
+    //   });
+    // } else {
+    //   sendSongsMutation(songVariables, ({createSongs: {id}})=>switchView(id));
+    // }
+  });
+};
+
+const getPlaylistFromSpotify = (playlistId, callback) => {
+  Spotify.sendRequest(`v1/playlists/${playlistId}`, "GET", {}, true)
+  .then((data)=>callback(data))
+  .catch((error)=>callback(null, error));
+};
+
+const getPlaylistId = uri => uri.substring(uri.search(/playlist:/g) + 9);
+
+const goToBar = (playlistURI, playlistOwnerId, userId, navigation) => {
+  if(userId === playlistOwnerId) {
+    let playlistId = getPlaylistId(playlistURI);
+    getPlaylistFromSpotify(playlistId, (data, error) => {
+      if(data) {
+        navigation.navigate('Bar', playlistURI);
+      } else {
+        client.mutate({
+          mutation: DeletePlaylistMutation,
+          variables: {id: playlistURI}
+        });
+      }
+    })
+  } else {
+    navigation.navigate('Bar', playlistURI);
   }
 };
 
@@ -197,8 +266,10 @@ const globals = {
   getSongData,
   getSongsDataHTTP,
   getSongsAsObjects,
-  requireSpotifyAuthorization,
-  requireSpotifyAuthorizationAndInjectUserDetails,
+  rsa,
+  rsa_ud,
+  addPlaylist,
+  goToBar,
   localPlaylists: new StoredPlaylist(),
 };
 

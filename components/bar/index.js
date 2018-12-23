@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import globals from '../helpers';
-import Header from './header';
+import Header from '../header';
 import Spotlight from './spotlight';
 import Songs from './songs';
 import createPlaylist from '../../GQL/playlist';
@@ -58,41 +58,33 @@ class PlaylistComponent extends React.Component {
   }
 
   render() {
+    console.warn("ERROR:", this.props.error);
+    console.warn("PL", this.props.playlist);
+    console.warn("S", this.props.songs);
     if(!this.props.loading && this.props.playlist && this.props.songs) {
       let user = this.props.screenProps.user;
-      let owned = user && user.id === this.props.playlist.ownerURI;
+      let owned = user && user.id === this.props.playlist.ownerId;
       return (
-        <View style={{flex:1}}>
+        <View style={globals.style.view}>
           <Header
-          owned={owned}
-          navigation={this.props.navigation}
-          updatePlaylist={(p)=>this.props.updatePlaylist(p)}
-          deletePlaylist={()=>this.props.deletePlaylist()}
-          deleteSongs={()=>this.props.deleteSongs()}
-          setOpenedBlur={(i, props)=>this.props.screenProps.setOpenedBlur(i,props)}
-          >
-            {this.props.playlist}
-          </Header>
-          <Spotlight owned={owned} 
-          next={()=>this.props.nextSong()}
-          >
+            {...this.props.screenProps}
+            navigation={this.props.navigation}
+            playlist={this.props.playlist}
+            updatePlaylist={(p)=>this.props.updatePlaylist(p)}
+            deletePlaylist={()=>this.props.deletePlaylist()}
+            deleteSongs={()=>this.props.deleteSongs()}
+          />
+          <Spotlight owned={owned} next={()=>this.props.nextSong()}>
             {this.state.songs[0]}
           </Spotlight>
           <Songs owned={owned} 
-          {...this.props.screenProps}
-          addSong={(song)=>this.props.addSong(song)}
-          deleteSong={(songId)=>this.props.deleteSong(songId)}
-          vote={(song)=>this.voteSong(song)}
+            {...this.props.screenProps}
+            addSong={(song)=>this.props.addSong(song)}
+            deleteSong={(songId)=>this.props.deleteSong(songId)}
+            vote={(song)=>this.voteSong(song)}
           >
             {this.state.songs.slice(1)}
           </Songs>
-        </View>
-      );
-    }
-    if(this.props.error) {
-      return (
-        <View>
-          <Text style={globals.style.smallText}>{JSON.stringify(this.props.error)}</Text>
         </View>
       );
     }
@@ -135,9 +127,8 @@ export default class Bar extends React.Component {
     });
   }
 
-
   componentWillMount() {
-    this.playlistId = this.props.navigation.state.params.id;
+    this.playlistId = this.props.navigation.state.params;
     this.getLocalVotesInterface();
   }
 

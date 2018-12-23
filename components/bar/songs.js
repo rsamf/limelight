@@ -80,7 +80,7 @@ export default class extends React.Component {
             </View>
           </Modal>
         }
-        <View style={style.view}>
+        <View style={globals.style.view}>
           <FlatList data={songs} keyExtractor={(item, index)=>String(index)} renderItem={({item, index})=>this.eachSong(item, index)}>
           </FlatList>
           <View style={style.addIcon}>
@@ -94,7 +94,7 @@ export default class extends React.Component {
 
 const style = StyleSheet.create({
   view: {
-    flex: 1
+    flex: .65
   },
   song: {
     flexDirection: 'row',

@@ -145,13 +145,12 @@ export default class extends React.Component {
 
   renderForGuest(song){
     return (
-      <View style={style.view}>
+      <View style={style.guest}>
         <TouchableOpacity style={style.spotifyIcon} onPress={()=>this.setState({modalActive:true})}>
           <Icon color={globals.sWhite} name="spotify" type="font-awesome"/>
         </TouchableOpacity>
-        <Text style={style.text}>Currently Playing:</Text>
+        <Image style={style.image} source={{uri:song.image}}/>
         <View style={style.title}>
-          <Image style={style.image} source={{uri:song.image}}/>
           <Text ellipsizeMode="middle" numberOfLines={1} style={style.text}>{song.artist} - {song.name}</Text>
         </View>
       </View>
@@ -160,7 +159,7 @@ export default class extends React.Component {
 
   renderForHost(song){
     return (
-      <View style={style.view}>
+      <View style={globals.style.view}>
         <TouchableOpacity style={style.spotifyIcon} onPress={()=>this.setState({modalActive:true})}>
           <Icon color={globals.sWhite} name="spotify" type="font-awesome"/>
         </TouchableOpacity>
@@ -192,7 +191,7 @@ export default class extends React.Component {
     const song = this.props.children;
     if(song) {
       return (
-        <View>
+        <View style={style.view}>
           <Modal isVisible={this.state.modalActive}>
             <View style={style.modalView}>
               <Text style={style.modalText}>See this song in Spotify?</Text>
@@ -211,7 +210,7 @@ export default class extends React.Component {
         </View>
       );
     }
-    return this.renderNotEmpty();
+    return this.renderEmpty();
   }
 
   visitSong() {
@@ -227,6 +226,18 @@ export default class extends React.Component {
 }
 
 const style = StyleSheet.create({
+  view: {
+    padding: 20,
+    backgroundColor: globals.sBlack,
+    borderBottomWidth: 0.5,
+    borderBottomColor: globals.sGrey,
+    flex: .35
+  },
+  guest: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1
+  },
   spotifyIcon: {
     padding: 15,
     position: "absolute",
@@ -243,12 +254,6 @@ const style = StyleSheet.create({
   modalText: {
     ...globals.style.text,
     color: globals.sBlack
-  },
-  view: {
-    padding: 20,
-    backgroundColor: globals.sBlack,
-    borderBottomWidth: 0.5,
-    borderBottomColor: globals.sGrey
   },
   control: {
     flexDirection: 'row',
@@ -267,8 +272,8 @@ const style = StyleSheet.create({
     marginBottom: 10
   },
   image: {
-    height: 30,
-    width: 30,
+    height: 200,
+    width: 200,
     marginRight: 7
   },
   title: {

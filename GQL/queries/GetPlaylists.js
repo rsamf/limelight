@@ -7,7 +7,7 @@ query AllPlaylists {
       id
       owner
       image
-      playlistName
+      name
     }
   }
 }

@@ -64,12 +64,12 @@ class AddedPlaylistsComponent extends React.Component {
     }];
     return (
       <Swipeout right={swipeoutBtns} style={style.swipeout}>
-        <TouchableOpacity style={style.playlist} onPress={()=>this.props.navigate('Bar', playlist)}>
+        <TouchableOpacity style={style.playlist} onPress={()=>this.props.navigation.navigate('Bar', playlist.id)}>
           <View style={{flexDirection: 'row'}}>
             <Image style={style.playlistImage} source={{uri:playlist.image || playlist.images[0].url}}/>
             <View style={style.playlistDetails}>
-              <Text ellipsizeMode={'tail'} numberOfLines={1} style={globals.style.text}>{playlist.playlistName || playlist.name}</Text>
-              <Text ellipsizeMode={'tail'} numberOfLines={1} style={style.playlistOwner}>{playlist.ownerName || playlist.owner.display_name }</Text>
+              <Text ellipsizeMode={'tail'} numberOfLines={1} style={globals.style.text}>{playlist.name}</Text>
+              <Text ellipsizeMode={'tail'} numberOfLines={1} style={style.playlistOwner}>{playlist.ownerName}</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -86,6 +86,7 @@ class AddedPlaylistsComponent extends React.Component {
       );
     }
     if (this.props.error) {
+      console.warn(this.props.error);
       return (
         <View style={style.message}>
           <Text style={globals.style.text}>

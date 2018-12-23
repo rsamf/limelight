@@ -5,8 +5,8 @@ query GetPlaylist($id: ID!) {
   getPlaylist(id: $id) {
     id
     ownerName
-    ownerURI
-    playlistName
+    ownerId
+    name
     songs
     image
     shortCode

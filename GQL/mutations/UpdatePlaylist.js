@@ -4,7 +4,7 @@ export default gql`
 mutation updatePlaylist($id: ID!, $playlist: PlaylistInput!) {
   updatePlaylist(id: $id, playlist: $playlist) {
     id
-    playlistName
+    name
     shortCode
     image
   }

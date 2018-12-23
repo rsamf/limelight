@@ -1,8 +1,9 @@
 import gql from 'graphql-tag';
 
 export default gql`
-mutation AddPlaylist($ownerURI: String!, $ownerName: String!, $playlistName: String!, $image: String) {
-  addPlaylist(ownerURI: $ownerURI, ownerName: $ownerName, playlistName: $playlistName, image: $image) {
+mutation AddPlaylist($id: ID!, $ownerId: String!, $ownerName: String!, $name: String!, $image: String) {
+  addPlaylist(id: $id, ownerId: $ownerId, ownerName: $ownerName, name: $name, image: $image) {
     id
+    name
   }
 }`;

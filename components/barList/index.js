@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, SectionList, StyleSheet, Text } from 'react-native';
 import globals from '../helpers';
-import Header from './header';
+import Header from '../header';
 import OwnedPlaylists from './owned';
 import AddedPlaylists from './added';
 import AddPlaylistBlur from '../blurs/addPlaylist';
