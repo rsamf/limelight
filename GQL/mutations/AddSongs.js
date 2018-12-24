@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export default gql`
-mutation AddSong($id: ID!, $song: SongInput!) {
-  addSong(id: $id, song: $song) {
+mutation AddSongs($id: ID!, $songs: [SongInput]!) {
+  addSongs(id: $id, songs: $songs) {
     id
     songs {
       id

@@ -8,5 +8,6 @@ query GetSomePlaylists($ids: [ID]!) {
     ownerId
     name
     image
+    __typename
   }
 }`;

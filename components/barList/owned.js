@@ -41,7 +41,7 @@ export default class OwnedList extends React.Component {
     super(props);
   }
 
-  onClick = (playlist) => globals.goToBar(playlist.id, playlist.ownerId, this.props.user.id, this.props.navigation);
+  onClick = (playlist) => globals.goToBar(playlist, this.props.user, this.props.navigation);
 
   eachPlaylist(playlist, i) {
     if(playlist === "LOADING") {

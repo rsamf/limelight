@@ -7,7 +7,7 @@ import AWSAppSyncClient from "aws-appsync/lib";
 import Spotify from 'rn-spotify-sdk';
 import StoredPlaylist from './StoredPlaylist';
 import AddPlaylistMutation from '../../GQL/mutations/AddPlaylist';
-import CreateSongsMutation from '../../GQL/mutations/CreateSongs';
+import AddSongListMutation from '../../GQL/mutations/AddSongList';
 import DeletePlaylistMutation from '../../GQL/mutations/DeletePlaylist';
 
 
@@ -145,6 +145,12 @@ const getSongData = (track) => {
   };
 };
 
+const getSongsFromPlaylist = playlist => {
+  if(playlist.tracks && playlist.tracks.items) {
+    return playlist.tracks.items.map(getSongData);
+  }
+  return [];
+}
 const getSongsDataHTTP = (userId, playlistId, callback) => {
   Spotify.sendRequest(`v1/users/${userId}/playlists/${playlistId}/tracks`, "GET", {}, true).then(({items}) => {
     callback(items.map(({track}) => getSongData(track)));
@@ -167,44 +173,37 @@ const rsa_ud = func => {
   }
 };
 
-const addPlaylist = (playlist, user, callback) => {
+const addPlaylistToAWS = (playlist, user, callback) => {
   const sendPlaylistMutation = (callback) => {
-    const playlistVariables = {
-      id: playlist.id,
+    const variables = {
+      id: playlist.uri,
+      name: playlist.name,
       ownerId: user.id,
       ownerName: user.display_name,
       // Elvis-operator plz xD
-      image: (playlist.images && playlist.images[0] && playlist.images[0].url) || (user.images && user.images[0] && user.images[0].url),
-      name: playlist ? playlist.name : user.display_name
+      image: (playlist.images && playlist.images[0] && playlist.images[0].url) || (user.images && user.images[0] && user.images[0].url)
     };
-    console.warn(playlistVariables);
     client.mutate({
       mutation: AddPlaylistMutation,
-      variables: playlistVariables
-    }).then(({data})=>{callback(data)});
-  }
-  const sendSongsMutation = (callback) => {
-    const songVariables = { id: playlist.id, songs: [] };
-    client.mutate({
-      mutation: CreateSongsMutation,
-      variables: songVariables
+      variables
     }).then(({data})=>{callback(data)});
   };
-  sendPlaylistMutation(data => {
-    sendSongsMutation(() => {
-      callback(data.addPlaylist);
+  const sendSongsMutation = (callback) => {
+    const variables = { id: playlist.uri, songs: getSongsFromPlaylist(playlist) };
+    client.mutate({
+      mutation: AddSongListMutation,
+      variables
+    }).then(({data})=>{callback(data)});
+  };
+  if(user.id === playlist.owner.id) {
+    sendPlaylistMutation(() => {
+      sendSongsMutation((data) => {
+        callback(data.addSongList.songs);
+      });
     });
-    // const id = data.addPlaylist.id;
-    // let songVariables = { id: id, songs: [] };
-    // if(playlist) {
-    //   getSongsDataHTTP(user.id, playlist.id, songs => {
-    //     songVariables.songs = songs;
-    //     sendSongsMutation(songVariables, ({createSongs: {id}})=>switchView(id));
-    //   });
-    // } else {
-    //   sendSongsMutation(songVariables, ({createSongs: {id}})=>switchView(id));
-    // }
-  });
+  } else {
+    callback(null);
+  }
 };
 
 const getPlaylistFromSpotify = (playlistId, callback) => {
@@ -214,22 +213,35 @@ const getPlaylistFromSpotify = (playlistId, callback) => {
 };
 
 const getPlaylistId = uri => uri.substring(uri.search(/playlist:/g) + 9);
+const getUserId = uri => uri.substring(uri.search(/user:/g) + 5, uri.search(/:playlist/g));
+const getMyPlaylists = (user, func) => {
+  Spotify.sendRequest('v1/me/playlists', "GET", {}, true).then(({items}) => {
+    let filtered = items.filter((playlist) => playlist.owner.id === user.id);
+    let mapped = filtered.map(playlist => ({
+      id: playlist.uri,
+      ownerId: playlist.owner.id,
+      image: playlist.images && playlist.images[0] && playlist.images[0].url,
+      name: playlist.name
+    }));
+    func(mapped);
+  });
+};
 
-const goToBar = (playlistURI, playlistOwnerId, userId, navigation) => {
-  if(userId === playlistOwnerId) {
-    let playlistId = getPlaylistId(playlistURI);
-    getPlaylistFromSpotify(playlistId, (data, error) => {
+const goToBar = (playlist, user, navigation) => {
+  if(playlist.ownerId === user.id) {
+    getPlaylistFromSpotify(getPlaylistId(playlist.id), (data, error) => {
       if(data) {
-        navigation.navigate('Bar', playlistURI);
+        navigation.navigate('Bar', playlist.id);
       } else {
         client.mutate({
           mutation: DeletePlaylistMutation,
-          variables: {id: playlistURI}
+          variables: {id: playlist.id}
         });
+        //remove from userplaylists and popup message saying playlist was deleted
       }
-    })
+    });
   } else {
-    navigation.navigate('Bar', playlistURI);
+    navigation.navigate('Bar', playlist.id);
   }
 };
 
@@ -268,8 +280,11 @@ const globals = {
   getSongsAsObjects,
   rsa,
   rsa_ud,
-  addPlaylist,
+  addPlaylistToAWS,
   goToBar,
+  getPlaylistId,
+  getUserId,
+  getMyPlaylists,
   localPlaylists: new StoredPlaylist(),
 };
 

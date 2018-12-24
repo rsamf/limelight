@@ -138,7 +138,9 @@ export default class extends React.Component {
   renderEmpty(){
     return (
       <View style={style.view}>
-        <Text style={globals.style.smallText}>Add some songs!</Text>
+        <View style={style.empty}>
+          <Text style={globals.style.smallText}>Add some songs!</Text>
+        </View>
       </View>
     );
   }
@@ -230,8 +232,11 @@ const style = StyleSheet.create({
     padding: 20,
     backgroundColor: globals.sBlack,
     borderBottomWidth: 0.5,
-    borderBottomColor: globals.sGrey,
-    flex: .35
+    borderBottomColor: globals.sGrey
+  },
+  empty: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   guest: {
     alignItems: 'center',

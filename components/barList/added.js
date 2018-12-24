@@ -133,7 +133,7 @@ export default class AddedPlaylists extends React.Component {
     }
     return (
       <View style={style.message}>
-        <Text style={globals.style.text}>You haven't added any playlists yet!</Text>
+        <Text style={globals.style.text}>No playlists...</Text>
         <View style={{flexDirection: 'row'}}>
           <Text style={globals.style.text}>Click </Text>
           <Icon

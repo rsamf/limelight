@@ -133,7 +133,7 @@ export default class AddPlaylistBlur extends React.Component {
       Spotify.sendRequest(`v1/users/${this.props.user.id}/playlists`, 'POST', {name}, true)
       .then((data) => {
         console.warn("DATA", data);
-        globals.addPlaylist({name, id: data.uri}, this.props.user, playlist => {
+        globals.addPlaylistToAWS({name, id: data.uri}, this.props.user, playlist => {
           if(playlist) {
             console.warn("playlist:", playlist);
             console.warn(data.owner.id);

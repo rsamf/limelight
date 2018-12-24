@@ -2,16 +2,45 @@ import GetPlaylist from './queries/GetPlaylist';
 import GetSongs from './queries/GetSongs';
 import UpdatePlaylistMutation from './mutations/UpdatePlaylist';
 import DeletePlaylistMutation from './mutations/DeletePlaylist';
-import DeleteSongsMutation from './mutations/DeleteSongs';
+import DeleteSongListMutation from './mutations/DeleteSongList';
 import VoteSongMutation from './mutations/VoteSong';
 import NextSongMutation from './mutations/NextSong';
-import AddSongMutation from './mutations/AddSong';
-import DeleteSongMutation from './mutations/DeleteSong';
+import AddSongsMutation from './mutations/AddSongs';
+import DeleteSongsMutation from './mutations/DeleteSongs';
 import OnSongsChangedSubscription from './subscriptions/SongsChanged';
 import { graphql, compose } from 'react-apollo';
 import SongsManipulation from './songHandlers';
 
 export default (Component) => compose(
+  graphql(GetSongs, {
+    options: props => {
+      return {
+        fetchPolicy: 'cache-and-network',
+        variables: { id: props.children }
+      };
+    },
+    props: props => {
+      return {
+        songs: props.data.getSongs && props.data.getSongs.songs,
+        error: props.data.error,
+        songsLoading: props.data.loading,
+        subscribeToSongChanges: () => {
+          props.data.subscribeToMore({
+            document: OnSongsChangedSubscription,
+            variables: { id: props.ownProps.children },
+            updateQuery: (prev, {subscriptionData:{data:{onSongsChanged:{songs}}}}) => {
+              return {
+                getSongs: {
+                  songs,
+                  __typename: 'SongList'
+                }
+              };
+            }
+          });
+        }
+      }
+    }
+  }),
   graphql(GetPlaylist, {
     options: props => {
       return {
@@ -19,10 +48,10 @@ export default (Component) => compose(
         variables: { id: props.children }
       };
     },
-    props: (props) => {
+    props: (props) => {    
       return {
         playlist: props.data.getPlaylist,
-        loading: props.data.loading,
+        playlistLoading: props.data.loading,
         error: props.data.error  
       };
     }
@@ -54,40 +83,13 @@ export default (Component) => compose(
       }
     }
   }),
-  graphql(DeleteSongsMutation, {
+  graphql(DeleteSongListMutation, {
     props: props => {
       return {
-        deleteSongs: () => {
+        deleteSongList: () => {
           props.mutate({
             variables: {
               id: props.ownProps.playlist.songs
-            }
-          });
-        }
-      }
-    }
-  }),
-  graphql(GetSongs, {
-    options: props => {
-      return {
-        fetchPolicy: 'cache-and-network',
-        variables: { id: props.children }
-      };
-    },
-    props: props => {
-      return {
-        songs: props.data.getSongs && props.data.getSongs.songs,
-        subscribeToSongChanges: () => {
-          props.data.subscribeToMore({
-            document: OnSongsChangedSubscription,
-            variables: { id: props.ownProps.children },
-            updateQuery: (prev, {subscriptionData:{data:{onSongsChanged:{songs}}}}) => {
-              return {
-                getSongs: {
-                  songs,
-                  __typename: 'SongList'
-                }
-              };
             }
           });
         }
@@ -152,7 +154,7 @@ export default (Component) => compose(
       };
     }
   }),
-  graphql(AddSongMutation, {
+  graphql(AddSongsMutation, {
     props: props => {
       return {
         addSong: (song) => {
@@ -162,20 +164,20 @@ export default (Component) => compose(
               let newSong = {...song, __typename: 'Song'};
               let songs = SongsManipulation.add(props.ownProps.songs, newSong);
               return {
-                addSong: {
+                addSongs: {
                   id: props.ownProps.children,
                   songs: songs,
                   __typename: 'SongList'
                 }
               };
             },
-            update: (proxy, { data: { addSong } }) => {
+            update: (proxy, { data: { addSongs } }) => {
               let newSong = {...song, __typename: 'Song'};
               let data = proxy.readQuery({ 
                 query: GetSongs, 
                 variables: { id: props.ownProps.children, song: newSong }
               });
-              data.getSongs.songs = addSong.songs;
+              data.getSongs.songs = addSongs.songs;
               proxy.writeQuery({ query: GetSongs, variables: { id: props.ownProps.children, song: newSong }, data });
             }
           });
@@ -183,28 +185,28 @@ export default (Component) => compose(
       };
     }
   }),
-  graphql(DeleteSongMutation, {
+  graphql(DeleteSongsMutation, {
     props: props => {
       return {
-        deleteSong: (id) => {
+        deleteSongs: (id) => {
           props.mutate({
             variables: { id: props.ownProps.children, songId: id },
             optimisticResponse: () => {
               let songs = SongsManipulation.delete(props.ownProps.songs, id);
               return {
-                deleteSong: {
+                deleteSongs: {
                   id: props.ownProps.children,
                   songs: songs,
                   __typename: 'SongList'
                 }
               };
             },
-            update: (proxy, { data: { deleteSong } }) => {
+            update: (proxy, { data: { deleteSongs } }) => {
               let data = proxy.readQuery({ 
                 query: GetSongs, 
                 variables: { id: props.ownProps.children, songId: id }
               });
-              data.getSongs.songs = deleteSong.songs;
+              data.getSongs.songs = deleteSongs.songs;
               proxy.writeQuery({ query: GetSongs, variables: { id: props.ownProps.children, songId: id }, data });
             }
           });
