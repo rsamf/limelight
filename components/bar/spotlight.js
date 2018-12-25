@@ -145,49 +145,49 @@ export default class extends React.Component {
     );
   }
 
-  renderForGuest(song){
-    return (
-      <View style={style.guest}>
-        <TouchableOpacity style={style.spotifyIcon} onPress={()=>this.setState({modalActive:true})}>
-          <Icon color={globals.sWhite} name="spotify" type="font-awesome"/>
-        </TouchableOpacity>
-        <Image style={style.image} source={{uri:song.image}}/>
-        <View style={style.title}>
-          <Text ellipsizeMode="middle" numberOfLines={1} style={style.text}>{song.artist} - {song.name}</Text>
-        </View>
-      </View>
-    );
-  }
+  // renderForGuest(song){
+  //   return (
+  //     <View style={style.guest}>
+  //       <TouchableOpacity style={style.spotifyIcon} onPress={()=>this.setState({modalActive:true})}>
+  //         <Icon color={globals.sWhite} name="spotify" type="font-awesome"/>
+  //       </TouchableOpacity>
+  //       <Image style={style.image} source={{uri:song.image}}/>
+  //       <View style={style.title}>
+  //         <Text ellipsizeMode="middle" numberOfLines={1} style={style.text}>{song.artist} - {song.name}</Text>
+  //       </View>
+  //     </View>
+  //   );
+  // }
 
-  renderForHost(song){
-    return (
-      <View style={globals.style.view}>
-        <TouchableOpacity style={style.spotifyIcon} onPress={()=>this.setState({modalActive:true})}>
-          <Icon color={globals.sWhite} name="spotify" type="font-awesome"/>
-        </TouchableOpacity>
-        <View style={style.title}>
-          <Image style={style.image} source={{uri:song.image}}/>
-          <Text ellipsizeMode="middle" numberOfLines={1} style={style.text}>{song.artist} - {song.name}</Text>
-        </View>
-        <View style={style.control}>
-          <Icon onPress={()=>this.seekStart()} iconStyle={style.controlItem} underlayColor={globals.sBlack}
-          color={globals.sWhite} name="step-backward" type="font-awesome"/>
-          {
-            this.state.track.playing
-            ?
-            <Icon onPress={()=>this.pause()} iconStyle={style.controlItem} 
-            color={globals.sWhite} name="pause" type="font-awesome" underlayColor={globals.sBlack}/>
-            :
-            <Icon onPress={()=>this.play()} iconStyle={style.controlItem} 
-            color={globals.sWhite} name="play" type="font-awesome" underlayColor={globals.sBlack}/>
-          }
-          <Icon onPress={()=>this.next()} iconStyle={style.controlItem} underlayColor={globals.sBlack}
-          color={globals.sWhite} name="step-forward" type="font-awesome"/>
-        </View>
-        <ProgressViewIOS style={style.progress} trackTintColor={globals.sGrey} progressTintColor={globals.sSand} progress={this.state.track.position}/>
-      </View>
-    );
-  }
+  // renderForHost(song){
+  //   return (
+  //     <View style={globals.style.view}>
+  //       <TouchableOpacity style={style.spotifyIcon} onPress={()=>this.setState({modalActive:true})}>
+  //         <Icon color={globals.sWhite} name="spotify" type="font-awesome"/>
+  //       </TouchableOpacity>
+  //       <View style={style.title}>
+  //         <Image style={style.image} source={{uri:song.image}}/>
+  //         <Text ellipsizeMode="middle" numberOfLines={1} style={style.text}>{song.artist} - {song.name}</Text>
+  //       </View>
+  //       <View style={style.control}>
+  //         <Icon onPress={()=>this.seekStart()} iconStyle={style.controlItem} underlayColor={globals.sBlack}
+  //         color={globals.sWhite} name="step-backward" type="font-awesome"/>
+  //         {
+  //           this.state.track.playing
+  //           ?
+  //           <Icon onPress={()=>this.pause()} iconStyle={style.controlItem} 
+  //           color={globals.sWhite} name="pause" type="font-awesome" underlayColor={globals.sBlack}/>
+  //           :
+  //           <Icon onPress={()=>this.play()} iconStyle={style.controlItem} 
+  //           color={globals.sWhite} name="play" type="font-awesome" underlayColor={globals.sBlack}/>
+  //         }
+  //         <Icon onPress={()=>this.next()} iconStyle={style.controlItem} underlayColor={globals.sBlack}
+  //         color={globals.sWhite} name="step-forward" type="font-awesome"/>
+  //       </View>
+  //       <ProgressViewIOS style={style.progress} trackTintColor={globals.sGrey} progressTintColor={globals.sSand} progress={this.state.track.position}/>
+  //     </View>
+  //   );
+  // }
   
   render(){
     const song = this.props.children;
@@ -204,11 +204,15 @@ export default class extends React.Component {
               </View>
             </View>
           </Modal>
-          {
-            this.props.owned ?
-            this.renderForHost(song) :
-            this.renderForGuest(song)
-          }
+          <View style={style.view}>
+            <TouchableOpacity style={style.spotifyIcon} onPress={()=>this.setState({modalActive:true})}>
+              <Icon color={globals.sWhite} name="spotify" type="font-awesome"/>
+            </TouchableOpacity>
+            <Image style={style.image} source={{ uri: song.image }}/>
+            <View style={style.title}>
+              <Text ellipsizeMode="middle" numberOfLines={1} style={style.text}>{song.artist} - {song.name}</Text>
+            </View>
+          </View>
         </View>
       );
     }
@@ -277,8 +281,8 @@ const style = StyleSheet.create({
     marginBottom: 10
   },
   image: {
-    height: 200,
-    width: 200,
+    height: 30,
+    width: 30,
     marginRight: 7
   },
   title: {

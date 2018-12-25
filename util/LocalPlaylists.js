@@ -2,12 +2,12 @@ import LocalArray from "./LocalArray";
 
 export default class LocalPlaylists extends LocalArray {
   constructor(component){
-    super("playlists", (playlists) => {
+    super("playlists", () => {
       component.setState({
-        playlists,
+        playlists: this,
         blurProps: {
           ...component.state.blurProps,
-          playlists
+          playlists: this
         }
       });
     });

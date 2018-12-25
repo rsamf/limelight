@@ -92,6 +92,38 @@ const style = StyleSheet.create({
   }
 });
 
+const diff = (truth, previous) => {
+  let toReturn = {
+    old: [],
+    new: [],
+    ordered: []
+  };
+  const findTruthWithId = (id) => {
+    for(let i = 0; i < truth.length; i++) {
+      if(truth[i]){
+        if(truth[i].track.id === id) {
+          return i;
+        }
+      }
+    }
+    return -1;
+  };
+  for(let i = 0; i < previous.length; i++) {
+    const truthIndex = findTruthWithId(previous[i].id);
+    if(truthIndex === -1) {
+      toReturn.old.push(previous[i].id);
+    } else {
+      toReturn.ordered.push(previous[i]);
+      delete truth[truthIndex];
+    }
+  }
+  toReturn.new = truth.filter(t => t).map(song =>({
+    ...getSongData(song.track),
+    state: 0
+  }));
+  return toReturn;
+};
+
 const createSearchTextInput = (onChangeText, onSubmitEditing) => {
   return () => (
     <View style={style.textInputContainer}>
@@ -150,7 +182,15 @@ const getSongsFromPlaylist = playlist => {
     return playlist.tracks.items.map(({track})=>getSongData(track));
   }
   return [];
-}
+};
+
+const transformSpotifyToAWSSongs = (spotify, aws) => {
+  for(let i = 0; i < spotify.length; i++) {
+
+  }
+  spotifySongs.map(({track})=>globals.getSongData(track));
+};
+
 const getSongsDataHTTP = (userId, playlistId, callback) => {
   Spotify.sendRequest(`v1/users/${userId}/playlists/${playlistId}/tracks`, "GET", {}, true).then(({items}) => {
     callback(items.map(({track}) => getSongData(track)));
@@ -189,7 +229,6 @@ const addPlaylistToAWS = (playlist, user, callback) => {
     }).then(({data})=>{callback(data)});
   };
   const sendSongsMutation = (callback) => {
-    console.warn("playlist:", JSON.stringify(playlist.tracks.items));
     const variables = { id: playlist.uri, songs: getSongsFromPlaylist(playlist) };
     client.mutate({
       mutation: AddSongListMutation,
@@ -197,10 +236,9 @@ const addPlaylistToAWS = (playlist, user, callback) => {
     }).then(({data})=>{callback(data)});
   };
   if(user.id === playlist.owner.id) {
-    sendPlaylistMutation(() => {
+    sendPlaylistMutation((data) => {
       sendSongsMutation((data) => {
-        console.warn("from sendSongsMutation:", data)
-        callback(data.addSongList.songs);
+        callback(data.addSongList.songs, data.addPlaylist);
       });
     });
   } else {
@@ -281,13 +319,14 @@ const globals = {
   getSongsDataHTTP,
   getSongsAsObjects,
   rsa,
+  diff,
   rsa_ud,
   addPlaylistToAWS,
   goToBar,
   getPlaylistId,
   getUserId,
   getMyPlaylists,
-  localPlaylists: new StoredPlaylist(),
+  transformSpotifyToAWSSongs
 };
 
 

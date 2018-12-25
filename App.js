@@ -45,7 +45,6 @@ export default class App extends React.Component {
   }
 
   addToUserPlaylists(playlist) {
-    console.warn(playlist);
     let playlists = this.state.user.playlists;
     if(playlist === "LOADING") {
       playlists.push("LOADING");

@@ -1,12 +1,12 @@
 import { AsyncStorage } from 'react-native';
 
 export default class LocalObject {
-  constructor(uniqueIdentifier, update) {
+  constructor(uniqueIdentifier, update, callback) {
     this.internalStorageItem = this.stg`${uniqueIdentifier}`;
     this.update = () => update(this);
     this.getAll(obj => {
       this.mockObject(obj);
-      this.update();
+      callback();
     });
   }
 

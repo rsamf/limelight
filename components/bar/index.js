@@ -7,7 +7,6 @@ import Songs from './songs';
 import createPlaylist from '../../GQL/playlist';
 import LocalSongs from '../../util/LocalSongs';
 import network from './network';
-const localVotes = new StoredVotes();
 
 class PlaylistComponent extends React.Component {
   constructor(props) {
@@ -15,39 +14,49 @@ class PlaylistComponent extends React.Component {
 
     this.state = {
       subscribed: false,
-      mergedVotes: false,
       loading: true,
-      songs: []
+      songs: null,
+      playlist: null
     };
   }
 
   componentWillReceiveProps(props) {
     let loading = props.songsLoading || props.playlistLoading;
     if(this.state.loading && props.isOwned && !loading && !props.error) {
-      if(!props.songs) {
-        console.warn("Couldn't find songs, initialzing...");
-        network.initialize(props.spotify, props.user, (data) => {
-          console.warn("from initialize (aws songs length):", data.length);
-          this.setState({
-            loading: false,
-            songs: new LocalSongs(data, this)
-          });
-        });
+      if(!props.songs || !props.playlist) {
+        console.warn("Couldn't find songs or playlist, initialzing...");
+        this.init(props);
       } else {
         this.get(props);
       }
     }
   }
 
+  init(props) {
+    network.initialize(props.spotify, props.user, (songs, playlist) => {
+      console.warn("init: from initialize (aws songs length):", songs.length);
+      this.setReady(props.children, songs, playlist);
+    });
+  }
+
   get(props) {
     // console.warn("Spotify", props.spotify.tracks.items);
     // console.warn("Songs", props.songs);
-    network.rebaseSongsFromSpotify(props.playlist.id, props.spotify.tracks.items, props.songs, (data) => {
-      console.warn("from initialize (spotify songs length):", data.length);
+    network.rebaseSongsFromSpotify(props.children, props.spotify.tracks.items, props.songs, (songs) => {
+      console.warn("get: from initialize (aws songs length):", songs.length);
+      this.setReady(props.children, songs, props.playlist);
+    });
+  }
+
+  setReady(id, songs, playlist) {
+    let localSongs = new LocalSongs(id, songs, this, () => {
       this.setState({
-        loading: false,
-        songs: new LocalSongs(data, this)
+        loading: false
       });
+    });
+    this.setState({
+      songs: localSongs,
+      playlist: playlist
     });
   }
 
@@ -60,34 +69,14 @@ class PlaylistComponent extends React.Component {
   //   }
   // }
 
-  // componentWillReceiveProps(newProps) {
-  //   if(newProps.songs) {
-  //     this.mergeSongsWithVotes(newProps.songs);
-  //   }
-  // }
-
-  // async mergeSongsWithVotes (songs) {
-  //   let votedSongs = await this.props.localVotes.set(songs);
-  //   let newSongs = songs.map(s => {
-  //     let currentVotedState = votedSongs[s.id];
-  //     return {
-  //       ...s,
-  //       voted: (currentVotedState !== undefined) ? currentVotedState.voted : false
-  //     };
-  //   });
-  //   this.setState({
-  //     mergedVotes: true,
-  //     songs: newSongs
-  //   });
-  // }
-
-  // voteSong(song) {
-  //   this.props.localVotes.vote(song.id, song.state, (songs, notAlreadyVoted) => {
-  //     if(notAlreadyVoted) {
-  //       this.props.voteSong(song.id);
-  //     }
-  //   });
-  // }
+  voteSong(index) {
+    // this.props.localVotes.vote(song.id, song.state, (songs, notAlreadyVoted) => {
+    //   if(notAlreadyVoted) {
+    //     this.props.voteSong(song.id);
+    //   }
+    // });
+    this.state.songs.vote(index);
+  }
 
   render() {
     return (
@@ -95,7 +84,7 @@ class PlaylistComponent extends React.Component {
         <Header
           {...this.props}
           navigation={this.props.navigation}
-          playlist={this.props.playlist}
+          playlist={this.state.playlist}
           updatePlaylist={(p)=>this.props.updatePlaylist(p)}
           deletePlaylist={()=>this.props.deletePlaylist()}
           deleteSongs={()=>this.props.deleteSongs()}
@@ -107,7 +96,7 @@ class PlaylistComponent extends React.Component {
               owned={this.props.isOwned} 
               next={()=>this.props.nextSong()}
             >
-              {this.state.songs[0]}
+              {this.state.songs.spotlight}
             </Spotlight>
 
             <Songs
@@ -117,7 +106,7 @@ class PlaylistComponent extends React.Component {
               deleteSong={(songId)=>this.props.deleteSong(songId)}
               vote={(song)=>this.voteSong(song)}
             >
-              {this.state.songs.slice(1)}
+              {this.state.songs.queue}
             </Songs>
           </View>
           ) :
@@ -136,7 +125,6 @@ export default class Bar extends React.Component {
 
     this.id = this.props.navigation.state.params;
     this.state = {
-      localVotes: null,
       spotify: null,
       loading: true,
       isOwned: (this.props.screenProps.user && this.props.screenProps.user.id) === globals.getUserId(this.id)
@@ -144,7 +132,6 @@ export default class Bar extends React.Component {
   }
 
   componentDidMount() {
-    this.getLocalVotesInterface();
     this.getPlaylistFromSpotify();
   }
 
@@ -164,29 +151,29 @@ export default class Bar extends React.Component {
     }
   }
 
-  getLocalVotesInterface() {
-    this.setState({
-      localVotes: {
-        vote: (songId, state, callback)=>{
-          localVotes.tryVote(this.playlistId, songId, state, callback);
-        },
-        get: () => {
-          return new Promise(resolve => {
-            localVotes.get(this.playlistId, playlist => {
-              resolve(playlist);
-            });
-          });
-        },
-        set: (songs) => {
-          return new Promise(resolve => {
-            localVotes.setPlaylistToSongs(this.playlistId, songs, playlist => {
-              resolve(playlist);
-            });
-          });
-        }
-      }  
-    });
-  }
+  // getLocalVotesInterface() {
+  //   this.setState({
+  //     localVotes: {
+  //       vote: (songId, state, callback)=>{
+  //         localVotes.tryVote(this.playlistId, songId, state, callback);
+  //       },
+  //       get: () => {
+  //         return new Promise(resolve => {
+  //           localVotes.get(this.playlistId, playlist => {
+  //             resolve(playlist);
+  //           });
+  //         });
+  //       },
+  //       set: (songs) => {
+  //         return new Promise(resolve => {
+  //           localVotes.setPlaylistToSongs(this.playlistId, songs, playlist => {
+  //             resolve(playlist);
+  //           });
+  //         });
+  //       }
+  //     }  
+  //   });
+  // }
 
   render(){
     return (
@@ -198,7 +185,6 @@ export default class Bar extends React.Component {
             isOwned={this.state.isOwned}
             spotify={this.state.spotify}
             navigation={this.props.navigation} 
-            localVotes={this.state.localVotes}
           >
             {this.id}
           </Playlist>
