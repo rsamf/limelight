@@ -19,7 +19,7 @@ const net = {
   },
   rebaseSongsFromSpotify: (id, spotifySongs, awsSongs, callback) => {
     let doneFlag = 0;
-    spotifySongs = spotifySongs.map(globals.getSongData);
+    spotifySongs = spotifySongs.map(({track})=>globals.getSongData(track));
     const findNewSongs = () => {
       return spotifySongs.filter(s => !includesId(awsSongs, s));
     };

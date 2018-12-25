@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Icon, Avatar } from 'react-native-elements';
 import ProfileBlur from './blurs/profile';
 import AddPlaylistBlur from './blurs/addPlaylist';
+import PlaylistOptionsBlur from './blurs/playlistOptions';
 import globals from './helpers';
 import Spotify from 'rn-spotify-sdk';
 
@@ -92,7 +93,7 @@ export default class Header extends React.Component {
   }
 
   showPlaylistOptions() {
-    this.props.setOpenedBlur(3, {
+    this.props.setOpenedBlur(PlaylistOptionsBlur, {
       playlist: this.props.children,
       navigation: this.props.navigation,
       updatePlaylist: (p)=>this.props.updatePlaylist(p),

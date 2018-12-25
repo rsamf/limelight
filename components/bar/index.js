@@ -5,7 +5,7 @@ import Header from '../header';
 import Spotlight from './spotlight';
 import Songs from './songs';
 import createPlaylist from '../../GQL/playlist';
-import StoredVotes from '../helpers/StoredVotes';
+import LocalSongs from '../../util/LocalSongs';
 import network from './network';
 const localVotes = new StoredVotes();
 
@@ -27,9 +27,10 @@ class PlaylistComponent extends React.Component {
       if(!props.songs) {
         console.warn("Couldn't find songs, initialzing...");
         network.initialize(props.spotify, props.user, (data) => {
+          console.warn("from initialize (aws songs length):", data.length);
           this.setState({
             loading: false,
-            songs: data
+            songs: new LocalSongs(data, this)
           });
         });
       } else {
@@ -39,12 +40,13 @@ class PlaylistComponent extends React.Component {
   }
 
   get(props) {
-    console.warn("Spotify", props.spotify.tracks.items);
-    console.warn("Songs", props.songs);
+    // console.warn("Spotify", props.spotify.tracks.items);
+    // console.warn("Songs", props.songs);
     network.rebaseSongsFromSpotify(props.playlist.id, props.spotify.tracks.items, props.songs, (data) => {
+      console.warn("from initialize (spotify songs length):", data.length);
       this.setState({
         loading: false,
-        songs: data
+        songs: new LocalSongs(data, this)
       });
     });
   }

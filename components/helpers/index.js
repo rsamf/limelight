@@ -147,7 +147,7 @@ const getSongData = (track) => {
 
 const getSongsFromPlaylist = playlist => {
   if(playlist.tracks && playlist.tracks.items) {
-    return playlist.tracks.items.map(getSongData);
+    return playlist.tracks.items.map(({track})=>getSongData(track));
   }
   return [];
 }
@@ -189,6 +189,7 @@ const addPlaylistToAWS = (playlist, user, callback) => {
     }).then(({data})=>{callback(data)});
   };
   const sendSongsMutation = (callback) => {
+    console.warn("playlist:", JSON.stringify(playlist.tracks.items));
     const variables = { id: playlist.uri, songs: getSongsFromPlaylist(playlist) };
     client.mutate({
       mutation: AddSongListMutation,
@@ -198,6 +199,7 @@ const addPlaylistToAWS = (playlist, user, callback) => {
   if(user.id === playlist.owner.id) {
     sendPlaylistMutation(() => {
       sendSongsMutation((data) => {
+        console.warn("from sendSongsMutation:", data)
         callback(data.addSongList.songs);
       });
     });
