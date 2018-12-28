@@ -6,7 +6,6 @@ export default {
   addPlaylist: (playlist, user, callback) => {
     if(user.id === playlist.owner.id) {
       const songs = globals.getSongsFromPlaylist(playlist);
-      console.warn(songs);
       globals.client.mutate({
         mutation: AddPlaylistMutation,
         variables: {
@@ -20,8 +19,7 @@ export default {
           }
         }
       }).then(({data}) => {
-        console.warn(data);
-        callback(data.addPlaylist);
+        callback({...data.addPlaylist, songs});
       });
     } else {
       callback();

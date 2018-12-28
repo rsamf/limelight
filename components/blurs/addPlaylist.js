@@ -6,6 +6,7 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import GetPlaylistsByCode from '../../GQL/queries/GetPlaylistsByCode';
 import Spotify from 'rn-spotify-sdk';
 import aws from '../../util/aws';
+import user from '../../util/user';
 
 export default class AddPlaylistBlur extends React.Component {
   constructor(props){
@@ -46,7 +47,7 @@ export default class AddPlaylistBlur extends React.Component {
   setSelected(i) {
     const go = () => this.setState({selectedButton: i});
     if(i === 2) {
-      globals.rsa(() => go());
+      user.rsa(go);
     } else {
       go();
     }
@@ -131,9 +132,8 @@ export default class AddPlaylistBlur extends React.Component {
     this.props.addToUserPlaylists("LOADING");
     const name = this.state.nameInput;
     const url = `v1/users/${this.props.user.id}/playlists`;
-    globals.rsa(() => {
+    user.rsa(() => {
       Spotify.sendRequest(url, 'POST', {name}, true).then(data => {
-        console.warn("DATA", data);
         const toAdd = {
           name, 
           uri: data.uri, 
@@ -143,8 +143,6 @@ export default class AddPlaylistBlur extends React.Component {
         };
         aws.addPlaylist(toAdd, this.props.user, playlist => {
           if(playlist) {
-            console.warn("playlist:", playlist);
-            console.warn(data.owner.id);
             this.props.addToUserPlaylists({
               id: playlist.id,
               ownerId: data.owner.id,

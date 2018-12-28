@@ -7,9 +7,12 @@ import user from '../../util/user';
 class Side extends React.Component {
   constructor(props) {
     super(props);
-    this.leftOpacities = [...Array(10)].fill(1,0,10).map((el, i)=>(10-i)*.1);
-    this.rightOpacities = [...Array(10)].fill(1,0,10).map((el, i)=>(i+1)*.1);
+    this.leftOpacities = [...Array(20)].map((_, i) => 1 - this.sigmoid(i));
+    this.rightOpacities = [...Array(20)].map((_, i) => this.sigmoid(i));
+    console.warn(this.rightOpacities);
   }
+
+  sigmoid = x => 1 / (1 + Math.E**-((x-10)/4))
 
   render() {
     if(this.props.value === "left") {
@@ -41,7 +44,9 @@ export default class OwnedList extends React.Component {
     super(props);
   }
 
-  onClick = (playlist) => globals.goToBar(playlist, this.props.user, this.props.navigation);
+  goToBar(id) {
+    this.props.navigation.navigate('Bar', id);
+  }
 
   componentDidMount() {
     user.setOwnedPlaylistsScrollView(this.refs.scroll);
@@ -56,7 +61,7 @@ export default class OwnedList extends React.Component {
       );
     }
     return (
-      <TouchableOpacity onPress={()=>this.onClick(playlist)} key={i} style={style.playlist}>
+      <TouchableOpacity onPress={()=>this.goToBar(playlist.id)} key={i} style={style.playlist}>
         {/* <Image source={{uri:playlist.image}} defaultSource={{uri:require('../../images/notes.png')}} style={style.playlistImage}/> */}
         <Image source={{uri:playlist.image}} style={style.playlistImage}/>
         <Text ellipsizeMode={'tail'} numberOfLines={1} style={globals.style.smallText}>{playlist.name}</Text>
@@ -118,7 +123,7 @@ const style = StyleSheet.create({
     paddingLeft: 10
   },
   shade: {
-    width: 2,
+    width: 1,
     backgroundColor: globals.sBlack,
   },
   shadowLeft: {

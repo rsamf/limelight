@@ -29,8 +29,9 @@ export default class LocalObject {
 
   delete(key, callback) {
     this.getAll(obj => {
-      delete obj[key];
-      this.setObject(obj).then(()=>{
+      let newObject = Object.assign({}, obj);
+      delete newObject[key];
+      this.setObject(newObject).then(()=>{
         if(callback) callback(obj);
       });
     });
@@ -38,8 +39,10 @@ export default class LocalObject {
 
   set(key, value, callback) {
     this.getAll(obj => {
-      obj[key] = value;
-      this.setObject(obj).then(()=>{
+      this.setObject({
+        ...obj,
+        [key]: value
+      }).then(()=>{
         if(callback) callback(obj);
       });
     });

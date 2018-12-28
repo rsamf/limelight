@@ -17,7 +17,6 @@ export default {
       });
     };
     Spotify.addListener("login", () => {
-      console.warn("Logged in");
       Spotify.getMe().then(user => {
         setUser({...user, playlists: []});
         globals.getMyPlaylists(user, playlists => setUser({...user, playlists}));
@@ -30,7 +29,6 @@ export default {
   addPlaylist(component, playlist) {
     let playlists = component.state.user.playlists;
     if(playlist === "LOADING") {
-      console.warn(component.props.children);
       if(ownedPlaylistsScrollView) {
         ownedPlaylistsScrollView.scrollTo({x: 0, y: 0, animated: true});
       }
@@ -47,6 +45,20 @@ export default {
         playlists
       }
     });
+  },
+  rsa: func => {
+    if(!Spotify.isLoggedIn()){
+      Spotify.login();
+    } else {
+      func();
+    }
+  },
+  rsa_ud: func => {
+    if(!Spotify.isLoggedIn()){
+      Spotify.login();
+    } else {
+      Spotify.getMe().then(func);
+    }
   }
 };
     

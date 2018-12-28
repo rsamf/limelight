@@ -46,7 +46,6 @@ export default class App extends React.Component {
   }
 
   componentDidMount(){
-    console.warn("loggedin?", Spotify.isLoggedIn());
     user.get(this);
 		if(!Spotify.isInitialized())
 		{
@@ -72,12 +71,6 @@ export default class App extends React.Component {
         ...props,
       }
     });
-  }
-
-  componentDidUpdate() {
-    console.warn('children', this.props.children);
-    console.warn('node', findNodeHandle(this.refs.scroll));
-    console.warn('user', user.ownedPlaylistsScrollView);
   }
 
   render(){

@@ -7,16 +7,17 @@ import Songs from './songs';
 import createPlaylist from '../../GQL/playlist';
 import LocalSongs from '../../util/LocalSongs';
 import network from './network';
+import { getOperationAST } from 'graphql';
 
 class PlaylistComponent extends React.Component {
   constructor(props) {
     super(props);
 
-    this.UPDATE_PERIOD = 60 * 1000;
+    this.UPDATE_PERIOD = 10 * 1000;
 
     this.state = {
+      songs: new LocalSongs(this.props.children, this), // Do not set state on this
       loading: true,
-      songs: null,
       playlist: null
     };
   }
@@ -24,7 +25,7 @@ class PlaylistComponent extends React.Component {
   componentWillReceiveProps(props) {
     let loading = props.songsLoading || props.playlistLoading;
     if(this.state.loading && !loading && !props.error) {
-      this.init(props, !props.songs || !props.playlist, props.isOwned);
+      this.init(props, !props.songs || !props.playlist);
     }
   }
 
@@ -32,50 +33,46 @@ class PlaylistComponent extends React.Component {
     clearInterval(this.interval);
   }
 
-  init(props, isEmpty, isOwned) {
+
+  init(props, isEmpty) {
     if(isEmpty) {
-      if(isOwned) {
-        network.initialize(props.spotify, props.user, (songs, playlist) => {
-          console.warn("init: from initialize (aws songs length):", songs.length);
-          this.setReady(props.children, songs, playlist);
-        });
-      } else {
-        props.navigation.navigate('BarList');
-      }
+      this.initEmpty(props);
     } else {
-      if(isOwned) {
-        this.get(props);
-      }
+      this.get(props);
     }
-    this.interval = setInterval(this.get, this.UPDATE_PERIOD);
-    this.props.subscribeToSongChanges();
+    // this.interval = setInterval(()=>this.get(), this.UPDATE_PERIOD);
+    // this.props.subscribeToSongChanges();
+  }
+
+  initEmpty(props){
+    if(props.isOwned) {
+      network.initialize(props.children, props.user, playlist => {
+        this.state.songs.rebase(playlist.songs);
+        this.setState({
+          playlist,
+          loading: false
+        });
+      });
+    } else {
+      props.navigation.navigate('BarList');
+    }
   }
 
   get(props = this.props) {
-    // console.warn("Spotify", props.spotify.tracks.items);
-    // console.warn("Songs", props.songs);
     if(props.isOwned) {
-      network.rebaseSongsFromSpotify(props.children, props.spotify.tracks.items, props.songs, (songs) => {
-        console.warn("get: from initialize (aws songs length):", songs.length);
-        this.setReady(props.children, songs, props.playlist);
+      network.rebasePlaylistFromSpotify(props.children, props.songs, playlist => {
+        console.warn("playlist", playlist);
+        console.warn("songs", playlist.songs);
+        this.setState({
+          playlist,
+          loading: false
+        });
+        this.state.songs.rebase(playlist.songs);
       });
     } else {
-      network.refetch(props.refetchSongs, props.refetchPlaylist, (data)=>{
-        console.log("REFTECHED:", data);
-      });
+      props.refetchSongs();
+      props.refetchPlaylist();
     }
-  }
-
-  setReady(id, songs, playlist) {
-    let localSongs = new LocalSongs(id, songs, this, () => {
-      this.setState({
-        loading: false
-      });
-    });
-    this.setState({
-      songs: localSongs,
-      playlist: playlist
-    });
   }
 
   voteSong(index) {
@@ -129,47 +126,21 @@ export default class Bar extends React.Component {
 
     this.id = this.props.navigation.state.params;
     this.state = {
-      spotify: null,
-      loading: true,
       isOwned: (this.props.screenProps.user && this.props.screenProps.user.id) === globals.getUserId(this.id)
     };
-  }
-
-  componentDidMount() {
-    this.getPlaylistFromSpotify();
-  }
-
-  getPlaylistFromSpotify() {
-    if(this.state.isOwned) {
-      network.getPlaylistFromSpotify(this.id, playlist => {
-        console.warn(playlist);
-        this.setState({
-          spotify: playlist,
-          loading: false
-        });
-      });
-    } else {
-      this.setState({
-        loaded: false
-      });
-    }
   }
 
   render(){
     return (
       <View style={globals.style.view}>
         {
-          !this.state.loading ?
           <Playlist 
             {...this.props.screenProps} 
             isOwned={this.state.isOwned}
-            spotify={this.state.spotify}
             navigation={this.props.navigation} 
           >
             {this.id}
           </Playlist>
-          :
-          <globals.Loader/>
         }
       </View>
     );

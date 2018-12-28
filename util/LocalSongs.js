@@ -2,48 +2,53 @@ import LocalObject from './LocalObject';
 import globals from '../components/helpers';
 
 export default class LocalSongs extends LocalObject {
-  constructor(playlistId, songs, component, callback) {
+  constructor(playlistId, component) {
     super("songs", () => {
       component.setState({
         songs: this
       });
     }, ()=>{
       this.playlistId = playlistId;
-      this.rebase(songs, ()=>callback(this));
     });
   }
 
+  get array() {
+    return this[this.playlistId] || [];
+  }
+
+  get length() {
+    return this.array.length;
+  }
+
   get spotlight() {
-    // console.error(this[this.playlistId]);
-    return this[this.playlistId][0];
+    return this.array[0];
   }
 
   get queue() {
-    return this[this.playlistId].slice(1);
+    return this.array.slice(1);
   }
 
-  canVote(state, index) {
-    let localSong = this[this.playlistId][index];
-    return state !== localSong.state || !localSong.voted;
+  canVote(index) {
+    let song = this.array[index];
+    return song.localState !== song.networkState || !song.voted;
   } 
 
   rebase(newSongs, callback) {
     if(this.contains(this.playlistId)) {
-      const diff = globals.diff(newSongs, this[this.playlistId]);
-      this.set(this.playlistId, [...this[this.playlistId], ...diff.new.map(song => ({
+      const diff = globals.diff(newSongs, this.array);
+      localSongs = diff.ordered.map(song => ({
         ...song,
-        voted: !this.canVote(song),
-      }))], callback);
+        networkState: song.state
+      }));
+      this.set(this.playlistId, localSongs, callback);
     } else {
-      this.set(this.playlistId, newSongs.map(song => ({
+      let localSongs = newSongs.map(song => ({
         ...song,
-        voted: false,
-      })), callback);
+        networkState: song.state,
+        localState: song.state
+      }));
+      this.set(this.playlistId, localSongs, callback);
     }
-
-    // diff.old.forEach(old =>{
-
-    // });
   }
 
   addSong(song) {

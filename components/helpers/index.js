@@ -5,10 +5,6 @@ import * as AWS from 'aws-sdk';
 import { AUTH_TYPE } from "aws-appsync/lib/link/auth-link";
 import AWSAppSyncClient from "aws-appsync/lib";
 import Spotify from 'rn-spotify-sdk';
-import AddPlaylistMutation from '../../GQL/mutations/AddPlaylist';
-import AddSongListMutation from '../../GQL/mutations/AddSongList';
-import DeletePlaylistMutation from '../../GQL/mutations/DeletePlaylist';
-
 
 const sBlue = '#43e5f8'//'#84bd00',
       sMiddle = '#20f3cb',
@@ -100,7 +96,7 @@ const diff = (truth, previous) => {
   const findTruthWithId = (id) => {
     for(let i = 0; i < truth.length; i++) {
       if(truth[i]){
-        if(truth[i].track.id === id) {
+        if(truth[i].id === id) {
           return i;
         }
       }
@@ -116,10 +112,7 @@ const diff = (truth, previous) => {
       delete truth[truthIndex];
     }
   }
-  toReturn.new = truth.filter(t => t).map(song =>({
-    ...getSongData(song.track),
-    state: 0
-  }));
+  toReturn.new = truth.filter(t => t);
   return toReturn;
 };
 
@@ -162,17 +155,14 @@ const Loader = () => {
   );
 };
 
-const getSongsAsObjects = (songs) => {
-  return songs.map(s => JSON.parse(s));
-};
-
 const getSongData = (track) => {
   return {
     id: track.id,
     name: track.name,
     artist: track.artists[0].name,
     duration: track.duration_ms/1000,
-    image: track.album.images[0] && track.album.images[0].url
+    image: track.album.images[0] && track.album.images[0].url,
+    state: 0
   };
 };
 
@@ -181,43 +171,6 @@ const getSongsFromPlaylist = playlist => {
     return playlist.tracks.items.map(({track})=>getSongData(track));
   }
   return [];
-};
-
-const transformSpotifyToAWSSongs = (spotify, aws) => {
-  for(let i = 0; i < spotify.length; i++) {
-
-  }
-  spotifySongs.map(({track})=>globals.getSongData(track));
-};
-
-const getSongsDataHTTP = (userId, playlistId, callback) => {
-  Spotify.sendRequest(`v1/users/${userId}/playlists/${playlistId}/tracks`, "GET", {}, true).then(({items}) => {
-    callback(items.map(({track}) => getSongData(track)));
-  });
-};
-
-const rsa = func => {
-  if(!Spotify.isLoggedIn()){
-    Spotify.login();
-  } else {
-    func();
-  }
-};
-
-const rsa_ud = func => {
-  if(!Spotify.isLoggedIn()){
-    Spotify.login();
-  } else {
-    Spotify.getMe().then(func);
-  }
-};
-
-
-
-const getPlaylistFromSpotify = (playlistId, callback) => {
-  Spotify.sendRequest(`v1/playlists/${playlistId}`, "GET", {}, true)
-  .then((data)=>callback(data))
-  .catch((error)=>callback(null, error));
 };
 
 const getPlaylistId = uri => uri.substring(uri.search(/playlist:/g) + 9);
@@ -233,24 +186,6 @@ const getMyPlaylists = (user, func) => {
     }));
     func(mapped);
   });
-};
-
-const goToBar = (playlist, user, navigation) => {
-  if(playlist.ownerId === user.id) {
-    getPlaylistFromSpotify(getPlaylistId(playlist.id), (data, error) => {
-      if(data) {
-        navigation.navigate('Bar', playlist.id);
-      } else {
-        client.mutate({
-          mutation: DeletePlaylistMutation,
-          variables: {id: playlist.id}
-        });
-        //remove from userplaylists and popup message saying playlist was deleted
-      }
-    });
-  } else {
-    navigation.navigate('Bar', playlist.id);
-  }
 };
 
 const client = new AWSAppSyncClient({
@@ -282,19 +217,13 @@ const globals = {
   Loader,
   createSearchTextInput,
   createTextInput,
-  client,
-  getSongData,
-  getSongsDataHTTP,
-  getSongsAsObjects,
-  rsa,
   diff,
-  rsa_ud,
-  goToBar,
   getPlaylistId,
   getUserId,
   getMyPlaylists,
-  transformSpotifyToAWSSongs,
-  getSongsFromPlaylist
+  getSongData,
+  getSongsFromPlaylist,
+  client,
 };
 
 

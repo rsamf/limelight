@@ -2,35 +2,28 @@ import globals from "../helpers";
 import aws from '../../util/aws';
 import Spotify from 'rn-spotify-sdk';
 
+const getPlaylistFromSpotify = (uri) => new Promise((resolve, reject) => {
+  Spotify.sendRequest(`v1/playlists/${globals.getPlaylistId(uri)}`, 'GET', {}, true)
+  .then(resolve)
+  .catch(reject);
+});
+
 const net = {
-  initialize: aws.addPlaylist,
-  refetch: (...funcs) => {
-    const refetches = funcs.slice(0, funcs.length - 1);
-    let datums = [];
-    const recursiveRefetch = (index) => {
-      refetches[index]().then(data => {
-        datums.push(data);
-        const next = index + 1;
-        if(next < refetches.length) {
-          recursiveRefetch(next)
-        } else {
-          funcs[funcs.length - 1](datums);
-        }
-      });
-    };
+  initialize: async (id, user, callback) => {
+    let spotify = await getPlaylistFromSpotify(id);
+    aws.addPlaylist(spotify, user, callback);
   },
-  getPlaylistFromSpotify: (id, callback) => {
-    Spotify.sendRequest(`v1/playlists/${globals.getPlaylistId(id)}`, 'GET', {}, true)
-    .then(callback)
-    .catch();
-  },
-  rebaseSongsFromSpotify: (id, spotifySongs, awsSongs, callback) => {
+  rebasePlaylistFromSpotify: async (id, awsSongs, callback) => {
+    let spotifyPlaylist = await getPlaylistFromSpotify(id);
+    let spotifySongs = globals.getSongsFromPlaylist(spotifyPlaylist);
+    let diff = globals.diff(spotifySongs, awsSongs);
     let doneFlag = 0;
-    const diff = globals.diff(spotifySongs, awsSongs);
     const checkToCallback = () => {
-      doneFlag++;
-      if(doneFlag === 2) {
-        callback(diff.ordered);
+      if(++doneFlag === 2) {
+        callback({
+          ...spotifyPlaylist,
+          songs: diff.ordered
+        });
       }
     };
     if(diff.new.length > 0) {
