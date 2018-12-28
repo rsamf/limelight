@@ -135,7 +135,7 @@ export default class AddedPlaylists extends React.Component {
       <View style={style.message}>
         <Text style={globals.style.text}>No playlists...</Text>
         <View style={{flexDirection: 'row'}}>
-          <Text style={globals.style.text}>Click </Text>
+          <Text style={globals.style.text}>Tap </Text>
           <Icon
             underlayColor={globals.sBlack}
             onPress={()=>this.props.addPlaylist(0)}

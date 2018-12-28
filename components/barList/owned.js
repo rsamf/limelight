@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ScrollView, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import globals from '../helpers'
-import Spotify from 'rn-spotify-sdk';
+import user from '../../util/user';
 
 class Side extends React.Component {
   constructor(props) {
@@ -43,6 +43,10 @@ export default class OwnedList extends React.Component {
 
   onClick = (playlist) => globals.goToBar(playlist, this.props.user, this.props.navigation);
 
+  componentDidMount() {
+    user.setOwnedPlaylistsScrollView(this.refs.scroll);
+  }
+
   eachPlaylist(playlist, i) {
     if(playlist === "LOADING") {
       return (
@@ -64,11 +68,11 @@ export default class OwnedList extends React.Component {
     return (
       <View style={style.view}>
         <Side value={"left"}/>
-        <ScrollView horizontal={true} style={style.scroll}>
+        <ScrollView ref="scroll" horizontal={true} style={style.scroll}>
           {
             this.props.user.playlists.map((p, i)=>this.eachPlaylist(p, i))
           }
-          <TouchableOpacity onPress={()=>this.props.addPlaylist(2)} style={style.createButton}>
+          <TouchableOpacity onPress={()=>this.goToTop()/*()=>this.props.addPlaylist(2)*/} style={style.createButton}>
             <Icon raised name='add' color={globals.sBlack} containerStyle={style.createIcon}/>
             <Text ellipsizeMode={'tail'} numberOfLines={1} style={globals.style.smallText}>Create New</Text>
           </TouchableOpacity>

@@ -1,8 +1,24 @@
 import globals from "../helpers";
+import aws from '../../util/aws';
 import Spotify from 'rn-spotify-sdk';
 
 const net = {
-  initialize: globals.addPlaylistToAWS,
+  initialize: aws.addPlaylist,
+  refetch: (...funcs) => {
+    const refetches = funcs.slice(0, funcs.length - 1);
+    let datums = [];
+    const recursiveRefetch = (index) => {
+      refetches[index]().then(data => {
+        datums.push(data);
+        const next = index + 1;
+        if(next < refetches.length) {
+          recursiveRefetch(next)
+        } else {
+          funcs[funcs.length - 1](datums);
+        }
+      });
+    };
+  },
   getPlaylistFromSpotify: (id, callback) => {
     Spotify.sendRequest(`v1/playlists/${globals.getPlaylistId(id)}`, 'GET', {}, true)
     .then(callback)

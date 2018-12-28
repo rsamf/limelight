@@ -12,8 +12,9 @@ class PlaylistComponent extends React.Component {
   constructor(props) {
     super(props);
 
+    this.UPDATE_PERIOD = 60 * 1000;
+
     this.state = {
-      subscribed: false,
       loading: true,
       songs: null,
       playlist: null
@@ -22,30 +23,47 @@ class PlaylistComponent extends React.Component {
 
   componentWillReceiveProps(props) {
     let loading = props.songsLoading || props.playlistLoading;
-    if(this.state.loading && props.isOwned && !loading && !props.error) {
-      if(!props.songs || !props.playlist) {
-        console.warn("Couldn't find songs or playlist, initialzing...");
-        this.init(props);
-      } else {
-        this.get(props);
-      }
+    if(this.state.loading && !loading && !props.error) {
+      this.init(props, !props.songs || !props.playlist, props.isOwned);
     }
   }
 
-  init(props) {
-    network.initialize(props.spotify, props.user, (songs, playlist) => {
-      console.warn("init: from initialize (aws songs length):", songs.length);
-      this.setReady(props.children, songs, playlist);
-    });
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
-  get(props) {
+  init(props, isEmpty, isOwned) {
+    if(isEmpty) {
+      if(isOwned) {
+        network.initialize(props.spotify, props.user, (songs, playlist) => {
+          console.warn("init: from initialize (aws songs length):", songs.length);
+          this.setReady(props.children, songs, playlist);
+        });
+      } else {
+        props.navigation.navigate('BarList');
+      }
+    } else {
+      if(isOwned) {
+        this.get(props);
+      }
+    }
+    this.interval = setInterval(this.get, this.UPDATE_PERIOD);
+    this.props.subscribeToSongChanges();
+  }
+
+  get(props = this.props) {
     // console.warn("Spotify", props.spotify.tracks.items);
     // console.warn("Songs", props.songs);
-    network.rebaseSongsFromSpotify(props.children, props.spotify.tracks.items, props.songs, (songs) => {
-      console.warn("get: from initialize (aws songs length):", songs.length);
-      this.setReady(props.children, songs, props.playlist);
-    });
+    if(props.isOwned) {
+      network.rebaseSongsFromSpotify(props.children, props.spotify.tracks.items, props.songs, (songs) => {
+        console.warn("get: from initialize (aws songs length):", songs.length);
+        this.setReady(props.children, songs, props.playlist);
+      });
+    } else {
+      network.refetch(props.refetchSongs, props.refetchPlaylist, (data)=>{
+        console.log("REFTECHED:", data);
+      });
+    }
   }
 
   setReady(id, songs, playlist) {
@@ -60,21 +78,7 @@ class PlaylistComponent extends React.Component {
     });
   }
 
-  // componentDidUpdate() {
-  //   if(this.props.subscribeToSongChanges && !this.state.subscribed) {
-  //     this.props.subscribeToSongChanges();
-  //     this.setState({
-  //       subscribed: true
-  //     });
-  //   }
-  // }
-
   voteSong(index) {
-    // this.props.localVotes.vote(song.id, song.state, (songs, notAlreadyVoted) => {
-    //   if(notAlreadyVoted) {
-    //     this.props.voteSong(song.id);
-    //   }
-    // });
     this.state.songs.vote(index);
   }
 
@@ -150,30 +154,6 @@ export default class Bar extends React.Component {
       });
     }
   }
-
-  // getLocalVotesInterface() {
-  //   this.setState({
-  //     localVotes: {
-  //       vote: (songId, state, callback)=>{
-  //         localVotes.tryVote(this.playlistId, songId, state, callback);
-  //       },
-  //       get: () => {
-  //         return new Promise(resolve => {
-  //           localVotes.get(this.playlistId, playlist => {
-  //             resolve(playlist);
-  //           });
-  //         });
-  //       },
-  //       set: (songs) => {
-  //         return new Promise(resolve => {
-  //           localVotes.setPlaylistToSongs(this.playlistId, songs, playlist => {
-  //             resolve(playlist);
-  //           });
-  //         });
-  //       }
-  //     }  
-  //   });
-  // }
 
   render(){
     return (

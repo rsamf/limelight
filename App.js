@@ -12,6 +12,7 @@ import LocalPlaylists from './util/LocalPlaylists';
 // AppSync
 import { Rehydrated } from 'aws-appsync-react';
 import { ApolloProvider } from 'react-apollo';
+import user from './util/user';
 
 const Root = createStackNavigator({
   BarList: {
@@ -36,62 +37,25 @@ export default class App extends React.Component {
       playlists,
       blur: null,
       blurProps: {
-        close: ()=>this.setOpenedBlur(null),
-        goToProfile: ()=>this.setOpenedBlur(ProfileBlur),
-        addToUserPlaylists: (playlist)=>this.addToUserPlaylists(playlist),
+        close: () => this.setOpenedBlur(null),
+        goToProfile: () => this.setOpenedBlur(ProfileBlur),
+        addToUserPlaylists: playlist => user.addPlaylist(this, playlist),
         playlists
       }
     };
-  }
-
-  addToUserPlaylists(playlist) {
-    let playlists = this.state.user.playlists;
-    if(playlist === "LOADING") {
-      playlists.push("LOADING");
-    } else {
-      playlists.pop();
-      if(playlist !== "ERROR") {
-        playlists.push(playlist);
-      }
-    }
-    this.setState({
-      user: {
-        ...this.state.user,
-        playlists
-      }
-    });
-  }
-
-  getUser(){
-    const setUser = (user) => {
-      this.setState({
-        user,
-        blurProps: {
-          ...this.state.blurProps,
-          user
-        }
-      });
-    };
-    Spotify.addListener("login", () => {
-      Spotify.getMe().then(user => {
-        user.playlists = [];
-        setUser(user);
-        globals.getMyPlaylists(user, (playlists)=>setUser({...user, playlists}));
-      });
-    });
-    Spotify.addListener("logout", () => {
-      setUser(null);
-    });
   }
 
   componentDidMount(){
-    this.getUser();
+    console.warn("loggedin?", Spotify.isLoggedIn());
+    user.get(this);
 		if(!Spotify.isInitialized())
 		{
 			let spotifyOptions = {
+        tokenSwapURL: "https://limelight-server.herokuapp.com/auth/swap",
+        tokenRefreshURL: "https://limelight-server.herokuapp.com/auth/refresh",
 			  clientID: "65a08501d9e64abfb003fb795ee1a540",
 				sessionUserDefaultsKey: "SpotifySession",
-				redirectURL: "spotlight://auth",
+				redirectURL: "limelight://auth",
 				scopes: ["user-read-private", "playlist-read", "playlist-modify-public", "streaming"],
 			};
 			Spotify.initialize(spotifyOptions).catch((error) => {
@@ -108,6 +72,12 @@ export default class App extends React.Component {
         ...props,
       }
     });
+  }
+
+  componentDidUpdate() {
+    console.warn('children', this.props.children);
+    console.warn('node', findNodeHandle(this.refs.scroll));
+    console.warn('user', user.ownedPlaylistsScrollView);
   }
 
   render(){

@@ -22,6 +22,7 @@ export default (Component) => compose(
     props: props => {
       return {
         songs: props.data.getSongs && props.data.getSongs.songs,
+        refetchSongs: props.refetch,
         error: props.data.error,
         songsLoading: props.data.loading,
         subscribeToSongChanges: () => {
@@ -52,6 +53,7 @@ export default (Component) => compose(
       return {
         playlist: props.data.getPlaylist,
         playlistLoading: props.data.loading,
+        refetchPlaylist: props.refetch,
         error: props.data.error  
       };
     }

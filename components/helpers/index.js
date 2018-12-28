@@ -5,7 +5,6 @@ import * as AWS from 'aws-sdk';
 import { AUTH_TYPE } from "aws-appsync/lib/link/auth-link";
 import AWSAppSyncClient from "aws-appsync/lib";
 import Spotify from 'rn-spotify-sdk';
-import StoredPlaylist from './StoredPlaylist';
 import AddPlaylistMutation from '../../GQL/mutations/AddPlaylist';
 import AddSongListMutation from '../../GQL/mutations/AddSongList';
 import DeletePlaylistMutation from '../../GQL/mutations/DeletePlaylist';
@@ -213,38 +212,7 @@ const rsa_ud = func => {
   }
 };
 
-const addPlaylistToAWS = (playlist, user, callback) => {
-  const sendPlaylistMutation = (callback) => {
-    const variables = {
-      id: playlist.uri,
-      name: playlist.name,
-      ownerId: user.id,
-      ownerName: user.display_name,
-      // Elvis-operator plz xD
-      image: (playlist.images && playlist.images[0] && playlist.images[0].url) || (user.images && user.images[0] && user.images[0].url)
-    };
-    client.mutate({
-      mutation: AddPlaylistMutation,
-      variables
-    }).then(({data})=>{callback(data)});
-  };
-  const sendSongsMutation = (callback) => {
-    const variables = { id: playlist.uri, songs: getSongsFromPlaylist(playlist) };
-    client.mutate({
-      mutation: AddSongListMutation,
-      variables
-    }).then(({data})=>{callback(data)});
-  };
-  if(user.id === playlist.owner.id) {
-    sendPlaylistMutation((data) => {
-      sendSongsMutation((data) => {
-        callback(data.addSongList.songs, data.addPlaylist);
-      });
-    });
-  } else {
-    callback(null);
-  }
-};
+
 
 const getPlaylistFromSpotify = (playlistId, callback) => {
   Spotify.sendRequest(`v1/playlists/${playlistId}`, "GET", {}, true)
@@ -256,7 +224,7 @@ const getPlaylistId = uri => uri.substring(uri.search(/playlist:/g) + 9);
 const getUserId = uri => uri.substring(uri.search(/user:/g) + 5, uri.search(/:playlist/g));
 const getMyPlaylists = (user, func) => {
   Spotify.sendRequest('v1/me/playlists', "GET", {}, true).then(({items}) => {
-    let filtered = items.filter((playlist) => playlist.owner.id === user.id);
+    let filtered = items.filter(playlist => playlist.owner.id === user.id);
     let mapped = filtered.map(playlist => ({
       id: playlist.uri,
       ownerId: playlist.owner.id,
@@ -321,12 +289,12 @@ const globals = {
   rsa,
   diff,
   rsa_ud,
-  addPlaylistToAWS,
   goToBar,
   getPlaylistId,
   getUserId,
   getMyPlaylists,
-  transformSpotifyToAWSSongs
+  transformSpotifyToAWSSongs,
+  getSongsFromPlaylist
 };
 
 
