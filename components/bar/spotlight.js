@@ -41,8 +41,7 @@ export default class extends React.Component {
             position: state.position/this.props.children.duration
           }
         });
-      }
-      else {
+      } else {
         if (this.state.track.playing && !this.nexting) {
           this.next();
         }
@@ -58,7 +57,7 @@ export default class extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if(newProps.owned) {
+    if(newProps.isOwned) {
       MusicControl.init(...this.musicControlFunctions);
       if(!this.interval) {
         this.interval = setInterval(()=>this.setPlaybackState(), 1000)
@@ -128,95 +127,66 @@ export default class extends React.Component {
   }
 
   componentWillUnmount(){
-    if(this.props.owned) {
+    if(this.props.isOwned) {
       Spotify.setPlaying(false);
       clearInterval(this.interval);
       MusicControl.turnOff();
     }
   }
 
-  renderEmpty(){
-    return (
-      <View style={style.view}>
-        <View style={style.empty}>
-          <Text style={globals.style.smallText}>Add some songs!</Text>
-        </View>
-      </View>
-    );
-  }
-
-  // renderForGuest(song){
-  //   return (
-  //     <View style={style.guest}>
-  //       <TouchableOpacity style={style.spotifyIcon} onPress={()=>this.setState({modalActive:true})}>
-  //         <Icon color={globals.sWhite} name="spotify" type="font-awesome"/>
-  //       </TouchableOpacity>
-  //       <Image style={style.image} source={{uri:song.image}}/>
-  //       <View style={style.title}>
-  //         <Text ellipsizeMode="middle" numberOfLines={1} style={style.text}>{song.artist} - {song.name}</Text>
-  //       </View>
-  //     </View>
-  //   );
-  // }
-
-  // renderForHost(song){
-  //   return (
-  //     <View style={globals.style.view}>
-  //       <TouchableOpacity style={style.spotifyIcon} onPress={()=>this.setState({modalActive:true})}>
-  //         <Icon color={globals.sWhite} name="spotify" type="font-awesome"/>
-  //       </TouchableOpacity>
-  //       <View style={style.title}>
-  //         <Image style={style.image} source={{uri:song.image}}/>
-  //         <Text ellipsizeMode="middle" numberOfLines={1} style={style.text}>{song.artist} - {song.name}</Text>
-  //       </View>
-  //       <View style={style.control}>
-  //         <Icon onPress={()=>this.seekStart()} iconStyle={style.controlItem} underlayColor={globals.sBlack}
-  //         color={globals.sWhite} name="step-backward" type="font-awesome"/>
-  //         {
-  //           this.state.track.playing
-  //           ?
-  //           <Icon onPress={()=>this.pause()} iconStyle={style.controlItem} 
-  //           color={globals.sWhite} name="pause" type="font-awesome" underlayColor={globals.sBlack}/>
-  //           :
-  //           <Icon onPress={()=>this.play()} iconStyle={style.controlItem} 
-  //           color={globals.sWhite} name="play" type="font-awesome" underlayColor={globals.sBlack}/>
-  //         }
-  //         <Icon onPress={()=>this.next()} iconStyle={style.controlItem} underlayColor={globals.sBlack}
-  //         color={globals.sWhite} name="step-forward" type="font-awesome"/>
-  //       </View>
-  //       <ProgressViewIOS style={style.progress} trackTintColor={globals.sGrey} progressTintColor={globals.sSand} progress={this.state.track.position}/>
-  //     </View>
-  //   );
-  // }
-  
   render(){
     const song = this.props.children;
     if(song) {
       return (
-        <View style={style.view}>
+        <View>
           <Modal isVisible={this.state.modalActive}>
             <View style={style.modalView}>
               <Text style={style.modalText}>See this song in Spotify?</Text>
-              <View style={style.control}>
+              <View style={style.modalOptions}>
                 <Button onPress={()=>this.visitSong()} title="Yes" backgroundColor={globals.spotifyGreen}
                 icon={{name:"spotify", type:"font-awesome"}}/>
                 <Button onPress={()=>this.setState({modalActive:false})} title="Cancel"/>
               </View>
             </View>
           </Modal>
+          {
+            this.props.isOwned &&
+            <ProgressViewIOS style={style.progress} trackTintColor={globals.sGrey} progressTintColor={globals.sGreen} progress={this.state.track.position}/>
+          }
           <View style={style.view}>
+            <View style={style.song}>
+              <Image style={style.songImage} source={{ uri: song.image }}/>
+              <View style={style.songInfo}>
+                <Text ellipsizeMode="tail" numberOfLines={1} style={style.songName}>{song.name}</Text>
+                <Text ellipsizeMode="tail" numberOfLines={1} style={style.songArtist}>{song.artist}</Text>
+              </View>
+            </View>
+            {
+              this.props.isOwned &&
+              (
+                <View style={style.songControls}>
+                  {
+                    this.state.track.playing
+                    ?
+                    <Icon onPress={()=>this.pause()} containerStyle={style.controlItem} 
+                    color={globals.sWhite} name="pause" type="font-awesome" underlayColor={globals.darkerGrey}/>
+                    :
+                    <Icon onPress={()=>this.play()} containerStyle={style.controlItem} 
+                    color={globals.sWhite} name="play" type="font-awesome" underlayColor={globals.darkerGrey}/>
+                  }
+                  <Icon onPress={()=>this.next()} containerStyle={style.controlItem} 
+                  color={globals.sWhite} name="step-forward" type="font-awesome" underlayColor={globals.darkerGrey}/>  
+                </View>
+              )
+            }
             <TouchableOpacity style={style.spotifyIcon} onPress={()=>this.setState({modalActive:true})}>
               <Icon color={globals.sWhite} name="spotify" type="font-awesome"/>
             </TouchableOpacity>
-            <Image style={style.image} source={{ uri: song.image }}/>
-            <View style={style.title}>
-              <Text ellipsizeMode="middle" numberOfLines={1} style={style.text}>{song.artist} - {song.name}</Text>
-            </View>
           </View>
         </View>
       );
     }
-    return this.renderEmpty();
+    return <View></View>;
   }
 
   visitSong() {
@@ -232,26 +202,66 @@ export default class extends React.Component {
 }
 
 const style = StyleSheet.create({
+  spotifyIcon: {
+    position: 'absolute',
+    right: 2,
+    top: 2,
+    opacity: .66
+  },
+  progress: {
+    flex: 1,
+    position: 'absolute',
+    bottom: 80,
+    left: 0,
+    right: 0,
+    zIndex: 10
+  },
   view: {
-    padding: 20,
-    backgroundColor: globals.sBlack,
-    borderBottomWidth: 0.5,
-    borderBottomColor: globals.sGrey
+    flex: 1,
+    padding: 10,
+    backgroundColor: globals.darkerGrey,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 80,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    shadowRadius: 5,
+    shadowOffset: {
+      height: -15
+    },
+    shadowOpacity: .9,
+    shadowColor: globals.sBlack,
+    zIndex: 5
   },
-  empty: {
-    justifyContent: 'center',
-    alignItems: 'center',
+  song: {
+    flexDirection: 'row',
+    flex: .7
   },
-  guest: {
-    alignItems: 'center',
-    justifyContent: 'center',
+  songImage: {
+    height: 60,
+    width: 60,
+    marginRight: 5
+  },
+  songInfo: {
+    flexDirection: 'column',
     flex: 1
   },
-  spotifyIcon: {
-    padding: 15,
-    position: "absolute",
-    right: 0,
-    top: 0
+  songName: {
+    ...globals.style.text
+  },
+  songArtist: {
+    ...globals.style.smallText,
+    color: globals.sGrey
+  },
+  songControls: {
+    flexDirection: 'row',
+    marginLeft: 20,
+    flex: .3
+  },
+  controlItem: {
+    marginRight: 30
   },
   modalView: {
     flex: 1, 
@@ -264,29 +274,7 @@ const style = StyleSheet.create({
     ...globals.style.text,
     color: globals.sBlack
   },
-  control: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 10
-  },
-  controlItem: {
-    marginRight: 20,
-    marginLeft: 20
-  },
-  progress: {
-    marginTop: 20
-  },
-  text: {
-    ...globals.style.smallText,
-    marginBottom: 10
-  },
-  image: {
-    height: 30,
-    width: 30,
-    marginRight: 7
-  },
-  title: {
-    flexDirection: 'row',
-    alignItems: 'center'
+  modalOptions: {
+    flexDirection: 'row'
   }
 });

@@ -5,7 +5,6 @@ import Bar from './components/bar';
 import Spotify from 'rn-spotify-sdk';
 import React from 'react';
 import globals from './components/helpers';
-import Header from './components/header';
 import Blur from './components/blurs';
 import ProfileBlur from './components/blurs/profile';
 import LocalPlaylists from './util/LocalPlaylists';
@@ -47,20 +46,17 @@ export default class App extends React.Component {
 
   componentDidMount(){
     user.get(this);
-		if(!Spotify.isInitialized())
-		{
-			let spotifyOptions = {
-        tokenSwapURL: "https://limelight-server.herokuapp.com/auth/swap",
-        tokenRefreshURL: "https://limelight-server.herokuapp.com/auth/refresh",
-			  clientID: "65a08501d9e64abfb003fb795ee1a540",
-				sessionUserDefaultsKey: "SpotifySession",
-				redirectURL: "limelight://auth",
-				scopes: ["user-read-private", "playlist-read", "playlist-modify-public", "streaming"],
-			};
-			Spotify.initialize(spotifyOptions).catch((error) => {
-				Alert.alert("Error in initializing Spotify");
-			});
-		}
+    const spotifyOptions = {
+      tokenSwapURL: "https://limelight-server.herokuapp.com/auth/swap",
+      tokenRefreshURL: "https://limelight-server.herokuapp.com/auth/refresh",
+      clientID: "65a08501d9e64abfb003fb795ee1a540",
+      sessionUserDefaultsKey: "SpotifySession",
+      redirectURL: "limelight://auth",
+      scopes: ["user-read-private", "playlist-read", "playlist-modify-public", "streaming"],
+    };
+    Spotify.initialize(spotifyOptions).catch(() => {
+      Alert.alert("Error in initializing Spotify");
+    });
   }
 
   setOpenedBlur(blur, props) {

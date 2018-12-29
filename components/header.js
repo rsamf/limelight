@@ -11,15 +11,12 @@ export default class Header extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.state = {
-
-    };
   }
 
   render(){
+    const view = this.props.playlist ? { ...style.view, ...style.shadow } : style.view;
     return (
-      <View style={style.view}>
+      <View style={view}>
         {this.renderLeft()}
         {this.renderMiddle()}
         {this.renderRight()}
@@ -104,6 +101,15 @@ export default class Header extends React.Component {
 }
 
 const style = StyleSheet.create({
+  shadow: {
+    shadowRadius: 5,
+    shadowOffset: {
+      height: 15
+    },
+    shadowOpacity: .9,
+    shadowColor: globals.sBlack,
+    zIndex: 5
+  },
   view: {
     backgroundColor: globals.darkGrey,
     height: 70,
@@ -114,13 +120,6 @@ const style = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     paddingBottom: 10,
-    // shadowRadius: 5,
-    // shadowOffset: {
-    //   height: 15
-    // },
-    // shadowOpacity: .9,
-    // shadowColor: globals.sBlack,
-    // zIndex: 5
   },
   titleContainer: {
     flexDirection: 'row',

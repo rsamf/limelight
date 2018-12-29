@@ -101,11 +101,11 @@ export default (Component) => compose(
   graphql(VoteSongMutation, {
     props: props => {
       return {
-        voteSong: (id) => {
+        voteSong: (index, id) => {
           props.mutate({
             variables: { id: props.ownProps.children, songId: id },
             optimisticResponse: () => {
-              let songs = SongsManipulation.vote(props.ownProps.songs, id);
+              let songs = SongsManipulation.vote(props.ownProps.songs, index);
               return {
                 voteSong: {
                   id: props.ownProps.children,

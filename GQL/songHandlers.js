@@ -1,8 +1,8 @@
 export default {
-  vote: (songs, id) => {
-    let songsCopy = songs.map(s => ({...s}));
+  vote: (songs, index) => {
+    let songsCopy = [...songs];
     let songsToVoteFrom = songsCopy.slice(1);
-    let index = getIndexFromId(songsToVoteFrom, id);
+    console.log(songsToVoteFrom[index]);
     songsToVoteFrom[index].votes++;
     return [songsCopy[0], ...shift(songsToVoteFrom, index)];
   },

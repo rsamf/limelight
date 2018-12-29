@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, SectionList, StyleSheet, Text } from 'react-native';
+import { View, SectionList, StyleSheet, Text, RefreshControl } from 'react-native';
 import globals from '../helpers';
 import Header from '../header';
 import OwnedPlaylists from './owned';
 import AddedPlaylists from './added';
+import NearbyPlaylists from './nearby';
 import AddPlaylistBlur from '../blurs/addPlaylist';
+import user from '../../util/user';
 
 const style = StyleSheet.create({
   sectionHeader: {
@@ -37,6 +39,7 @@ export default class BarList extends React.Component {
   propsForPlaylists = () => ({
     user: this.props.screenProps.user,
     playlists: this.props.screenProps.playlists,
+    nearby: [],
     navigation: this.props.navigation,
     addPlaylist: (op) => this.props.screenProps.openBlur(AddPlaylistBlur, {selected: op})
   });
@@ -48,7 +51,19 @@ export default class BarList extends React.Component {
     if(item === "ADDED") {
       return <AddedPlaylists {...this.propsForPlaylists()}/>;
     }
-    return <View></View>;
+    if(item === "NEARBY") {
+      return <View></View>
+      // return <NearbyPlaylists {...this.propsForPlaylists()}/>;
+    }
+  }
+
+  onRefresh() {
+    user.refreshPlaylists((playlists)=>{
+      console.warn(playlists);
+      this.setState({
+        refreshing: false
+      });
+    });
   }
 
   render(){
@@ -65,6 +80,9 @@ export default class BarList extends React.Component {
         <Header {...this.props.screenProps}/>
         <View style={style.playlists}>
           <SectionList
+            refreshControl={
+              <RefreshControl refreshing={this.state.refreshing} onRefresh={()=>this.onRefresh()}/>
+            }
             renderItem={({item})=>this.eachPlaylist(item)}
             renderSectionHeader={({section: {title}}) => (
               <Text style={style.sectionHeader}>{title}</Text>

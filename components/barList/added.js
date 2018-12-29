@@ -68,8 +68,8 @@ class AddedPlaylistsComponent extends React.Component {
           <View style={{flexDirection: 'row'}}>
             <Image style={style.playlistImage} source={{uri:playlist.image || playlist.images[0].url}}/>
             <View style={style.playlistDetails}>
-              <Text ellipsizeMode={'tail'} numberOfLines={1} style={globals.style.text}>{playlist.name}</Text>
-              <Text ellipsizeMode={'tail'} numberOfLines={1} style={style.playlistOwner}>{playlist.ownerName}</Text>
+              <Text ellipsizeMode='tail' numberOfLines={1} style={globals.style.text}>{playlist.name}</Text>
+              <Text ellipsizeMode='tail' numberOfLines={1} style={style.playlistOwner}>{playlist.ownerName}</Text>
             </View>
           </View>
         </TouchableOpacity>

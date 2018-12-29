@@ -1,12 +1,27 @@
 import Spotify from 'rn-spotify-sdk';
+import spotify from './spotify';
 import globals from '../components/helpers';
 
-let ownedPlaylistsScrollView;
+const getPlaylists = (user, func) => {
+  spotify.request('/me/playlists', "GET").then(data => {
+    let items = data.items;
+    let filtered = items.filter(playlist => playlist.owner.id === user.id);
+    let mapped = filtered.map(playlist => ({
+      id: playlist.uri,
+      ownerId: playlist.owner.id,
+      image: playlist.images && playlist.images[0] && playlist.images[0].url,
+      name: playlist.name
+    }));
+    func(mapped);
+  });
+};
+let ownedPlaylistsScrollView, userComponent;
 export default {
   setOwnedPlaylistsScrollView: val => {
     ownedPlaylistsScrollView = val;
   },
   get: (component) => {
+    userComponent = component;
     const setUser = user => {
       component.setState({
         user,
@@ -18,14 +33,15 @@ export default {
     };
     Spotify.addListener("login", () => {
       Spotify.getMe().then(user => {
-        setUser({...user, playlists: []});
-        globals.getMyPlaylists(user, playlists => setUser({...user, playlists}));
+        setUser({...user, playlists: ["LOADING"]});
+        getPlaylists(user, playlists => setUser({...user, playlists}));
       });
     });
     Spotify.addListener("logout", () => {
       setUser(null);
     });
   },
+  getPlaylists,
   addPlaylist(component, playlist) {
     let playlists = component.state.user.playlists;
     if(playlist === "LOADING") {
@@ -46,19 +62,34 @@ export default {
       }
     });
   },
+  refreshPlaylists: (callback) => {
+    getPlaylists(userComponent.state.user, playlists => {
+      userComponent.setState({
+        user: {
+          ...userComponent.state.user,
+          playlists
+        }
+      });
+      callback(playlists);
+    });
+  },
   rsa: func => {
-    if(!Spotify.isLoggedIn()){
-      Spotify.login();
-    } else {
-      func();
-    }
+    Spotify.isLoggedInAsync().then((loggedIn)=> {
+      if(loggedIn) {
+        func();
+      } else {
+        Spotify.login();
+      }
+    });
   },
   rsa_ud: func => {
-    if(!Spotify.isLoggedIn()){
-      Spotify.login();
-    } else {
-      Spotify.getMe().then(func);
-    }
+    Spotify.isLoggedInAsync().then((loggedIn)=> {
+      if(loggedIn) {
+        Spotify.getMe().then(func);
+      } else {
+        Spotify.login();
+      }
+    });
   }
 };
     

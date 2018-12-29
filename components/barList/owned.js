@@ -9,7 +9,6 @@ class Side extends React.Component {
     super(props);
     this.leftOpacities = [...Array(20)].map((_, i) => 1 - this.sigmoid(i));
     this.rightOpacities = [...Array(20)].map((_, i) => this.sigmoid(i));
-    console.warn(this.rightOpacities);
   }
 
   sigmoid = x => 1 / (1 + Math.E**-((x-10)/4))
@@ -64,7 +63,7 @@ export default class OwnedList extends React.Component {
       <TouchableOpacity onPress={()=>this.goToBar(playlist.id)} key={i} style={style.playlist}>
         {/* <Image source={{uri:playlist.image}} defaultSource={{uri:require('../../images/notes.png')}} style={style.playlistImage}/> */}
         <Image source={{uri:playlist.image}} style={style.playlistImage}/>
-        <Text ellipsizeMode={'tail'} numberOfLines={1} style={globals.style.smallText}>{playlist.name}</Text>
+        <Text ellipsizeMode="tail" numberOfLines={1} style={globals.style.smallText}>{playlist.name}</Text>
       </TouchableOpacity>
     );
   }
@@ -72,17 +71,17 @@ export default class OwnedList extends React.Component {
   render() {
     return (
       <View style={style.view}>
-        <Side value={"left"}/>
+        <Side value="left"/>
         <ScrollView ref="scroll" horizontal={true} style={style.scroll}>
           {
             this.props.user.playlists.map((p, i)=>this.eachPlaylist(p, i))
           }
           <TouchableOpacity onPress={()=>this.goToTop()/*()=>this.props.addPlaylist(2)*/} style={style.createButton}>
             <Icon raised name='add' color={globals.sBlack} containerStyle={style.createIcon}/>
-            <Text ellipsizeMode={'tail'} numberOfLines={1} style={globals.style.smallText}>Create New</Text>
+            <Text ellipsizeMode="tail" numberOfLines={1} style={globals.style.smallText}>Create New</Text>
           </TouchableOpacity>
         </ScrollView>
-        <Side value={"right"}/>
+        <Side value="right"/>
       </View>      
     );
   }

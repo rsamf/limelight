@@ -89,13 +89,13 @@ const style = StyleSheet.create({
 
 const diff = (truth, previous) => {
   let toReturn = {
-    old: [],
-    new: [],
-    ordered: []
+    old: [], // old ids
+    new: [], // new objs
+    ordered: [] // defining objs
   };
   const findTruthWithId = (id) => {
     for(let i = 0; i < truth.length; i++) {
-      if(truth[i]){
+      if(truth[i]) {
         if(truth[i].id === id) {
           return i;
         }
@@ -176,7 +176,8 @@ const getSongsFromPlaylist = playlist => {
 const getPlaylistId = uri => uri.substring(uri.search(/playlist:/g) + 9);
 const getUserId = uri => uri.substring(uri.search(/user:/g) + 5, uri.search(/:playlist/g));
 const getMyPlaylists = (user, func) => {
-  Spotify.sendRequest('v1/me/playlists', "GET", {}, true).then(({items}) => {
+  Spotify.sendRequest('v1/me/playlists?limit=50&offset=0', "GET", null, false).then(data => {
+    let items = data.items;
     let filtered = items.filter(playlist => playlist.owner.id === user.id);
     let mapped = filtered.map(playlist => ({
       id: playlist.uri,

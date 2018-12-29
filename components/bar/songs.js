@@ -19,10 +19,23 @@ export default class extends React.Component {
     return (
       <TouchableOpacity key={i} onLongPress={()=>this.setState({viewingSong:song})}>
         <View style={style.song}>
-          <Icon iconStyle={style.voteIcon} type="entypo" name="chevron-with-circle-up" color={song.voted ? globals.sGreen : globals.sGrey} underlayColor={globals.sBlack} onPress={()=>this.props.vote(song, i)}/>
-          <Text style={{...style.voteText, ...globals.style.smallText, color: song.voted ? globals.sGreen : globals.sGrey}}>{song.votes}</Text>
-          <Image style={style.image} source={{uri:song.image}}/>
-          <Text style={{...style.songDescription, ...globals.style.smallText}}>{song.artist} - {song.name}</Text>
+          <Icon
+            containerStyle={style.voteIcon} 
+            size={35}
+            type="entypo" 
+            name="chevron-with-circle-up" 
+            color={song.voted ? globals.sGreen : globals.sGrey} 
+            underlayColor={globals.sBlack} 
+            onPress={()=>this.props.vote(i)}
+          />
+          <Text style={{...style.voteNumber, color: song.voted ? globals.sGreen : globals.sGrey}}>
+            {song.votes}
+          </Text>
+          <Image style={style.songImage} source={{uri: song.image}}/>
+          <View style={style.songInfo}>
+            <Text ellipsizeMode={"tail"} numberOfLines={1} style={style.songName}>{song.name}</Text>
+            <Text ellipsizeMode="tail" numberOfLines={1} style={style.songArtist}>{song.artist}</Text>
+          </View>
         </View>
       </TouchableOpacity>
     );
@@ -75,7 +88,7 @@ export default class extends React.Component {
   render() {
     const songs = this.props.children;
     return (
-      <View style={globals.style.view}>
+      <View style={style.view}>
         {
           this.state.viewingSong &&
           <Modal isVisible={true}>
@@ -105,41 +118,62 @@ export default class extends React.Component {
 }
 
 const style = StyleSheet.create({
+  view: {
+    flex: 1,
+    marginBottom: 80
+  },
   song: {
     flexDirection: 'row',
     flex: 1,
-    paddingBottom: 12,
-    paddingTop: 12,
-    paddingLeft: 10,
-    marginLeft: 5,
-    marginRight: 5,
+    paddingBottom: 10,
+    paddingTop: 10,
+    marginLeft: 10,
+    marginRight: 10,
     alignItems: 'center'
+  },
+  voteIcon: {
+    width: 35,
+    height: 35,
+    marginRight: 10
+  },
+  voteNumber: {
+    marginRight: 10,
+    color: globals.sGrey,
+    ...globals.style.text,
+  },
+  songImage: {
+    height: 30,
+    width: 30,
+    marginRight: 10
+  },
+  songInfo: {
+    flexDirection: 'column',
+    flex: 1
+  },
+  songName: {
+    ...globals.style.text
+  },
+  songArtist: {
+    ...globals.style.smallText,
+    color: globals.sGrey
   },
   addButtonContainer: {
     flex: 1,
     alignItems: 'center'
   },
   addButton: {
-    padding: 12,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 30,
+    paddingRight: 30,
     marginTop: 10,
-    marginBottom: 50,
     borderRadius: 20,
     borderWidth: 1,
     borderColor: globals.sWhite,
+    backgroundColor: globals.sBlue,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  voteIcon: {
-    marginRight: 5
-  },
-  voteText: {
-    marginRight: 15
-  },
-  image: {
-    height: 30,
-    width: 30,
-    marginRight: 7
   },
   modalOptions: {
     marginTop: 20,
