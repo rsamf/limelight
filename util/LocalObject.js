@@ -2,15 +2,13 @@ import { AsyncStorage } from 'react-native';
 
 export default class LocalObject {
   constructor(uniqueIdentifier, update, callback) {
-    this.internalStorageItem = this.stg`${uniqueIdentifier}`;
+    this.internalStorageItem = `limelight:${uniqueIdentifier}`;
     this.update = () => update(this);
     this.getAll(obj => {
       this.mockObject(obj);
       callback();
     });
   }
-
-  stg = item => `spotlight:${item}`;
 
   contains(key) {
     return this[key] ? true : false;

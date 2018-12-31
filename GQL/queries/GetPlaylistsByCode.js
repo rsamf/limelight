@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export default gql`
-query GetPlaylistsByCode($shortCode: ID!) {
-  getPlaylistsByCode(shortCode: $shortCode) {
+query GetPlaylistsByCode($code: ID!) {
+  getPlaylistsByCode(code: $code) {
     playlists {
       id
       name

@@ -4,5 +4,8 @@ export default gql`
 mutation DeleteSongs($id: ID!, $songs: [ID]!) {
   deleteSongs(id: $id, songId: $songs) {
     id
+    songs {
+      id
+    }
   }
 }`;

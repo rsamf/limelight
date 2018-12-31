@@ -66,7 +66,7 @@ export default class AddPlaylistBlur extends React.Component {
     globals.client.query({
       query: GetPlaylistsByCode,
       variables: {
-        shortCode: this.state.iDinput
+        code: this.state.iDinput
       }
     }).then(({data: {getPlaylistsByCode:{playlists}}})=>{
       this.setState({
@@ -77,19 +77,20 @@ export default class AddPlaylistBlur extends React.Component {
     });
   }
 
-  eachPlaylist(playlist, onPress) {
+  eachPlaylist(playlist) {
     let disabled = this.props.playlists.contains(playlist.id);
+    let playlistStyle = { ...style.playlist, opacity: 1 - .5*disabled };
     return (
-      <TouchableOpacity disabled={disabled} style={{...style.playlist, opacity: 1-disabled*.5}} onPress={()=>onPress(playlist)}>
-        <Image style={style.playlistImage} source={{uri:playlist.image || playlist.images[0].url}}/>
+      <TouchableOpacity disabled={disabled} style={playlistStyle} onPress={()=>this.joinPlaylist(playlist)}>
+        <Image style={style.playlistImage} source={{uri:playlist.image || ""}}/>
         <View style={style.playlistContent}>
           <View style={style.playlistDetails}>
-            <Text ellipsizeMode={'tail'} numberOfLines={1} style={globals.style.text}>{playlist.name}</Text>
-            <Text ellipsizeMode={'tail'} numberOfLines={1} style={globals.style.smallText}>{playlist.ownerName}</Text>
+            <Text ellipsizeMode='tail' numberOfLines={1} style={globals.style.text}>{playlist.name}</Text>
+            <Text ellipsizeMode='tail' numberOfLines={1} style={globals.style.smallText}>{playlist.ownerName}</Text>
           </View>
           {
             disabled &&
-            <Badge value="Added" textStyle={{ color: globals.sWhite }}/>
+            <Badge value="Added" textStyle={globals.style.smallText}/>
           }
         </View>
       </TouchableOpacity>
@@ -178,9 +179,7 @@ export default class AddPlaylistBlur extends React.Component {
           <FlatList 
             data={this.state.searchedPlaylists} 
             keyExtractor={(item, index) => String(index)} 
-            renderItem={({item}) => 
-              this.eachPlaylist(item, (playlist)=>this.joinPlaylist(playlist))
-            }
+            renderItem={({item}) => this.eachPlaylist(item)}
           />
         );
       }

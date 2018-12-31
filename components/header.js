@@ -74,7 +74,7 @@ export default class Header extends React.Component {
 
   renderRight() {
     if(this.props.playlist) {
-      if(this.props.user && this.props.user.id === this.props.playlist.owner.id) {
+      if(this.props.user && this.props.user.id === this.props.playlist.ownerId) {
         return (
           <Icon iconStyle={style.clickable} name="md-more" type="ionicon" color={globals.sWhite} underlayColor={globals.sSand}
           onPress={()=>this.showPlaylistOptions()}/>

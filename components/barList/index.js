@@ -39,7 +39,7 @@ export default class BarList extends React.Component {
   propsForPlaylists = () => ({
     user: this.props.screenProps.user,
     playlists: this.props.screenProps.playlists,
-    nearby: [],
+    nearby: this.state.nearby,
     navigation: this.props.navigation,
     addPlaylist: (op) => this.props.screenProps.openBlur(AddPlaylistBlur, {selected: op})
   });
@@ -52,8 +52,7 @@ export default class BarList extends React.Component {
       return <AddedPlaylists {...this.propsForPlaylists()}/>;
     }
     if(item === "NEARBY") {
-      return <View></View>
-      // return <NearbyPlaylists {...this.propsForPlaylists()}/>;
+      return <NearbyPlaylists {...this.propsForPlaylists()}/>;
     }
   }
 

@@ -1,12 +1,14 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import globals from '../helpers';
 import Header from '../header';
 import Spotlight from './spotlight';
 import Songs from './songs';
 import createPlaylist from '../../GQL/playlist';
 import LocalSongs from '../../util/LocalSongs';
+import AddSongBlur from '../blurs/addSong';
 import network from './network';
+import user from '../../util/user';
 
 class PlaylistComponent extends React.Component {
   constructor(props) {
@@ -21,21 +23,25 @@ class PlaylistComponent extends React.Component {
     };
   }
 
+  initializing = true
+
   componentWillReceiveProps(props) {
-    let loading = props.songsLoading || props.playlistLoading;
-    if(!loading && !props.error) {
-      if(this.state.loading) {
-        if(!props.songs || !props.playlist) {
-          this.init(props);
-        } else {
-          this.get(props);
-        }
-      // this.interval = setInterval(()=>this.get(), this.UPDATE_PERIOD);
-      // this.props.subscribeToSongChanges();
+    console.log("req", props.requests);
+    let loading = props.songsLoading || props.playlistLoading || props.requestsLoading;
+    if(loading || props.error) return;
+    if(this.initializing) {
+      this.initializing = false;
+      if(!props.songs || !props.playlist) {
+        this.init(props);
       } else {
-        console.log("received props", props);
-        this.state.songs.rebase(props.songs);
+        console.log("calling get()");
+        this.get(props);
       }
+    // this.interval = setInterval(()=>this.get(), this.UPDATE_PERIOD);
+    // this.props.subscribeToSongChanges();
+    } else {
+      console.log("Rebasing from willreceiveprops()", props.songs);
+      this.state.songs.rebase(props.songs);
     }
   }
 
@@ -46,6 +52,7 @@ class PlaylistComponent extends React.Component {
   init(props){
     if(props.isOwned) {
       network.initialize(props.children, props.user, playlist => {
+        console.log("Rebasing from init()");
         this.state.songs.rebase(playlist.songs);
         this.setState({
           playlist,
@@ -60,17 +67,27 @@ class PlaylistComponent extends React.Component {
   get(props = this.props) {
     if(props.isOwned) {
       network.rebasePlaylistFromSpotify(props.children, props.songs, playlist => {
-        // console.warn("playlist", playlist);
-        // console.warn("songs", playlist.songs);
         this.setState({
           playlist,
           loading: false
         });
+        console.log("Rebasing from get()");
         this.state.songs.rebase(props.songs, playlist.songs);
       });
     } else {
-      props.refetchSongs();
-      props.refetchPlaylist();
+      this.setState({
+        loading: false
+      });
+    }
+  }
+
+  refresh() {
+    if(this.props.isOwned) {
+      this.get();
+    } else {
+      this.props.refetchSongs();
+      this.props.refetchPlaylist();
+      this.props.refetchRequests();
     }
   }
 
@@ -80,26 +97,53 @@ class PlaylistComponent extends React.Component {
     });
   }
 
+  addSong(song, uri, requestIndex) {
+    if(this.props.isOwned) {
+      network.addSongToSpotify(this.state.playlist.id, uri, playlist => {
+        if(playlist) {
+          console.warn("adding songs:", [awsSong()]);
+          this.props.addSongs([awsSong()]);
+        }
+      });
+      if(requestIndex != -1) {
+        this.props.requestACKSong(requestIndex);
+      }
+    } else {
+      this.props.requestSong(song);
+    }
+  }
+
+  searchSong(){
+    user.rsa(()=>{
+      this.props.openBlur(AddSongBlur, {
+        isOwned: this.props.isOwned,
+        addSong: (song, uri) => this.addSong(song, uri, -1)
+      });
+    });
+  }
+
   render() {
     return (
       <View style={globals.style.view}>
-        <Header
-          {...this.props}
-          navigation={this.props.navigation}
-          playlist={this.state.playlist}
-          updatePlaylist={(p)=>this.props.updatePlaylist(p)}
-          deletePlaylist={()=>this.props.deletePlaylist()}
-          deleteSongs={()=>this.props.deleteSongs()}
-        />
         {
           !this.state.loading ? (
           <View style={globals.style.view}>
+            <Header
+              {...this.props}
+              navigation={this.props.navigation}
+              playlist={this.props.playlist}
+              updatePlaylist={(p)=>this.props.updatePlaylist(p)}
+              deletePlaylist={()=>this.props.deletePlaylist()}
+              deleteSongs={()=>this.props.deleteSongs()}
+            />
             <Songs
               {...this.props}
-              owned={this.props.isOwned} 
-              addSong={(song)=>this.props.addSong(song)}
+              isOwned={this.props.isOwned} 
+              search={()=>this.searchSong()}
+              addSong={(song, uri, i)=>this.addSong(song, uri, i)}
               deleteSong={(songId)=>this.props.deleteSong(songId)}
               vote={(i)=>this.vote(i)}
+              requests={this.props.requests}
             >
               {this.state.songs.queue}
             </Songs>
@@ -145,4 +189,14 @@ export default class Bar extends React.Component {
       </View>
     );
   }
+}
+
+function awsSong(song) {
+  return { 
+    id: song.id,
+    name: song.name,
+    artist: song.artist,
+    iamge: song.image,
+    duration: song.duration
+  };
 }

@@ -52,7 +52,7 @@ export default class LocalSongs extends LocalObject {
           return oldSongs[i];
         }
       }
-      return -1;
+      return null;
     };
     songs.forEach((s,i) => {
       let oldSong = findOldSongWithMatchingId(i);
@@ -60,12 +60,18 @@ export default class LocalSongs extends LocalObject {
         toReturn.push({
           ...s,
           localState: oldSong.localState,
+          voted: oldSong.voted,
           networkState: s.state,
-          voted: oldSong.voted
         });
       }
     });
-    toReturn = [...toReturn, ...songs.filter(s => s)];
+    console.log("old songs:", toReturn);
+    toReturn = [...toReturn, ...songs.filter(s => s).map(s => ({
+      ...s,
+      localState: s.state,
+      networkState: s.state,
+      voted: false
+    }))];
     if(onlyInclude) {
       toReturn = toReturn.filter(s => contains(s.id));
     }
@@ -73,8 +79,9 @@ export default class LocalSongs extends LocalObject {
   }
 
   rebase(newSongs, onlyInclude) {
+    if(!newSongs) return;
     if(this.contains(this.playlistId)) {
-      const merged = this.getMerged(newSongs, onlyInclude);
+      const merged = this.getMerged([...newSongs], onlyInclude);
       console.log("MERGED SONGS:", merged);
       this.set(this.playlistId, merged);
     } else {
@@ -119,11 +126,9 @@ export default class LocalSongs extends LocalObject {
       newQ[index] = {
         ...song,
         localState: song.networkState,
-        votes: song.votes++,
         voted: true
       };
-      this.set(this.playlistId, [this.spotlight, ...newQ]);
-      if(callback) callback(song.id);
+      this.set(this.playlistId, [this.spotlight, ...newQ], ()=>callback(song.id));
     }
   }
 

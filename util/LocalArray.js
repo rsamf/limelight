@@ -2,15 +2,13 @@ import { AsyncStorage } from 'react-native';
 
 export default class LocalArray {
   constructor(uniqueIdentifier, update) {
-    this.internalStorageItem = this.stg`${uniqueIdentifier}`;
+    this.internalStorageItem = `limelight:${uniqueIdentifier}`;
     this.update = () => update(this);
     this.getAll(list => {
       this.mockArray(list);
       this.update();
     });
   }
-
-  stg = item => `spotlight:${item}`;
 
   contains(element) {
     return this.toArray().includes(element);
@@ -33,6 +31,7 @@ export default class LocalArray {
 
   push(element, callback){
     this.getAll(list => {
+      console.log(list);
       if(!list.includes(element)) {
         list.push(element);
         this.setList(list).then(()=>{

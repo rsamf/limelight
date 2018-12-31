@@ -1,8 +1,7 @@
 import { createStackNavigator } from 'react-navigation';
-import { AppRegistry, Alert, View, StatusBar, StatusBarStyle, findNodeHandle } from 'react-native';
+import { AppRegistry, View, StatusBar, findNodeHandle } from 'react-native';
 import BarList from './components/barList';
 import Bar from './components/bar';
-import Spotify from 'rn-spotify-sdk';
 import React from 'react';
 import globals from './components/helpers';
 import Blur from './components/blurs';
@@ -12,6 +11,7 @@ import LocalPlaylists from './util/LocalPlaylists';
 import { Rehydrated } from 'aws-appsync-react';
 import { ApolloProvider } from 'react-apollo';
 import user from './util/user';
+import spotify from './util/spotify';
 
 const Root = createStackNavigator({
   BarList: {
@@ -46,17 +46,7 @@ export default class App extends React.Component {
 
   componentDidMount(){
     user.get(this);
-    const spotifyOptions = {
-      tokenSwapURL: "https://limelight-server.herokuapp.com/auth/swap",
-      tokenRefreshURL: "https://limelight-server.herokuapp.com/auth/refresh",
-      clientID: "65a08501d9e64abfb003fb795ee1a540",
-      sessionUserDefaultsKey: "SpotifySession",
-      redirectURL: "limelight://auth",
-      scopes: ["user-read-private", "playlist-read", "playlist-modify-public", "streaming"],
-    };
-    Spotify.initialize(spotifyOptions).catch(() => {
-      Alert.alert("Error in initializing Spotify");
-    });
+    spotify.initialize();
   }
 
   setOpenedBlur(blur, props) {

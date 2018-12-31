@@ -76,7 +76,7 @@ export default class OwnedList extends React.Component {
           {
             this.props.user.playlists.map((p, i)=>this.eachPlaylist(p, i))
           }
-          <TouchableOpacity onPress={()=>this.goToTop()/*()=>this.props.addPlaylist(2)*/} style={style.createButton}>
+          <TouchableOpacity onPress={()=>this.props.addPlaylist(2)} style={style.createButton}>
             <Icon raised name='add' color={globals.sBlack} containerStyle={style.createIcon}/>
             <Text ellipsizeMode="tail" numberOfLines={1} style={globals.style.smallText}>Create New</Text>
           </TouchableOpacity>

@@ -5,7 +5,7 @@ mutation updatePlaylist($id: ID!, $playlist: PlaylistInput!) {
   updatePlaylist(id: $id, playlist: $playlist) {
     id
     name
-    shortCode
+    code
     image
   }
 }`;

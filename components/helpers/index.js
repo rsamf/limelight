@@ -113,6 +113,7 @@ const diff = (truth, previous) => {
     }
   }
   toReturn.new = truth.filter(t => t);
+  toReturn.ordered = [...toReturn.ordered, ...toReturn.new];
   return toReturn;
 };
 
@@ -155,13 +156,17 @@ const Loader = () => {
   );
 };
 
-const getSongData = (track) => {
+const getSongData = (track, smallerImage) => {
   return {
     id: track.id,
     name: track.name,
     artist: track.artists[0].name,
     duration: track.duration_ms/1000,
-    image: track.album.images[0] && track.album.images[0].url,
+    image: (
+      smallerImage ? 
+      track.album.images[1] && track.album.images[1].url :
+      track.album.images[0] && track.album.images[0].url
+    ),
     state: 0
   };
 };

@@ -9,6 +9,6 @@ query GetPlaylist($id: ID!) {
     name
     songs
     image
-    shortCode
+    code
   }
 }`;

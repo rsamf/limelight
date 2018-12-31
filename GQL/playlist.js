@@ -1,5 +1,6 @@
 import GetPlaylist from './queries/GetPlaylist';
 import GetSongs from './queries/GetSongs';
+import GetSongRequests from './queries/GetSongRequests';
 import UpdatePlaylistMutation from './mutations/UpdatePlaylist';
 import DeletePlaylistMutation from './mutations/DeletePlaylist';
 import DeleteSongListMutation from './mutations/DeleteSongList';
@@ -7,7 +8,10 @@ import VoteSongMutation from './mutations/VoteSong';
 import NextSongMutation from './mutations/NextSong';
 import AddSongsMutation from './mutations/AddSongs';
 import DeleteSongsMutation from './mutations/DeleteSongs';
+import RequestAddSongMutation from './mutations/RequestAddSong';
+import RequestACKSongMutation from './mutations/RequestACKSong';
 import OnSongsChangedSubscription from './subscriptions/SongsChanged';
+import OnRequestsChangedSubscription from './subscriptions/RequestsChanged';
 import { graphql, compose } from 'react-apollo';
 import SongsManipulation from './songHandlers';
 
@@ -22,7 +26,7 @@ export default (Component) => compose(
     props: props => {
       return {
         songs: props.data.getSongs && props.data.getSongs.songs,
-        refetchSongs: props.refetch,
+        refetchSongs: props.data.refetch,
         error: props.data.error,
         songsLoading: props.data.loading,
         subscribeToSongChanges: () => {
@@ -30,6 +34,36 @@ export default (Component) => compose(
             document: OnSongsChangedSubscription,
             variables: { id: props.ownProps.children },
             updateQuery: (prev, {subscriptionData:{data:{onSongsChanged:{songs}}}}) => {
+              return {
+                getSongs: {
+                  songs,
+                  __typename: 'SongList'
+                }
+              };
+            }
+          });
+        }
+      }
+    }
+  }),
+  graphql(GetSongRequests, {
+    options: props => {
+      return {
+        fetchPolicy: 'cache-and-network',
+        variables: { id: "r-"+props.children }
+      };
+    },
+    props: props => {
+      return {
+        requestsLoading: props.data.loading,
+        error: props.data.error,
+        requests: props.data.getSongs && props.data.getSongs.songs,
+        refetchRequests: props.data.refetch,
+        subscribeToRequests: () => {
+          props.data.subscribeToMore({
+            document: OnRequestsChangedSubscription,
+            variables: { id: "r-"+props.ownProps.children },
+            updateQuery: (prev, {subscriptionData:{data:{onRequestsChanged:{songs}}}}) => {
               return {
                 getSongs: {
                   songs,
@@ -53,7 +87,7 @@ export default (Component) => compose(
       return {
         playlist: props.data.getPlaylist,
         playlistLoading: props.data.loading,
-        refetchPlaylist: props.refetch,
+        refetchPlaylist: props.data.refetch,
         error: props.data.error  
       };
     }
@@ -159,28 +193,27 @@ export default (Component) => compose(
   graphql(AddSongsMutation, {
     props: props => {
       return {
-        addSong: (song) => {
+        addSongs: (songs) => {
+          console.log("ADDDING songs", songs);
           props.mutate({
-            variables: { id: props.ownProps.children, song },
+            variables: { id: props.ownProps.children, songs },
             optimisticResponse: () => {
-              let newSong = {...song, __typename: 'Song'};
-              let songs = SongsManipulation.add(props.ownProps.songs, newSong);
+              let updatedSongs = SongsManipulation.add(props.ownProps.songs, songs);
               return {
                 addSongs: {
                   id: props.ownProps.children,
-                  songs: songs,
+                  songs: updatedSongs,
                   __typename: 'SongList'
                 }
               };
             },
             update: (proxy, { data: { addSongs } }) => {
-              let newSong = {...song, __typename: 'Song'};
               let data = proxy.readQuery({ 
                 query: GetSongs, 
-                variables: { id: props.ownProps.children, song: newSong }
+                variables: { id: props.ownProps.children }
               });
               data.getSongs.songs = addSongs.songs;
-              proxy.writeQuery({ query: GetSongs, variables: { id: props.ownProps.children, song: newSong }, data });
+              proxy.writeQuery({ query: GetSongs, variables: { id: props.ownProps.children }, data });
             }
           });
         }
@@ -209,11 +242,75 @@ export default (Component) => compose(
                 variables: { id: props.ownProps.children, songId: id }
               });
               data.getSongs.songs = deleteSongs.songs;
-              proxy.writeQuery({ query: GetSongs, variables: { id: props.ownProps.children, songId: id }, data });
+              proxy.writeQuery({ query: GetSongs, variables: { id: props.ownProps.children }, data });
             }
           });
         }
       };
+    }
+  }),
+  graphql(RequestAddSongMutation, {
+    props: props => {
+      const id = props.ownProps.children;
+      return {
+        requestSong: (song) => {
+          props.mutate({
+            variables: { id, song },
+            optimisticResponse: () => {
+              let songs = SongsManipulation.request(props.ownProps.requests, song);
+              return {
+                requestAddSong: {
+                  id,
+                  songs,
+                  __typename: 'SongList'
+                }
+              };
+            },
+            update: (proxy, { data: { requestAddSong }}) => {
+              const rid = "r-"+id;
+              let data = proxy.readQuery({ 
+                query: GetSongRequests, 
+                variables: { id: rid }
+              });
+              data.getSongs.songs = requestAddSong.songs;
+              proxy.writeQuery({ query: GetSongRequests, variables: { id: rid }, data });
+            }
+          });
+        }
+      }
+    }
+  }),
+  graphql(RequestACKSongMutation, {
+    props: props => {
+      const id = props.ownProps.children;
+      return {
+        requestACKSong: index => {
+          props.mutate({
+            variables: { id, index },
+            optimisticResponse: () => {
+              let songs = SongsManipulation.requestACK(props.ownProps.requests, index);
+              return {
+                requestACKSong: {
+                  id,
+                  songs,
+                  __typename: 'SongList'
+                }
+              };
+            },
+            update: (proxy, { data: { requestACKSong }}) => {
+              console.log("songs:", requestACKSong);
+              const rid = "r-"+id;
+              let data = proxy.readQuery({ 
+                query: GetSongRequests, 
+                variables: { id: rid }
+              });
+              data.getSongs.songs = requestACKSong.songs;
+              console.log("DATA",data.getSongs);
+              proxy.writeQuery({ query: GetSongRequests, variables: { id: rid }, data });
+            }
+          });
+        }
+      }
     }
   })
 )(Component);

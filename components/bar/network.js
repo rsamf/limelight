@@ -1,6 +1,8 @@
 import globals from "../helpers";
 import aws from '../../util/aws';
 import Spotify from 'rn-spotify-sdk';
+import AddSongsMutation from '../../GQL/mutations/AddSongs';
+import DeleteSongsMutation from '../../GQL/mutations/DeleteSongs';
 
 const getPlaylistFromSpotify = (uri) => new Promise((resolve, reject) => {
   Spotify.sendRequest(`v1/playlists/${globals.getPlaylistId(uri)}`, 'GET', {}, true)
@@ -13,7 +15,17 @@ const net = {
     let spotify = await getPlaylistFromSpotify(id);
     aws.addPlaylist(spotify, user, callback);
   },
-  rebasePlaylistFromSpotify: async (id, awsSongs, callback) => {
+  addSongToSpotify: (id, song, callback) => {
+    const body = { uris: [song] };
+    Spotify.sendRequest(`v1/playlists/${id}/tracks`, "POST", body, true)
+      .then(playlist => {
+        callback(playlist);
+      })
+      .catch(err => {
+      });
+  },
+  rebasePlaylistFromSpotify: async (id, awsSongs=[], callback) => {
+    console.log("rebasePlaylistFromSpotify()");
     let spotifyPlaylist = await getPlaylistFromSpotify(id);
     let spotifySongs = globals.getSongsFromPlaylist(spotifyPlaylist);
     let diff = globals.diff(spotifySongs, awsSongs);
@@ -37,17 +49,18 @@ const net = {
     } else {
       checkToCallback();
     }
-    if(diff.old.length > 0) {
-      globals.client.mutate({
-        mutation: DeleteSongsMutation,
-        variables: {
-          id,
-          songs: diff.old
-        }
-      }).then(checkToCallback);
-    } else {
-      checkToCallback();
-    }
+    checkToCallback();
+    // if(diff.old.length > 0) {
+    //   globals.client.mutate({
+    //     mutation: DeleteSongsMutation,
+    //     variables: {
+    //       id,
+    //       songs: diff.old
+    //     }
+    //   }).then(checkToCallback);
+    // } else {
+    //   checkToCallback();
+    // }
   }
 };
 

@@ -1,7 +1,5 @@
 import React from 'react';
-import { View, FlatList, TouchableOpacity, Text, TextInput, StyleSheet } from 'react-native';
-import { Button } from 'react-native-elements';
-import { BlurView } from 'react-native-blur';
+import { View, FlatList, TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
 import Spotify from 'rn-spotify-sdk';
 import globals from '../helpers';
 
@@ -11,73 +9,91 @@ export default class AddSong extends React.Component {
     super(props);
     this.state = {
       searchedSongs: [],
-      songToSearch: ""
+      songToSearch: "",
+      loading: false
     };
   }
 
-  addSong(song) {
-    this.props.addSong(globals.getSongData(song));
+  addSong(song, uri) {
+    this.props.addSong(song, uri);
     this.props.close();
   }
 
-  eachAddSong(song, i) {
+  eachAddSong(song) {
+    let uri = song.uri;
+    song = globals.getSongData(song, true);
     return (
-      <TouchableOpacity style={style.addSong} onPress={()=>this.addSong(song)}>
-        <Text style={globals.style.text}>{song.name} - {song.artists[0].name}</Text>
+      <TouchableOpacity style={style.song} onPress={()=>this.addSong(song, uri)}>
+        <Image style={style.songImage} source={{uri: song.image}}/>
+        <View style={style.songInfo}>
+          <Text ellipsizeMode='tail' numberOfLines={1} style={style.songName}>{song.name}</Text>
+          <Text ellipsizeMode='tail' numberOfLines={1} style={style.songArtist}>{song.artist}</Text>
+        </View>
       </TouchableOpacity>
     );
   }
 
-  changeQuery(toQuery) {
-    this.setState({
-      songToSearch: toQuery
-    });
-  }
-
   searchSongs() {
+    this.setState({loading: true});
     Spotify.search(this.state.songToSearch.replace(/ /g, '+'), ['track'], {}).then(({tracks: {items}}) => {
       this.setState({
-        searchedSongs: items
+        searchedSongs: items,
+        loading: false
       });
     });
   }
 
+  SearchTextInput = globals.createSearchTextInput((songToSearch) => {
+    this.setState({songToSearch});
+  }, () => {
+    this.searchSongs();
+  });
+
   render() {
     return (
-      <View style={globals.style.fullscreen}>
-        <BlurView style={globals.style.fullscreen} viewRef={this.props.viewRef} blurType="light" blurAmount={10}/>
-        <View style={style.addSongView}>
-          <TextInput placeholder="Song Name" style={globals.style.textInput} onChangeText={(text)=>this.changeQuery(text)}
-          blurOnSubmit={true} enablesReturnKeyAutomatically={true} onSubmitEditing={()=>this.searchSongs()}>
-          </TextInput>
-          <FlatList data={this.state.searchedSongs} keyExtractor={(item, index)=>String(index)} renderItem={({item, index})=>this.eachAddSong(item, index)}>
-          </FlatList>
-          <View style={style.cancel}>
-            <Button title="Cancel" onPress={()=>this.props.close()}></Button>
-          </View>
-        </View>
+      <View style={style.view}>
+        <this.SearchTextInput/>
+        {
+          this.state.loading ?
+          <globals.Loader/> :
+          <FlatList
+            style={style.songs}
+            data={this.state.searchedSongs} 
+            keyExtractor={(_, index)=>String(index)} 
+            renderItem={({item})=>this.eachAddSong(item)}
+          />
+        }
       </View>
     );
   }
 }
 
 const style = StyleSheet.create({
-  addSongView: {
-    ...globals.style.fullscreen,
-    paddingTop: 50,
-    alignItems: 'center'
+  view: {
+    flex: 1
+  },
+  song: {
+    flexDirection: 'row',
+    marginTop: 10,
+    marginBottom: 10
+  },
+  songs: {
+    marginLeft: 40,
+    marginTop: 20
+  },
+  songImage: {
+    width: 50,
+    height: 50,
+    marginRight: 10
+  },
+  songName: {
+    ...globals.style.text,
+  },
+  songArtist: {
+    ...globals.style.smallText,
+    color: globals.sGrey
   },
   addSongInput: {
     borderBottomWidth: 1
-  },
-  addSong: {
-    padding: 20,
-    borderBottomWidth: 1,
-    borderColor: globals.sGrey
-  },
-  cancel: {
-    position: 'absolute',
-    left: 15,
-    bottom: 15
   }
 });
