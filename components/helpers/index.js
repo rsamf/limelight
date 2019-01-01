@@ -112,7 +112,7 @@ const diff = (truth, previous) => {
       delete truth[truthIndex];
     }
   }
-  toReturn.new = truth.filter(t => t);
+  toReturn.new = truth.filter(t => t).map(s => ({...s, votes: 0, state: 0}));
   toReturn.ordered = [...toReturn.ordered, ...toReturn.new];
   return toReturn;
 };
@@ -133,7 +133,7 @@ const createSearchTextInput = (onChangeText, onSubmitEditing) => {
     </View>
   );
 };
-const createTextInput = (onChangeText, onSubmitEditing) => {
+const createTextInput = (onChangeText, onSubmitEditing, onBlur) => {
   return () => (
     <View style={style.textInputContainer}>
       <TextInput 
@@ -144,6 +144,7 @@ const createTextInput = (onChangeText, onSubmitEditing) => {
         spellCheck={false}
         onChangeText={(text)=>onChangeText(text)}
         onSubmitEditing={onSubmitEditing}
+        onBlur={onBlur}
       />
     </View>
   )

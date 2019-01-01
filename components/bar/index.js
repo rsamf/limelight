@@ -19,7 +19,8 @@ class PlaylistComponent extends React.Component {
     this.state = {
       songs: new LocalSongs(this.props.children, this), // Do not set state on this
       loading: true,
-      playlist: null
+      playlist: null,
+      refreshing: false
     };
   }
 
@@ -42,6 +43,7 @@ class PlaylistComponent extends React.Component {
     } else {
       console.log("Rebasing from willreceiveprops()", props.songs);
       this.state.songs.rebase(props.songs);
+      this.setState({ refreshing: false });
     }
   }
 
@@ -66,22 +68,34 @@ class PlaylistComponent extends React.Component {
 
   get(props = this.props) {
     if(props.isOwned) {
-      network.rebasePlaylistFromSpotify(props.children, props.songs, playlist => {
+      const callback = playlist => {
+        console.log("called callback");
         this.setState({
           playlist,
-          loading: false
+          loading: false,
+          refreshing: false
         });
-        console.log("Rebasing from get()");
-        this.state.songs.rebase(props.songs, playlist.songs);
-      });
+        // this.state.songs.rebase(playlist.songs);
+      };
+      console.log("Rebasing from get()");
+      network.rebasePlaylistFromSpotify(
+        props.children, 
+        props.songs, 
+        this.props.addSongs,
+        this.props.deleteSongs, 
+        callback
+      );
     } else {
       this.setState({
-        loading: false
+        loading: false,
+        refreshing: false
       });
     }
   }
 
   refresh() {
+    console.log("Refreshing");
+    this.setState({refreshing: true});
     if(this.props.isOwned) {
       this.get();
     } else {
@@ -101,8 +115,8 @@ class PlaylistComponent extends React.Component {
     if(this.props.isOwned) {
       network.addSongToSpotify(this.state.playlist.id, uri, playlist => {
         if(playlist) {
-          console.warn("adding songs:", [awsSong()]);
-          this.props.addSongs([awsSong()]);
+          console.warn("adding songs:", [awsSong(song)]);
+          this.props.addSongs([awsSong(song)]);
         }
       });
       if(requestIndex != -1) {
@@ -110,6 +124,14 @@ class PlaylistComponent extends React.Component {
       }
     } else {
       this.props.requestSong(song);
+    }
+  }
+
+  deleteSong(index, isRequest) {
+    if(isRequest) {
+      this.props.requestACKSong(index);
+    } else {
+      this.props.deleteSongs([index]);
     }
   }
 
@@ -129,12 +151,11 @@ class PlaylistComponent extends React.Component {
           !this.state.loading ? (
           <View style={globals.style.view}>
             <Header
-              {...this.props}
+              user={this.props.user}
+              openBlur={(blur, props)=>this.props.openBlur(blur,props)}
               navigation={this.props.navigation}
               playlist={this.props.playlist}
               updatePlaylist={(p)=>this.props.updatePlaylist(p)}
-              deletePlaylist={()=>this.props.deletePlaylist()}
-              deleteSongs={()=>this.props.deleteSongs()}
             />
             <Songs
               {...this.props}
@@ -144,6 +165,8 @@ class PlaylistComponent extends React.Component {
               deleteSong={(songId)=>this.props.deleteSong(songId)}
               vote={(i)=>this.vote(i)}
               requests={this.props.requests}
+              refreshing={this.state.refreshing}
+              refresh={()=>this.refresh()}
             >
               {this.state.songs.queue}
             </Songs>
@@ -196,7 +219,7 @@ function awsSong(song) {
     id: song.id,
     name: song.name,
     artist: song.artist,
-    iamge: song.image,
+    image: song.image,
     duration: song.duration
   };
 }

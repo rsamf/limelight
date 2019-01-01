@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet, View, Image, TouchableOpacity, Linking, Alert, ScrollView } from 'react-native';
+import { Text, StyleSheet, View, Image, TouchableOpacity, Linking, Alert, SectionList, RefreshControl } from 'react-native';
 import Modal from "react-native-modal";
 import { Icon, Button } from 'react-native-elements';
 import globals from '../helpers';
@@ -41,6 +41,7 @@ export default class extends React.Component {
   }
 
   eachRequest(song, i) {
+    if(song === "ADD") return this.renderAddButton();
     const uri = "spotify:track:"+song.id;
     return (
       <TouchableOpacity key={i} onLongPress={()=>this.setState({viewingSong:song})}>
@@ -101,6 +102,14 @@ export default class extends React.Component {
     });
   }
 
+  each(item, index, section) {
+    if(section.title === "Queue") {
+      return this.eachSong(item, index);
+    } else {
+      return this.eachRequest(item, index);
+    }
+  }
+
   render() {
     const songs = this.props.children;
     const requests = this.props.requests;
@@ -124,11 +133,22 @@ export default class extends React.Component {
           </Modal>
         }
         <View style={globals.style.view}>
-          <ScrollView>
-            {songs.map((s, i) => this.eachSong(s, i))}
-            {requests.map((s, i) => this.eachRequest(s, i))}
-            {this.renderAddButton()}
-          </ScrollView>
+          <SectionList
+            refreshControl={
+              <RefreshControl refreshing={this.props.refreshing} onRefresh={()=>this.props.refresh()}/>
+            }
+            renderItem={({item, index, section}) => this.each(item, index, section)}
+            renderSectionHeader={({section: {title}}) => (
+                title === "Requests" && this.props.requests.length === 0 ?
+                (<View/>) :
+                <Text style={style.sectionHeader}>{title}</Text>
+            )}
+            sections={[
+              {title: 'Queue', data: songs},
+              {title: 'Requests', data: [...requests, "ADD"]},
+            ]}
+            keyExtractor={(_, index) => String(index)}
+          />
         </View>
       </View>
     );
@@ -139,6 +159,19 @@ const style = StyleSheet.create({
   view: {
     flex: 1,
     marginBottom: 82
+  },
+  sectionHeader: {
+    ...globals.style.smallText,
+    color: globals.sSand,
+    backgroundColor: globals.darkerGrey,
+    padding: 5,
+    shadowRadius: 5,
+    shadowOffset: {
+      height: 15
+    },
+    shadowOpacity: .9,
+    shadowColor: globals.sBlack,
+    zIndex: 5
   },
   song: {
     flexDirection: 'row',

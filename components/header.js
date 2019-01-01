@@ -14,9 +14,8 @@ export default class Header extends React.Component {
   }
 
   render(){
-    const view = this.props.playlist ? { ...style.view, ...style.shadow } : style.view;
     return (
-      <View style={view}>
+      <View style={style.view}>
         {this.renderLeft()}
         {this.renderMiddle()}
         {this.renderRight()}
@@ -55,7 +54,7 @@ export default class Header extends React.Component {
         {
           this.props.playlist ?
           <Icon name="ios-arrow-back" type="ionicon" color={globals.sWhite} underlayColor={globals.darkGrey}
-          onPress={()=>this.props.navigation.goBack()} containerStyle={{marginRight:20}}/>
+          onPress={()=>this.props.navigation.goBack()}/>
           :
           avatar()
         }
@@ -76,40 +75,35 @@ export default class Header extends React.Component {
     if(this.props.playlist) {
       if(this.props.user && this.props.user.id === this.props.playlist.ownerId) {
         return (
-          <Icon iconStyle={style.clickable} name="md-more" type="ionicon" color={globals.sWhite} underlayColor={globals.sSand}
-          onPress={()=>this.showPlaylistOptions()}/>
+          <TouchableOpacity onPress={()=>this.showPlaylistOptions()}>
+            <Icon 
+              containerStyle={style.clickable} 
+              name="md-more" 
+              type="ionicon" 
+              color={globals.sWhite} 
+              underlayColor={globals.sSand}
+            />
+          </TouchableOpacity>
         );
       }
       return <View></View>
     }
     return (
       <TouchableOpacity onPress={()=>this.props.openBlur(AddPlaylistBlur, {selected: 0})}>
-        <Icon color={globals.sWhite} type="entypo" name="plus"/>
+        <Icon containerStyle={style.clickable} color={globals.sWhite} type="entypo" name="plus"/>
       </TouchableOpacity>    
     );
   }
 
   showPlaylistOptions() {
-    this.props.setOpenedBlur(PlaylistOptionsBlur, {
-      playlist: this.props.children,
-      navigation: this.props.navigation,
-      updatePlaylist: (p)=>this.props.updatePlaylist(p),
-      deletePlaylist: ()=>this.props.deletePlaylist(),
-      deleteSongs: ()=>this.props.deleteSongs()
+    this.props.openBlur(PlaylistOptionsBlur, {
+      playlist: this.props.playlist,
+      updatePlaylist: (p)=>this.props.updatePlaylist(p)
     });
   }
 }
 
 const style = StyleSheet.create({
-  shadow: {
-    shadowRadius: 5,
-    shadowOffset: {
-      height: 15
-    },
-    shadowOpacity: .9,
-    shadowColor: globals.sBlack,
-    zIndex: 5
-  },
   view: {
     backgroundColor: globals.darkGrey,
     height: 70,
@@ -137,6 +131,8 @@ const style = StyleSheet.create({
     fontSize: 14
   },
   clickable: {
+    paddingLeft: 15,
+    paddingRight: 15,
     zIndex: 5
   }
 });

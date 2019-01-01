@@ -36,6 +36,24 @@ export default class BarList extends React.Component {
     };
   }
 
+  componentDidMount() {
+    if(navigator) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        const lng = pos.coords.longitude;
+        const lat = pos.coords.latitude;
+        fetch(`https://limelight-server.herokuapp.com/nearby?lng=${lng}&lat=${lat}`)
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          this.setState({
+            nearby: data
+          });
+        });
+      })
+    }
+
+  }
+
   propsForPlaylists = () => ({
     user: this.props.screenProps.user,
     playlists: this.props.screenProps.playlists,
@@ -87,7 +105,7 @@ export default class BarList extends React.Component {
               <Text style={style.sectionHeader}>{title}</Text>
             )}
             sections={sections}
-            keyExtractor={(item, index)=>String(index)} 
+            keyExtractor={(_, i)=>String(i)} 
           />
         </View>
       </View>

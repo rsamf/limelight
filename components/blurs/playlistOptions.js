@@ -1,14 +1,8 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { Icon, Button } from 'react-native-elements';
-import { BlurView } from 'react-native-blur';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Linking } from 'react-native';
+import { Icon } from 'react-native-elements';
 import QRCode from 'react-native-qrcode';
 import globals from '../helpers';
-const trashIcon = {
-  name: 'delete',
-  size: 15,
-  color: 'white'
-};
 
 export default class PlaylistOptions extends React.Component {
   constructor(props) {
@@ -30,65 +24,100 @@ export default class PlaylistOptions extends React.Component {
     this.props.close();
   }
 
-  deletePlaylist() {
-    this.props.deleteSongs();
-    this.props.deletePlaylist();
-    this.props.playlists.remove(this.props.playlist.id);
-    this.props.close();
-    this.props.navigation.navigate('BarList');
+  TextInput = globals.createTextInput(
+    (editingCode)=>this.setState({ editingCode }), 
+    ()=>this.submitEditingCode(),
+    ()=>this.setState({editingCode: null })
+  )
+
+  goToPlaylist() {
+    const url = `https://open.spotify.com/user/${this.props.playlist.ownerId}/playlist/${globals.getPlaylistId(this.props.playlist.id)}`;
+    Linking.canOpenURL(url).then(supported => {
+      if (!supported) {
+        Alert.alert("Could not open the link to the playlist!");
+      } else {
+        Linking.openURL(url);
+      }
+    });
   }
 
   render() {
     return (
-      <View style={globals.style.fullscreen}>
-        <BlurView style={globals.style.fullscreen} viewRef={this.props.viewRef} blurType="light" blurAmount={10}/>
-        <View style={style.view}>
-          <View style={style.title}>
-            {
-              this.state.editingTitle !== null ?
-              <TextInput onChangeText={(input)=>this.setState({editingTitle:input})} defaultValue={this.props.playlist.name}
-              blurOnSubmit={true} enablesReturnKeyAutomatically={true} onSubmitEditing={()=>this.submitEditingTitle()}
-              style={globals.style.textInput} onBlur={()=>this.setState({editingTitle:null})}/> :
-              <TouchableOpacity onPress={()=>this.setState({editingTitle:this.props.playlist.name})}>
-                <Text style={globals.style.text}>{this.props.playlist.name}</Text>
-              </TouchableOpacity>
-            }
-            {
-              this.state.editingCode !== null ?
-              <TextInput onChangeText={(input)=>this.setState({editingCode:input})} defaultValue={this.props.playlist.code}
-              blurOnSubmit={true} enablesReturnKeyAutomatically={true} onSubmitEditing={()=>this.submitEditingCode()}
-              style={globals.style.smallTextInput} onBlur={()=>this.setState({editingCode:null})}/> :
-              <TouchableOpacity onPress={()=>this.setState({editingCode:this.props.playlist.name})}>
-                <Text style={globals.style.smallText}>{this.props.playlist.code || "Create a Code for People to Join"}</Text>
-              </TouchableOpacity>
-            }
-          </View>
-          <QRCode value={this.props.playlist.id} size={256}/>
-          <Button buttonStyle={style.delete} icon={trashIcon} title='Delete' onPress={()=>this.deletePlaylist()}/>
-          <TouchableOpacity style={style.cancel} onPress={()=>this.props.close()}>
-            <Icon size={30} color={globals.sBlack} name="x" type="feather"/>
+      <View style={style.view}>
+        <Text style={style.name}>{this.props.playlist.name}</Text>
+        {
+          this.state.editingCode !== null ?
+          <this.TextInput/> :
+          <TouchableOpacity style={style.code} onPress={()=>this.setState({editingCode:this.props.playlist.name})}>
+            <Text style={style.codeText}>{this.props.playlist.code || "Create a Code for People to Join"}</Text>
+            <Icon
+              iconStyle={style.codeIcon}
+              type="entypo"
+              name="edit"
+              color={globals.sWhite}
+              size={18}
+            />
           </TouchableOpacity>
+        }
+        <View style={style.qr}>
+          <QRCode value={this.props.playlist.id} size={256}/>
         </View>
+        <TouchableOpacity style={style.goToSpotify} onPress={()=>this.goToPlaylist()}>
+          <Text style={globals.style.text}>Visit in Spotify</Text>
+          <Icon 
+            name="spotify" 
+            type="entypo" 
+            color={globals.sWhite}
+            size={18}
+            containerStyle={style.spotifyIcon}
+          />
+        </TouchableOpacity>
       </View>
     );
   }
 }
 
 const style = StyleSheet.create({
-  cancel: {
-    position: 'absolute',
-    top: 20,
-    left: 20
-  },
   view: {
-    justifyContent: 'center',
+    flex: 1,
+    marginLeft: 40,
+    marginRight: 40,
     alignItems: 'center',
-    flex: 1
+    justifyContent: 'center'
   },
-  title: {
-    marginBottom: 40
+  playlistInfo: {
+    marginBottom: 20
   },
-  delete: {
-    marginTop: 40
+  name: {
+    ...globals.style.text
+  },
+  code: {
+    marginTop: 13,
+    flexDirection: 'row'
+  },
+  codeEdit: {
+    flexDirection: 'row'
+  },
+  codeIcon: {
+    marginLeft: 40
+  },
+  codeText: {
+    ...globals.style.text,
+  },
+  qr: {
+    marginTop: 30
+  },
+  goToSpotify: {
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: globals.sWhite,
+    flexDirection: 'row',
+    padding: 10,
+    paddingLeft: 30,
+    paddingRight: 30,
+    borderRadius: 40
+  },
+  spotifyIcon: {
+    marginLeft: 10
   }
 });

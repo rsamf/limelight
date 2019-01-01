@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export default gql`
-mutation updatePlaylist($id: ID!, $playlist: PlaylistInput!) {
-  updatePlaylist(id: $id, playlist: $playlist) {
+mutation updatePlaylist($id: ID!, $name: String, $code: String, $image: String) {
+  updatePlaylist(id: $id, name: $name, code: $code, image: $image) {
     id
     name
     code

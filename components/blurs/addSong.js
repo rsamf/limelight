@@ -77,6 +77,9 @@ const style = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10
   },
+  songInfo: {
+    flex: 1
+  },
   songs: {
     marginLeft: 40,
     marginTop: 20

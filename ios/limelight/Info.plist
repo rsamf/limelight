@@ -54,7 +54,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Hi, there! I want to borrow access to your camera for just a bit, so I can scan that QR thingy over there.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Location not used</string>
+	<string>Location services are needed to find playlists near you.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>This app does not use NSMotionUsageDescription</string>
 	<key>NSSpeechRecognitionUsageDescription</key>

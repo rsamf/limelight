@@ -86,6 +86,7 @@ class AddedPlaylistsComponent extends React.Component {
       );
     }
     if (this.props.error) {
+      console.warn(this.props.error);
       return (
         <View style={style.message}>
           <Text style={globals.style.text}>

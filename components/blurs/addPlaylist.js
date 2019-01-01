@@ -68,7 +68,7 @@ export default class AddPlaylistBlur extends React.Component {
       variables: {
         code: this.state.iDinput
       }
-    }).then(({data: {getPlaylistsByCode:{playlists}}})=>{
+    }).then(({data: {getPlaylistsByCode: {playlists}}})=>{
       this.setState({
         searchedPlaylists: playlists,
         loading: false,

@@ -17,11 +17,11 @@ export default {
       state: 0
     }))];
   },
-  delete: (songs, id) => {
-    let songsCopy = [...songs];
-    let index = getIndexFromId(songsCopy, id);
-    songsCopy.splice(index, 1);
-    return songsCopy;
+  deleteByIndexes: (songs, indexes) => {
+    return songs.filter((_, i) => !indexes.includes(i));
+  },
+  deleteByIds: (songs, ids) => {
+    return songs.filter(song => !ids.includes(song.id));
   },
   // Requests
   request: (songs, song) => {

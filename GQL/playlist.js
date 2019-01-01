@@ -95,11 +95,11 @@ export default (Component) => compose(
   graphql(UpdatePlaylistMutation, {
     props: props => {
       return {
-        updatePlaylist: (playlist) => {
+        updatePlaylist: (changed) => {
           props.mutate({
             variables: {
               id: props.ownProps.playlist.id,
-              playlist
+              ...changed
             }
           });
         }
@@ -223,11 +223,11 @@ export default (Component) => compose(
   graphql(DeleteSongsMutation, {
     props: props => {
       return {
-        deleteSongs: (id) => {
+        deleteSongs: (ids) => {
           props.mutate({
-            variables: { id: props.ownProps.children, songId: id },
+            variables: { id: props.ownProps.children, songs: ids },
             optimisticResponse: () => {
-              let songs = SongsManipulation.delete(props.ownProps.songs, id);
+              let songs = SongsManipulation.deleteByIds(props.ownProps.songs, ids);
               return {
                 deleteSongs: {
                   id: props.ownProps.children,
@@ -239,7 +239,7 @@ export default (Component) => compose(
             update: (proxy, { data: { deleteSongs } }) => {
               let data = proxy.readQuery({ 
                 query: GetSongs, 
-                variables: { id: props.ownProps.children, songId: id }
+                variables: { id: props.ownProps.children, songs: ids }
               });
               data.getSongs.songs = deleteSongs.songs;
               proxy.writeQuery({ query: GetSongs, variables: { id: props.ownProps.children }, data });

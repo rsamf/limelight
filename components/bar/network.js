@@ -24,43 +24,20 @@ const net = {
       .catch(err => {
       });
   },
-  rebasePlaylistFromSpotify: async (id, awsSongs=[], callback) => {
+  rebasePlaylistFromSpotify: async (id, awsSongs=[], addSongs, deleteSongs, callback) => {
     console.log("rebasePlaylistFromSpotify()");
     let spotifyPlaylist = await getPlaylistFromSpotify(id);
     let spotifySongs = globals.getSongsFromPlaylist(spotifyPlaylist);
     let diff = globals.diff(spotifySongs, awsSongs);
-    let doneFlag = 0;
-    const checkToCallback = () => {
-      if(++doneFlag === 2) {
-        callback({
-          ...spotifyPlaylist,
-          songs: diff.ordered
-        });
-      }
-    };
     if(diff.new.length > 0) {
-      globals.client.mutate({
-        mutation: AddSongsMutation,
-        variables: {
-          id,
-          songs: diff.new
-        }
-      }).then(checkToCallback);
-    } else {
-      checkToCallback();
+      console.log("adding songs", diff.new);
+      addSongs(diff.new);
     }
-    checkToCallback();
-    // if(diff.old.length > 0) {
-    //   globals.client.mutate({
-    //     mutation: DeleteSongsMutation,
-    //     variables: {
-    //       id,
-    //       songs: diff.old
-    //     }
-    //   }).then(checkToCallback);
-    // } else {
-    //   checkToCallback();
-    // }
+    if(diff.old.length > 0) {
+      console.log("deleting songs", diff.old);
+      deleteSongs(diff.old);
+    }
+    callback(spotifyPlaylist);
   }
 };
 
