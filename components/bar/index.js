@@ -133,12 +133,13 @@ class PlaylistComponent extends React.Component {
     }
   }
 
-  deleteSong(index, isRequest) {
-    if(isRequest) {
-      this.props.requestACKSong(index);
-    } else {
-      this.props.deleteSongs([index]);
-    }
+  requestACKSong(index) {
+    this.props.requestACKSong(index);
+  }
+
+  deleteSong(id) {
+    network.deleteSongs(this.props.playlist.id, [id]);
+    this.props.deleteSongs([id]);
   }
 
   searchSong(){
@@ -168,7 +169,8 @@ class PlaylistComponent extends React.Component {
               isOwned={this.props.isOwned} 
               search={()=>this.searchSong()}
               addSong={(song, uri, i)=>this.addSong(song, uri, i)}
-              deleteSong={(songId)=>this.props.deleteSong(songId)}
+              ackSong={(i)=>this.props.requestACKSong(i)}
+              deleteSong={(id, isRequest)=>this.deleteSong(id, isRequest)}
               vote={(i)=>this.vote(i)}
               requests={this.props.requests}
               refreshing={this.state.refreshing}

@@ -10,6 +10,8 @@ export default {
     return [...songsCopy.slice(1), songsCopy[0]];
   },
   add: (songs, newSongs) => {
+    console.log("od",songs);
+    console.log("new", newSongs);
     return [...songs, ...newSongs.map(song => ({
       ...song,
       __typename: "Song",

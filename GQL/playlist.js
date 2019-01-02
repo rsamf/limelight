@@ -199,6 +199,7 @@ export default (Component) => compose(
             variables: { id: props.ownProps.children, songs },
             optimisticResponse: () => {
               let updatedSongs = SongsManipulation.add(props.ownProps.songs, songs);
+              console.log("UPDATED SONGS:", updatedSongs);
               return {
                 addSongs: {
                   id: props.ownProps.children,

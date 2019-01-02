@@ -51,6 +51,12 @@ const net = {
       update(toEdit);
     }
     callback(spotifyPlaylist);
+  },
+  deleteSongs: (id, ids) => {
+    const tracks = ids.map(id => ({
+      uri: `spotify:track:${id}`
+    }));
+    Spotify.sendRequest(`v1/playlists/${globals.getPlaylistId(id)}/tracks`, "DELETE", { tracks }, true).then(console.log);
   }
 };
 

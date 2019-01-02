@@ -10,13 +10,30 @@ export default class extends React.Component {
 
     this.state = {
       addingSong: false,
-      viewingSong: null
+      viewingSong: null,
+      viewingSongIsRequest: false
     };
+  }
+
+  onLongPress(song, isRequest, i) {
+    this.setState({
+      viewingSong: song,
+      viewingSongIsRequest: isRequest,
+      viewingSongIndex: i
+    });
+  }
+
+  addSong(song=this.state.viewingSong, index=this.state.viewingSongIndex) {
+    const uri = "spotify:track:"+song.id;
+    this.props.addSong(song, uri, index);
+    this.setState({
+      viewingSong: null
+    });
   }
 
   eachSong(song, i) {
     return (
-      <TouchableOpacity key={i} onLongPress={()=>this.setState({viewingSong:song})}>
+      <TouchableOpacity key={i} onLongPress={()=>this.onLongPress(song, false, i)}>
         <View style={style.song}>
           <Icon
             containerStyle={style.voteIcon} 
@@ -42,9 +59,8 @@ export default class extends React.Component {
 
   eachRequest(song, i) {
     if(song === "ADD") return this.renderAddButton();
-    const uri = "spotify:track:"+song.id;
     return (
-      <TouchableOpacity key={i} onLongPress={()=>this.setState({viewingSong:song})}>
+      <TouchableOpacity key={i} onLongPress={()=>this.onLongPress(song, true, i)}>
         <View style={style.request}>
           {
             this.props.isOwned &&
@@ -55,7 +71,7 @@ export default class extends React.Component {
               name="plus" 
               color={globals.sWhite}
               underlayColor={globals.sBlack} 
-              onPress={()=>this.props.addSong(song, uri, i)}
+              onPress={()=>this.addSong(song, i)}
             />
           }
           <Image style={style.songImage} source={{uri: song.image}}/>
@@ -79,6 +95,13 @@ export default class extends React.Component {
         </View>
       </View>
     );
+  }
+
+  ackSong() {
+    this.props.ackSong(this.state.viewingSongIndex);
+    this.setState({
+      viewingSong: null
+    });
   }
 
   deleteSong() {
@@ -111,24 +134,45 @@ export default class extends React.Component {
   }
 
   render() {
+    console.log("song", this.state.viewingSong);
     const songs = this.props.children;
     const requests = this.props.requests;
     return (
       <View style={style.view}>
         {
           this.state.viewingSong &&
-          <Modal isVisible={true}>
+          <Modal isVisible={true} onBackdropPress={()=>this.setState({ viewingSong: null })}>
             <View style={style.modalView}>
-              <Text style={style.modalText}>{this.state.viewingSong.name} - {this.state.viewingSong.artist}</Text>
-              <View style={style.modalOptions}>
-                {
-                  this.props.isOwned &&
-                  <Button onPress={()=>this.deleteSong()} title="Delete" backgroundColor="red"/>
-                }
-                <Button onPress={()=>this.visitSong(this.state.viewingSong.id)} title="Spotify" backgroundColor={globals.spotifyGreen}
-                 icon={{name:"spotify", type:"font-awesome"}}/>
-                <Button onPress={()=>this.setState({viewingSong:null})} title="Cancel"/>
+              <View style={{...style.modalBorder, ...style.modalItem}}>
+                <Image style={style.modalImage} source={{uri: this.state.viewingSong.image}}/>
+                <View style={style.modalDetails}>
+                  <Text ellipsizeMode="tail" numberOfLines={1} style={style.songName}>{this.state.viewingSong.name}</Text>
+                  <Text ellipsizeMode="tail" numberOfLines={1} style={style.songArtist}>{this.state.viewingSong.artist}</Text>
+                </View>
               </View>
+              <TouchableOpacity style={{...style.modalBorder, ...style.modalItem}} onPress={()=>this.visitSong()}>
+                <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="spotify" type="font-awesome"/>
+                <Text style={globals.style.text}>View in Spotify</Text>
+              </TouchableOpacity>
+              {
+                this.state.viewingSongIsRequest ? (
+                  <View>
+                    <TouchableOpacity style={{...style.modalBorder, ...style.modalItem}} onPress={()=>this.addSong()}>
+                      <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="check" type="feather"/>
+                      <Text style={globals.style.text}>Accept</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{...style.modalItem}} onPress={()=>this.ackSong()}>
+                      <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="x" type="feather"/>
+                      <Text style={globals.style.text}>Reject</Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  <TouchableOpacity style={{...style.modalItem}} onPress={()=>this.deleteSong()}>
+                    <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="trash-o" type="font-awesome"/>
+                    <Text style={globals.style.text}>Delete</Text>
+                  </TouchableOpacity>
+                )
+              }
             </View>
           </Modal>
         }
@@ -246,14 +290,28 @@ const style = StyleSheet.create({
     flexDirection: 'row'
   },
   modalView: {
-    flex: 1, 
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 10,
-    backgroundColor: globals.sWhite
+    backgroundColor: 'rgba(0,0,0,.6)',
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: globals.sWhite
   },
-  modalText: {
-    ...globals.style.smallText,
-    color: globals.sBlack
+  modalBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: globals.sGrey
+  },
+  modalItem: {
+    flexDirection: 'row',
+    padding: 15
+  },
+  modalIcon: {
+    marginRight: 10
+  },
+  modalImage: {
+    height: 50,
+    width: 50
+  },
+  modalDetails: {
+    marginLeft: 10,
+    flex: 1
   }
 });
