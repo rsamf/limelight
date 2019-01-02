@@ -155,22 +155,24 @@ export default class extends React.Component {
                 <Text style={globals.style.text}>View in Spotify</Text>
               </TouchableOpacity>
               {
-                this.state.viewingSongIsRequest ? (
-                  <View>
-                    <TouchableOpacity style={{...style.modalBorder, ...style.modalItem}} onPress={()=>this.addSong()}>
-                      <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="check" type="feather"/>
-                      <Text style={globals.style.text}>Accept</Text>
+                this.props.isOwned && (
+                  this.state.viewingSongIsRequest ? (
+                    <View>
+                      <TouchableOpacity style={{...style.modalBorder, ...style.modalItem}} onPress={()=>this.addSong()}>
+                        <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="check" type="feather"/>
+                        <Text style={globals.style.text}>Accept</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={{...style.modalItem}} onPress={()=>this.ackSong()}>
+                        <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="x" type="feather"/>
+                        <Text style={globals.style.text}>Reject</Text>
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <TouchableOpacity style={{...style.modalItem}} onPress={()=>this.deleteSong()}>
+                      <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="trash-o" type="font-awesome"/>
+                      <Text style={globals.style.text}>Delete</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{...style.modalItem}} onPress={()=>this.ackSong()}>
-                      <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="x" type="feather"/>
-                      <Text style={globals.style.text}>Reject</Text>
-                    </TouchableOpacity>
-                  </View>
-                ) : (
-                  <TouchableOpacity style={{...style.modalItem}} onPress={()=>this.deleteSong()}>
-                    <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="trash-o" type="font-awesome"/>
-                    <Text style={globals.style.text}>Delete</Text>
-                  </TouchableOpacity>
+                  )
                 )
               }
             </View>
