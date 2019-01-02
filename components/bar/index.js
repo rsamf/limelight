@@ -78,11 +78,17 @@ class PlaylistComponent extends React.Component {
         // this.state.songs.rebase(playlist.songs);
       };
       console.log("Rebasing from get()");
+      const awsPlaylist = {
+        ...props.playlist,
+        songs: props.songs
+      };
+      console.log("get(): playlist", props.playlist);
       network.rebasePlaylistFromSpotify(
         props.children, 
-        props.songs, 
+        awsPlaylist, 
         this.props.addSongs,
         this.props.deleteSongs, 
+        this.props.updatePlaylist,
         callback
       );
     } else {

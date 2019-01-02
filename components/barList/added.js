@@ -14,6 +14,7 @@ const style = StyleSheet.create({
     margin: 50
   },
   playlist: {
+    marginLeft: 20,
     marginTop: 13,
     marginBottom: 10,
     flexDirection: 'row',

@@ -6,7 +6,7 @@ import { AUTH_TYPE } from "aws-appsync/lib/link/auth-link";
 import AWSAppSyncClient from "aws-appsync/lib";
 import Spotify from 'rn-spotify-sdk';
 
-const sBlue = '#43e5f8'//'#84bd00',
+const sBlue = '#23a5c8'//'#43e5f8',//'#84bd00'
       sMiddle = '#20f3cb',
       sGreen = '#04fea6'
       sBlack = '#000000',
