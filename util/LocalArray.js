@@ -31,7 +31,6 @@ export default class LocalArray {
 
   push(element, callback){
     this.getAll(list => {
-      console.log(list);
       if(!list.includes(element)) {
         list.push(element);
         this.setList(list).then(()=>{
@@ -40,6 +39,18 @@ export default class LocalArray {
       } else {
         if(callback) callback(list);
       }
+    });
+  }
+
+  pushAll(elements, callback) {
+    this.getAll(list => {
+      let toPush = elements.filter(el=>{
+        return !list.includes(el);
+      });
+      list.push(...toPush);
+      this.setList(list).then(()=>{
+        if(callback) callback(list);
+      });
     });
   }
 
