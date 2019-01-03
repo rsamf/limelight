@@ -104,13 +104,13 @@ const style = StyleSheet.create({
     padding: 0
   },
   playlist: {
-    width: 120,
-    height: 120,
+    width: 110,
+    height: 110,
     alignItems: 'center'
   },
   playlistImage: {
-    width: 100,
-    height: 100
+    width: 90,
+    height: 90
   },
   view: {
     flexDirection: 'row',
