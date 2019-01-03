@@ -105,6 +105,8 @@ const style = StyleSheet.create({
     ...globals.style.text,
   },
   qr: {
+    backgroundColor: globals.sWhite,
+    padding: 1,
     marginTop: 30
   },
   goToSpotify: {
