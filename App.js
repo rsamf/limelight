@@ -17,7 +17,7 @@ export default class extends React.Component {
 
   finishReading() {
     this.setState({
-      finishReading: true
+      finishedReading: true
     });
   }
 

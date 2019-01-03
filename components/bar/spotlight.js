@@ -211,7 +211,7 @@ const style = StyleSheet.create({
   progress: {
     flex: 1,
     position: 'absolute',
-    bottom: 80,
+    bottom: 80 + (globals.isX() ? 15 : 0),
     left: 0,
     right: 0,
     zIndex: 10
@@ -219,12 +219,14 @@ const style = StyleSheet.create({
   view: {
     flex: 1,
     padding: 10,
+    paddingLeft: 10 + (globals.isX() ? 10 : 0),
+    paddingBottom: 10 + (globals.isX() ? 10 : 0),
     backgroundColor: globals.darkerGrey,
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: 80,
+    height: 80 + (globals.isX() ? 15 : 0),
     flexDirection: 'row',
     justifyContent: 'space-between',
     shadowRadius: 5,

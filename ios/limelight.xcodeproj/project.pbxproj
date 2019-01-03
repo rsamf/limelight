@@ -28,7 +28,6 @@
 		223B96EA20FBE45E006CAC33 /* SpotifyAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223B96E720FBE45E006CAC33 /* SpotifyAuthentication.framework */; };
 		223B96EB20FBE45E006CAC33 /* SpotifyAudioPlayback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223B96E820FBE45E006CAC33 /* SpotifyAudioPlayback.framework */; };
 		223B96EC20FBE45E006CAC33 /* SpotifyMetadata.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223B96E920FBE45E006CAC33 /* SpotifyMetadata.framework */; };
-		2258D43F212F6DAB0064F60A /* Spotify_Logo_RGB_Green.png in Resources */ = {isa = PBXBuildFile; fileRef = 2258D43E212F6DAB0064F60A /* Spotify_Logo_RGB_Green.png */; };
 		2258D4FE212FA33E0064F60A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2258D4FC212FA33E0064F60A /* LaunchScreen.xib */; };
 		2298F0472123CDE400901262 /* iTunesArtwork@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2298F01A2123CDE400901262 /* iTunesArtwork@1x.png */; };
 		263FA745458442E1A42B9D2B /* libMusicControl-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EEDDC9A8F4724657A3E7EA15 /* libMusicControl-tvOS.a */; };
@@ -427,7 +426,6 @@
 		223B96E720FBE45E006CAC33 /* SpotifyAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyAuthentication.framework; path = "../node_modules/rn-spotify-sdk/ios/external/SpotifySDK/SpotifyAuthentication.framework"; sourceTree = "<group>"; };
 		223B96E820FBE45E006CAC33 /* SpotifyAudioPlayback.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyAudioPlayback.framework; path = "../node_modules/rn-spotify-sdk/ios/external/SpotifySDK/SpotifyAudioPlayback.framework"; sourceTree = "<group>"; };
 		223B96E920FBE45E006CAC33 /* SpotifyMetadata.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyMetadata.framework; path = "../node_modules/rn-spotify-sdk/ios/external/SpotifySDK/SpotifyMetadata.framework"; sourceTree = "<group>"; };
-		2258D43E212F6DAB0064F60A /* Spotify_Logo_RGB_Green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Spotify_Logo_RGB_Green.png; sourceTree = "<group>"; };
 		2258D4FD212FA33E0064F60A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		2298F01A2123CDE400901262 /* iTunesArtwork@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@1x.png"; sourceTree = "<group>"; };
 		22C2BCBD2101594F004DFB30 /* limelight.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = limelight.entitlements; path = limelight/limelight.entitlements; sourceTree = "<group>"; };
@@ -620,7 +618,6 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				2258D4FB212FA33E0064F60A /* Base.lproj */,
 				13B07FB71A68108700A75B9A /* main.m */,
-				2258D43E212F6DAB0064F60A /* Spotify_Logo_RGB_Green.png */,
 				2298F01A2123CDE400901262 /* iTunesArtwork@1x.png */,
 			);
 			name = limelight;
@@ -1406,7 +1403,6 @@
 				4EF040DE9CA54B13891EA23C /* MaterialCommunityIcons.ttf in Resources */,
 				72B2DE7ED46F48B381E363D1 /* MaterialIcons.ttf in Resources */,
 				2298F0472123CDE400901262 /* iTunesArtwork@1x.png in Resources */,
-				2258D43F212F6DAB0064F60A /* Spotify_Logo_RGB_Green.png in Resources */,
 				2258D4FE212FA33E0064F60A /* LaunchScreen.xib in Resources */,
 				C1E3B00984204B4DAC61A30A /* Octicons.ttf in Resources */,
 				1409DFD1F40D4387A62028E1 /* SimpleLineIcons.ttf in Resources */,

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -14,44 +14,10 @@
         <view contentMode="scaleToFill" id="iN0-l3-epB">
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-            <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Limelight" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TKQ-7C-8f5">
-                    <rect key="frame" x="177" y="120.5" width="126.5" height="39"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="32"/>
-                    <color key="textColor" red="0.12549019610000001" green="0.95294117649999999" blue="0.79607843140000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Spotify_Logo_RGB_Green.png" translatesAutoresizingMaskIntoConstraints="NO" id="kv1-hs-I0i">
-                    <rect key="frame" x="150" y="409" width="180" height="70"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="70" id="8jT-x8-xqj"/>
-                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="70" id="CJ8-st-FlC"/>
-                        <constraint firstAttribute="width" constant="180" id="DJk-Qk-QvJ"/>
-                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="168" id="jdH-1C-7OQ"/>
-                    </constraints>
-                </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Music powered by" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vmp-fT-Ce6">
-                    <rect key="frame" x="130" y="370" width="220" height="34"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="28"/>
-                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
-            </subviews>
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-            <constraints>
-                <constraint firstItem="TKQ-7C-8f5" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="CNj-pj-JRU"/>
-                <constraint firstAttribute="bottom" secondItem="kv1-hs-I0i" secondAttribute="bottom" constant="1" id="OzB-Tr-1Yy"/>
-                <constraint firstItem="kv1-hs-I0i" firstAttribute="top" secondItem="Vmp-fT-Ce6" secondAttribute="bottom" constant="5" id="i97-c1-ms0"/>
-                <constraint firstItem="kv1-hs-I0i" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="l7v-WZ-zg9"/>
-                <constraint firstItem="TKQ-7C-8f5" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="-100" id="sTN-NT-uVb"/>
-                <constraint firstItem="Vmp-fT-Ce6" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="tt6-t8-QOQ"/>
-            </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="548" y="455"/>
         </view>
     </objects>
-    <resources>
-        <image name="Spotify_Logo_RGB_Green.png" width="2362" height="709"/>
-    </resources>
 </document>

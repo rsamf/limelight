@@ -32,6 +32,7 @@ export default class extends React.Component {
   }
 
   eachSong(song, i) {
+    const votedColor = this.props.voted(i) ? globals.sGreen : globals.sGrey;
     return (
       <TouchableOpacity key={i} onLongPress={()=>this.onLongPress(song, false, i)}>
         <View style={style.song}>
@@ -40,11 +41,11 @@ export default class extends React.Component {
             size={35}
             type="entypo" 
             name="chevron-with-circle-up" 
-            color={song.voted ? globals.sGreen : globals.sGrey} 
-            underlayColor={globals.sBlack} 
+            color={votedColor} 
+            underlayColor={globals.sBlack}
             onPress={()=>this.props.vote(i)}
           />
-          <Text style={{...style.voteNumber, color: song.voted ? globals.sGreen : globals.sGrey}}>
+          <Text style={{...style.voteNumber, color: votedColor }}>
             {song.votes}
           </Text>
           <Image style={style.songImage} source={{uri: song.image}}/>

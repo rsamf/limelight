@@ -10,6 +10,10 @@ query GetMessages {
     content
     subcontent
     date
-    image
+    image {
+      uri
+      width
+      height
+    }
   }
 }`;

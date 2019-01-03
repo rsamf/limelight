@@ -1,4 +1,4 @@
-import { StyleSheet, View, TextInput, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, TextInput, ActivityIndicator, Dimensions, Platform } from 'react-native';
 import { Icon } from 'react-native-elements';
 import React from 'react';
 import * as AWS from 'aws-sdk';
@@ -195,6 +195,16 @@ const getMyPlaylists = (user, func) => {
   });
 };
 
+export const isX = () => {
+  const { height, width } = Dimensions.get('window');
+  console.log(height, width);
+  console.log("IS IPONEX");
+  console.log(Platform.OS);
+  return (
+    Platform.OS === 'ios' && (height === 812 || height === 896 || width === 812 || width === 896)
+  );
+}
+
 const client = new AWSAppSyncClient({
   url: "https://oiywd3csqfenhjw7d6p3k6qepe.appsync-api.us-west-2.amazonaws.com/graphql",
   region: "us-west-2",
@@ -230,6 +240,7 @@ const globals = {
   getMyPlaylists,
   getSongData,
   getSongsFromPlaylist,
+  isX,
   client,
 };
 

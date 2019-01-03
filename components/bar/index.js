@@ -166,7 +166,8 @@ class PlaylistComponent extends React.Component {
             />
             <Songs
               {...this.props}
-              isOwned={this.props.isOwned} 
+              isOwned={this.props.isOwned}
+              voted={(i)=>!this.state.songs.canVote(i)}
               search={()=>this.searchSong()}
               addSong={(song, uri, i)=>this.addSong(song, uri, i)}
               ackSong={(i)=>this.props.requestACKSong(i)}

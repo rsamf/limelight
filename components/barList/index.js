@@ -38,20 +38,23 @@ export default class BarList extends React.Component {
 
   componentDidMount() {
     if(navigator) {
-      navigator.geolocation.getCurrentPosition((pos) => {
-        const lng = -80.1267//pos.coords.longitude;
-        const lat = 26.3897//pos.coords.latitude;
-        fetch(`https://limelight-server.herokuapp.com/nearby?lng=${lng}&lat=${lat}`)
-        .then(res => res.json())
-        .then(data => {
-          console.log(data);
-          this.setState({
-            nearby: data
+      try {
+        navigator.geolocation.getCurrentPosition((pos) => {
+          const lng = pos.coords.longitude;
+          const lat = pos.coords.latitude;
+          fetch(`https://limelight-server.herokuapp.com/nearby?lng=${lng}&lat=${lat}`)
+          .then(res => res.json())
+          .then(data => {
+            console.log(data);
+            this.setState({
+              nearby: data
+            });
           });
         });
-      })
+      } catch(e) {
+        return;
+      }
     }
-
   }
 
   propsForPlaylists = () => ({

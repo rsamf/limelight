@@ -1,4 +1,5 @@
 import Spotify from 'rn-spotify-sdk';
+import LocalObject from './LocalObject';
 
 const getPlaylists = (user, func) => {
   Spotify.sendRequest('v1/me/playlists', "GET", {}, false).then(({items}) => {
@@ -42,6 +43,7 @@ export default {
     Spotify.addListener("logout", () => {
       setUser(null);
     });
+    promptLogin();
   },
   getPlaylists,
   addPlaylist(component, playlist) {
@@ -95,3 +97,12 @@ export default {
   }
 };
     
+
+function promptLogin() {
+  let app = new LocalObject("app", ()=>{}, () => {
+    if(!app.notFirstTimeOpen) {
+      app.set("notFirstTimeOpen", true);
+      Spotify.login();
+    }
+  });
+}

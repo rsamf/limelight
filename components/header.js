@@ -106,11 +106,11 @@ export default class Header extends React.Component {
 const style = StyleSheet.create({
   view: {
     backgroundColor: globals.darkGrey,
-    height: 70,
+    height: 70 + (globals.isX() ? 15 : 0),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 30,
+    paddingTop: 30 + (globals.isX() ? 15 : 0),
     paddingLeft: 10,
     paddingRight: 10,
     paddingBottom: 10,
@@ -120,7 +120,7 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    marginTop: 20,
+    marginTop: 20 + (globals.isX() ? 15 : 0),
     left: 0,
     right: 0,
     top: 0,

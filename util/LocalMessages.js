@@ -15,13 +15,27 @@ export default class LocalMessages extends LocalArray {
   init() {
     this.unreadMessages = [];
     globals.client.query({query: GetMessagesQuery})
-    .then(({data: {getMessages}}) => {
-      this.wipe(); // Remove once done testing
-      this.getMessagesToRead(getMessages);
-    });
+      .then(({data: {getMessages}}) => {
+        // this.wipe(); ///
+        this.getMessagesToRead(getMessages);
+      })
+      .catch((err) => {
+        // this.getMessagesToRead([{
+        //   id: -1,
+        //   type: "EVERY",
+        //   title: "Oops!",
+        //   content: "Sorry, but Amazon Web Services which Limelight requires seems to be malfunctioning...",
+        //   subcontent: "Try again soon!"
+        // }]);
+        console.warn("COULDN't GET MSGS", err);
+        this.unreadMessages = [];
+        this.update();
+        this.ready=true;
+      });
   }
 
   getMessagesToRead(aws) {
+    console.log(aws);
     let newMessages = this.sorted(aws);
     this.unreadMessages = newMessages.filter(message => {
       if(message.type === "WELCOME" || message.type === "ONCE") {
@@ -32,7 +46,6 @@ export default class LocalMessages extends LocalArray {
       }
       return false;
     });
-    console.log("UNREAD:", this.unreadMessages);
     this.ready = true;
     this.pushAll(aws.map(a => a.id));
   }

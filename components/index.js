@@ -44,8 +44,8 @@ export default class Limelight extends React.Component {
   }
 
   componentDidMount(){
-    user.get(this);
     spotify.initialize();
+    user.get(this);
   }
 
   setOpenedBlur(blur, props) {
