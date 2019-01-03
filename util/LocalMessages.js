@@ -27,7 +27,6 @@ export default class LocalMessages extends LocalArray {
         //   content: "Sorry, but Amazon Web Services which Limelight requires seems to be malfunctioning...",
         //   subcontent: "Try again soon!"
         // }]);
-        console.warn("COULDN't GET MSGS", err);
         this.unreadMessages = [];
         this.update();
         this.ready=true;
@@ -35,7 +34,6 @@ export default class LocalMessages extends LocalArray {
   }
 
   getMessagesToRead(aws) {
-    console.log(aws);
     let newMessages = this.sorted(aws);
     this.unreadMessages = newMessages.filter(message => {
       if(message.type === "WELCOME" || message.type === "ONCE") {

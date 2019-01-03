@@ -22,41 +22,35 @@ const net = {
       .catch(err => {
       });
   },
-  rebasePlaylistFromSpotify: async (id, aws, addSongs, deleteSongs, update, callback) => {
-    console.log("rebasePlaylistFromSpotify()");
+  rebasePlaylistFromSpotify: async (id, aws, addSongs, deleteSongs, update, updateSongProps, callback) => {
     let spotifyPlaylist = await getPlaylistFromSpotify(id);
     let spotifySongs = globals.getSongsFromPlaylist(spotifyPlaylist);
     let diff = globals.diff(spotifySongs, aws.songs || []);
     if(diff.new.length > 0) {
-      console.log("adding songs", diff.new);
       addSongs(diff.new);
     }
     if(diff.old.length > 0) {
-      console.log("deleting songs", diff.old);
       deleteSongs(diff.old);
     }
     let toEdit = {};
     if(spotifyPlaylist.name !== aws.name) {
-      console.log("NAMES NOT EQUAL", spotifyPlaylist.name, aws.name);
       toEdit.name = spotifyPlaylist.name;
     }
     let spotifyImage = getSpotifyImage(spotifyPlaylist);
     if(spotifyImage !== aws.image) {
-      console.log("IMAGES NOT EQUAL", spotifyImage, aws.image);
       toEdit.image = spotifyImage;
     }
     if(toEdit.name || toEdit.image) {
-      console.log("SENDING UPDATED", toEdit);
-      console.log("rebase(): playlist", aws);
       update(toEdit);
     }
-    callback(spotifyPlaylist);
+    callback(spotifyPlaylist, diff.new.length === 0 && diff.old.length === 0 && diff.ordered);
   },
   deleteSongs: (id, ids) => {
     const tracks = ids.map(id => ({
       uri: `spotify:track:${id}`
     }));
-    Spotify.sendRequest(`v1/playlists/${globals.getPlaylistId(id)}/tracks`, "DELETE", { tracks }, true).then(console.log);
+    Spotify.sendRequest(`v1/playlists/${globals.getPlaylistId(id)}/tracks`, "DELETE", { tracks }, true)
+      .then(()=>{});//do nothing
   }
 };
 

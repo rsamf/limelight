@@ -135,7 +135,6 @@ export default class extends React.Component {
   }
 
   render() {
-    console.log("song", this.state.viewingSong);
     const songs = this.props.children;
     const requests = this.props.requests;
     return (
@@ -223,8 +222,8 @@ const style = StyleSheet.create({
   song: {
     flexDirection: 'row',
     flex: 1,
-    paddingBottom: 10,
-    paddingTop: 10,
+    paddingBottom: 12,
+    paddingTop: 12,
     marginLeft: 10,
     marginRight: 10,
     alignItems: 'center'
@@ -273,6 +272,7 @@ const style = StyleSheet.create({
   addButtonContainer: {
     flex: 1,
     alignItems: 'center',
+    marginTop: 20,
     marginBottom: 20
   },
   addButton: {

@@ -45,7 +45,6 @@ export default class BarList extends React.Component {
           fetch(`https://limelight-server.herokuapp.com/nearby?lng=${lng}&lat=${lat}`)
           .then(res => res.json())
           .then(data => {
-            console.log(data);
             this.setState({
               nearby: data
             });
@@ -79,7 +78,6 @@ export default class BarList extends React.Component {
 
   onRefresh() {
     user.refreshPlaylists((playlists)=>{
-      console.warn(playlists);
       this.setState({
         refreshing: false
       });

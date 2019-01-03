@@ -65,7 +65,6 @@ export default class LocalSongs extends LocalObject {
         });
       }
     });
-    console.log("old songs:", toReturn);
     toReturn = [...toReturn, ...songs.filter(s => s).map(s => ({
       ...s,
       localState: s.state,
@@ -82,7 +81,6 @@ export default class LocalSongs extends LocalObject {
     if(!newSongs) return;
     if(this.contains(this.playlistId)) {
       const merged = this.getMerged([...newSongs], onlyInclude);
-      console.log("MERGED SONGS:", merged);
       this.set(this.playlistId, merged);
     } else {
       let localSongs = newSongs.map(song => ({

@@ -31,7 +31,6 @@
 		2258D4FE212FA33E0064F60A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2258D4FC212FA33E0064F60A /* LaunchScreen.xib */; };
 		2298F0472123CDE400901262 /* iTunesArtwork@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2298F01A2123CDE400901262 /* iTunesArtwork@1x.png */; };
 		263FA745458442E1A42B9D2B /* libMusicControl-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EEDDC9A8F4724657A3E7EA15 /* libMusicControl-tvOS.a */; };
-		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2D02E4C21E0B4AEC006451C7 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157351DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
@@ -1481,7 +1480,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */,
-				2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -27,21 +27,20 @@ class PlaylistComponent extends React.Component {
   initializing = true
 
   componentWillReceiveProps(props) {
-    console.log("req", props.requests);
     let loading = props.songsLoading || props.playlistLoading || props.requestsLoading;
-    if(loading || props.error) return;
+    if(loading) return;
+    if(props.error) props.navigation.navigate('BarList');
     if(this.initializing) {
       this.initializing = false;
       if(!props.songs || !props.playlist) {
         this.init(props);
       } else {
-        console.log("calling get()");
         this.get(props);
       }
-    // this.interval = setInterval(()=>this.get(), this.UPDATE_PERIOD);
-    // this.props.subscribeToSongChanges();
+      // this.interval = setInterval(()=>this.get(), this.UPDATE_PERIOD);
+      this.props.subscribeToSongChanges();
+      this.props.subscribeToRequests();
     } else {
-      console.log("Rebasing from willreceiveprops()", props.songs);
       this.state.songs.rebase(props.songs);
       this.setState({ refreshing: false });
     }
@@ -54,7 +53,6 @@ class PlaylistComponent extends React.Component {
   init(props){
     if(props.isOwned) {
       network.initialize(props.children, props.user, playlist => {
-        console.log("Rebasing from init()");
         this.state.songs.rebase(playlist.songs);
         this.setState({
           playlist,
@@ -68,27 +66,26 @@ class PlaylistComponent extends React.Component {
 
   get(props = this.props) {
     if(props.isOwned) {
-      const callback = playlist => {
-        console.log("called callback");
+      const callback = (playlist, songs) => {
         this.setState({
           playlist,
           loading: false,
           refreshing: false
         });
-        // this.state.songs.rebase(playlist.songs);
+        if(songs)
+          this.state.songs.rebase(songs);
       };
-      console.log("Rebasing from get()");
       const awsPlaylist = {
         ...props.playlist,
         songs: props.songs
       };
-      console.log("get(): playlist", props.playlist);
       network.rebasePlaylistFromSpotify(
         props.children, 
         awsPlaylist, 
         this.props.addSongs,
         this.props.deleteSongs, 
         this.props.updatePlaylist,
+        this.props.updateSongProps,
         callback
       );
     } else {
@@ -100,7 +97,6 @@ class PlaylistComponent extends React.Component {
   }
 
   refresh() {
-    console.log("Refreshing");
     this.setState({refreshing: true});
     if(this.props.isOwned) {
       this.get();
@@ -121,7 +117,6 @@ class PlaylistComponent extends React.Component {
     if(this.props.isOwned) {
       network.addSongToSpotify(this.state.playlist.id, uri, playlist => {
         if(playlist) {
-          console.warn("adding songs:", [awsSong(song)]);
           this.props.addSongs([awsSong(song)]);
         }
       });

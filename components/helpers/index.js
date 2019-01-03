@@ -197,9 +197,6 @@ const getMyPlaylists = (user, func) => {
 
 export const isX = () => {
   const { height, width } = Dimensions.get('window');
-  console.log(height, width);
-  console.log("IS IPONEX");
-  console.log(Platform.OS);
   return (
     Platform.OS === 'ios' && (height === 812 || height === 896 || width === 812 || width === 896)
   );

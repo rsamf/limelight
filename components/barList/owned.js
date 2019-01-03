@@ -78,7 +78,6 @@ export default class OwnedList extends React.Component {
           }
           <TouchableOpacity onPress={()=>this.props.addPlaylist(2)} style={style.createButton}>
             <Icon raised name='add' color={globals.sBlack} containerStyle={style.createIcon}/>
-            <Text ellipsizeMode="tail" numberOfLines={1} style={globals.style.smallText}>Create New</Text>
           </TouchableOpacity>
         </ScrollView>
         <Side value="right"/>
@@ -91,7 +90,7 @@ const style = StyleSheet.create({
   createButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingLeft: 10,
+    paddingLeft: 20,
     marginLeft: 10,
     marginRight: 80,
     borderLeftWidth: .5,
@@ -99,24 +98,24 @@ const style = StyleSheet.create({
   },
   createIcon: {
     opacity: .6, 
-    width: 50,
-    height: 50,
+    width: 80,
+    height: 80,
     margin: 0,
     padding: 0
   },
   playlist: {
-    width: 70,
-    height: 70,
+    width: 120,
+    height: 120,
     alignItems: 'center'
   },
   playlistImage: {
-    width: 50,
-    height: 50
+    width: 100,
+    height: 100
   },
   view: {
     flexDirection: 'row',
-    marginTop: 13,
-    marginBottom: 10
+    marginTop: 18,
+    marginBottom: 15
   },
   scroll: {
     paddingLeft: 10
@@ -143,4 +142,4 @@ const style = StyleSheet.create({
     bottom: 0,
     zIndex: 5
   }
-})
+});

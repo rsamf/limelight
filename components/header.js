@@ -29,7 +29,7 @@ export default class Header extends React.Component {
       if(this.props.user) {
         const image = this.props.user.images[0];
         return (
-          <TouchableOpacity onPress={()=>this.props.openBlur(ProfileBlur)}>
+          <TouchableOpacity style={style.widerClick} onPress={()=>this.props.openBlur(ProfileBlur)}>
           {
             image && image.url ?
             <Avatar
@@ -37,14 +37,27 @@ export default class Header extends React.Component {
               source={{uri:image.url}}
               height={signinSize}
             /> :
-            <Icon size={signinSize} type="feather" name="user" color={globals.sWhite} underlayColor={globals.sBlack}/>
+            <Icon
+              size={signinSize}
+              type="feather" 
+              name="user" 
+              color={globals.sWhite} 
+              underlayColor={globals.sBlack}
+            />
           }
           </TouchableOpacity>
         );
       } else {
         return (
           <TouchableOpacity onPress={()=>Spotify.login()}>
-            <Icon size={signinSize} type="font-awesome" name="user-circle" color={globals.sWhite} underlayColor={globals.sBlack}/>
+            <Icon 
+              containerStyle={style.widerClick} 
+              size={signinSize} 
+              type="font-awesome" 
+              name="user-circle" 
+              color={globals.sWhite} 
+              underlayColor={globals.sBlack}
+            />
           </TouchableOpacity>
         );
       }
@@ -53,9 +66,14 @@ export default class Header extends React.Component {
       <View style={style.clickable}>
         {
           this.props.playlist ?
-          <Icon name="ios-arrow-back" type="ionicon" color={globals.sWhite} underlayColor={globals.darkGrey}
-          onPress={()=>this.props.navigation.goBack()}/>
-          :
+          <Icon 
+            name="ios-arrow-back" 
+            type="ionicon" 
+            color={globals.sWhite} 
+            underlayColor={globals.darkGrey}
+            containerStyle={style.widerClick}
+            onPress={()=>this.props.navigation.goBack()}
+          /> :
           avatar()
         }
       </View>
@@ -77,7 +95,7 @@ export default class Header extends React.Component {
         return (
           <TouchableOpacity onPress={()=>this.showPlaylistOptions()}>
             <Icon 
-              containerStyle={style.clickable} 
+              containerStyle={style.widerClick} 
               name="md-more" 
               type="ionicon" 
               color={globals.sWhite} 
@@ -86,11 +104,11 @@ export default class Header extends React.Component {
           </TouchableOpacity>
         );
       }
-      return <View></View>
+      return <View></View>;
     }
     return (
       <TouchableOpacity onPress={()=>this.props.openBlur(AddPlaylistBlur, {selected: 0})}>
-        <Icon containerStyle={style.clickable} color={globals.sWhite} type="entypo" name="plus"/>
+        <Icon containerStyle={style.widerClick} color={globals.sWhite} type="entypo" name="plus"/>
       </TouchableOpacity>    
     );
   }
@@ -131,8 +149,10 @@ const style = StyleSheet.create({
     fontSize: 14
   },
   clickable: {
-    paddingLeft: 15,
-    paddingRight: 15,
     zIndex: 5
+  },
+  widerClick: {
+    paddingLeft: 15,
+    paddingRight: 15
   }
 });

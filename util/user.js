@@ -3,7 +3,6 @@ import LocalObject from './LocalObject';
 
 const getPlaylists = (user, func) => {
   Spotify.sendRequest('v1/me/playlists', "GET", {}, false).then(({items}) => {
-    console.warn("ITEMS:", items);
     if(items) {
       let filtered = items.filter(playlist => playlist.owner.id === user.id);
       let mapped = filtered.map(playlist => ({
@@ -18,6 +17,7 @@ const getPlaylists = (user, func) => {
     }
   });
 };
+
 let ownedPlaylistsScrollView, userComponent;
 export default {
   setOwnedPlaylistsScrollView: val => {

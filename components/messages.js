@@ -23,7 +23,6 @@ export default class Messages extends React.Component {
             this.props.children.map((m, i) => {
               const slideStyle = getSlideStyle();
               const bg = slideStyle.backgroundColor;
-              console.log(i, m.image);
               return (
                 <View key={i} style={slideStyle}>
                   <View style={style.titleWrapper}>

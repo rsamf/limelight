@@ -194,12 +194,10 @@ export default (Component) => compose(
     props: props => {
       return {
         addSongs: (songs) => {
-          console.log("ADDDING songs", songs);
           props.mutate({
             variables: { id: props.ownProps.children, songs },
             optimisticResponse: () => {
               let updatedSongs = SongsManipulation.add(props.ownProps.songs, songs);
-              console.log("UPDATED SONGS:", updatedSongs);
               return {
                 addSongs: {
                   id: props.ownProps.children,
@@ -299,14 +297,12 @@ export default (Component) => compose(
               };
             },
             update: (proxy, { data: { requestACKSong }}) => {
-              console.log("songs:", requestACKSong);
               const rid = "r-"+id;
               let data = proxy.readQuery({ 
                 query: GetSongRequests, 
                 variables: { id: rid }
               });
               data.getSongs.songs = requestACKSong.songs;
-              console.log("DATA",data.getSongs);
               proxy.writeQuery({ query: GetSongRequests, variables: { id: rid }, data });
             }
           });

@@ -23,8 +23,6 @@ export default {
   },
   request: (path, method, data) => new Promise(async (resolve, reject) => {
     const { accessToken } = await Spotify.getAuthAsync();
-    // const accessToken = "BQADxaaLpYPgGBIKiUkCo7Lm384YEJIoNSS5nfEC_xRirM5JNwMercRdhTCeXa28M2oihSrqw3s0SbxL84kX3nCBtMVGeyxc8cn6seZH4m6kOQdVTJHInzs81dCEpTrhXdUpZq_nUTDcGJ_TZGFDBChDEZk08DPMeIx35cEfzgLxunlvQu9uuYBwJvA3USWO"
-    console.log("ACCESS TOKEN:", accessToken);
     let options = {
       method,
       headers: {
