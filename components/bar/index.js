@@ -29,7 +29,7 @@ class PlaylistComponent extends React.Component {
   componentWillReceiveProps(props) {
     let loading = props.songsLoading || props.playlistLoading || props.requestsLoading;
     if(loading) return;
-    if(props.error) props.navigation.navigate('BarList');
+    if(props.error) return props.navigation.navigate('BarList');
     if(this.initializing) {
       this.initializing = false;
       if(!props.songs || !props.playlist) {
@@ -53,10 +53,11 @@ class PlaylistComponent extends React.Component {
   init(props){
     if(props.isOwned) {
       network.initialize(props.children, props.user, playlist => {
-        this.state.songs.rebase(playlist.songs);
-        this.setState({
-          playlist,
-          loading: false
+        this.state.songs.rebase(playlist.songs, null, () => {
+          this.setState({
+            playlist,
+            loading: false
+          });
         });
       });
     } else {
@@ -120,7 +121,7 @@ class PlaylistComponent extends React.Component {
           this.props.addSongs([awsSong(song)]);
         }
       });
-      if(requestIndex != -1) {
+      if(requestIndex !== -1) {
         this.props.requestACKSong(requestIndex);
       }
     } else {
@@ -160,7 +161,6 @@ class PlaylistComponent extends React.Component {
               updatePlaylist={(p)=>this.props.updatePlaylist(p)}
             />
             <Songs
-              {...this.props}
               isOwned={this.props.isOwned}
               voted={(i)=>!this.state.songs.canVote(i)}
               search={()=>this.searchSong()}

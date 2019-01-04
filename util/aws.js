@@ -18,8 +18,8 @@ export default {
             songs
           }
         }
-      }).then(({data}) => {
-        callback({...data.addPlaylist, songs});
+      }).then(({data:{addPlaylist}}) => {
+        callback({...addPlaylist, songs});
       });
     } else {
       callback();

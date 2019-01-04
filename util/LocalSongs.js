@@ -77,11 +77,13 @@ export default class LocalSongs extends LocalObject {
     return toReturn;
   }
 
-  rebase(newSongs, onlyInclude) {
+  rebase(newSongs, onlyInclude, callback) {
     if(!newSongs) return;
     if(this.contains(this.playlistId)) {
       const merged = this.getMerged([...newSongs], onlyInclude);
-      this.set(this.playlistId, merged);
+      this.set(this.playlistId, merged, () => {
+        if(callback) callback();
+      });
     } else {
       let localSongs = newSongs.map(song => ({
         ...song,
@@ -89,7 +91,9 @@ export default class LocalSongs extends LocalObject {
         networkState: song.state,
         localState: song.state
       }));
-      this.set(this.playlistId, localSongs);
+      this.set(this.playlistId, localSongs, () => {
+        if(callback) callback();
+      });
     }
   }
 

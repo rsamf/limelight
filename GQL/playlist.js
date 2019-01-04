@@ -57,7 +57,7 @@ export default (Component) => compose(
       return {
         requestsLoading: props.data.loading,
         error: props.data.error,
-        requests: props.data.getSongs && props.data.getSongs.songs,
+        requests: (props.data.getSongs && props.data.getSongs.songs) || [],
         refetchRequests: props.data.refetch,
         subscribeToRequests: () => {
           props.data.subscribeToMore({
