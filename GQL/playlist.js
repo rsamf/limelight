@@ -83,7 +83,7 @@ export default (Component) => compose(
         variables: { id: props.children }
       };
     },
-    props: (props) => {    
+    props: (props) => {
       return {
         playlist: props.data.getPlaylist,
         playlistLoading: props.data.loading,

@@ -73,8 +73,7 @@ class PlaylistComponent extends React.Component {
           loading: false,
           refreshing: false
         });
-        if(songs)
-          this.state.songs.rebase(songs);
+        if(songs) this.state.songs.rebase(songs);
       };
       const awsPlaylist = {
         ...props.playlist,

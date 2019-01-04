@@ -168,7 +168,8 @@ const getSongData = (track, smallerImage) => {
       track.album.images[1] && track.album.images[1].url :
       track.album.images[0] && track.album.images[0].url
     ),
-    state: 0
+    state: 0,
+    votes: 0
   };
 };
 
