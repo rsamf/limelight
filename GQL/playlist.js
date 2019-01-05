@@ -60,13 +60,14 @@ export default (Component) => compose(
         requests: (props.data.getSongs && props.data.getSongs.songs) || [],
         refetchRequests: props.data.refetch,
         subscribeToRequests: () => {
+          console.warn("SUBBING");
           props.data.subscribeToMore({
             document: OnRequestsChangedSubscription,
             variables: { id: "r-"+props.ownProps.children },
-            updateQuery: (prev, {subscriptionData:{data:{onRequestsChanged:{songs}}}}) => {
+            updateQuery: (prev, sub) => {
               return {
                 getSongs: {
-                  songs,
+                  songs: sub.subscriptionData.data.onRequestsChanged.songs,
                   __typename: 'SongList'
                 }
               };

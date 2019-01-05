@@ -58,11 +58,11 @@ export default class Blur extends React.Component {
 const style = StyleSheet.create({
   cancel: {
     position: 'absolute',
-    top: 30,
+    top: 30 + (globals.isX() ? 15 : 0),
     left: 20
   },
   children: {
-    marginTop: 60,
+    marginTop: 60 + (globals.isX() ? 15 : 0),
     flex: 1
   }
 });

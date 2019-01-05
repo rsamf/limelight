@@ -117,11 +117,13 @@ const diff = (truth, previous) => {
   return toReturn;
 };
 
-const createSearchTextInput = (onChangeText, onSubmitEditing) => {
+const createSearchTextInput = (placeholder, onChangeText, onSubmitEditing) => {
   return () => (
     <View style={style.textInputContainer}>
       <Icon name="search" color={sWhite}/>
-      <TextInput 
+      <TextInput
+        placeholder={placeholder}
+        placeholderTextColor={globals.sWhite}
         style={style.textInput} 
         blurOnSubmit={true} 
         enablesReturnKeyAutomatically={true} 
@@ -129,6 +131,8 @@ const createSearchTextInput = (onChangeText, onSubmitEditing) => {
         spellCheck={false}
         onChangeText={(text)=>onChangeText(text)}
         onSubmitEditing={onSubmitEditing}
+        returnKeyType="search"
+        autoFocus={true}
       />
     </View>
   );
@@ -145,6 +149,8 @@ const createTextInput = (onChangeText, onSubmitEditing, onBlur) => {
         onChangeText={(text)=>onChangeText(text)}
         onSubmitEditing={onSubmitEditing}
         onBlur={onBlur}
+        returnKeyType="done"
+        autoFocus={true}
       />
     </View>
   )

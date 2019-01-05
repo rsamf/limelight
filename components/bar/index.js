@@ -100,6 +100,7 @@ class PlaylistComponent extends React.Component {
     this.setState({refreshing: true});
     if(this.props.isOwned) {
       this.get();
+      this.props.refetchRequests();
     } else {
       this.props.refetchSongs();
       this.props.refetchPlaylist();

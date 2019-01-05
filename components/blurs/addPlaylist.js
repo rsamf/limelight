@@ -116,7 +116,8 @@ export default class AddPlaylistBlur extends React.Component {
     );
   }
 
-  SearchTextInput = globals.createSearchTextInput((iDinput) => {
+  SearchTextInput = globals.createSearchTextInput("Type in your Invitational Code",
+  (iDinput) => {
     this.setState({iDinput});
   }, () => {
     this.searchPlaylists();
@@ -267,6 +268,7 @@ const style = StyleSheet.create({
   },
   playlists: {
     flex: .8,
+    marginTop: 20,
     marginLeft: 20,
     marginRight: 20
   },

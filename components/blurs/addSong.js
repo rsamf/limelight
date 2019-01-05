@@ -35,7 +35,7 @@ export default class AddSong extends React.Component {
 
   searchSongs() {
     this.setState({loading: true});
-    Spotify.search(this.state.songToSearch.replace(/ /g, '+'), ['track'], {}).then(({tracks: {items}}) => {
+    Spotify.search(this.state.songToSearch.replace(/ /g, '+'), ['track','artist'], {}).then(({tracks: {items}}) => {
       this.setState({
         searchedSongs: items,
         loading: false
@@ -43,7 +43,8 @@ export default class AddSong extends React.Component {
     });
   }
 
-  SearchTextInput = globals.createSearchTextInput((songToSearch) => {
+  SearchTextInput = globals.createSearchTextInput("Type in a song or artist",
+  (songToSearch) => {
     this.setState({songToSearch});
   }, () => {
     this.searchSongs();
@@ -82,6 +83,7 @@ const style = StyleSheet.create({
   },
   songs: {
     marginLeft: 40,
+    marginRight: 40,
     marginTop: 20
   },
   songImage: {

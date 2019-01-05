@@ -139,14 +139,19 @@ export default class extends React.Component {
     if(song) {
       return (
         <View>
-          <Modal isVisible={this.state.modalActive}>
+          <Modal isVisible={this.state.modalActive} onBackdropPress={()=>this.setState({ modalActive: false })}>
             <View style={style.modalView}>
-              <Text style={style.modalText}>See this song in Spotify?</Text>
-              <View style={style.modalOptions}>
-                <Button onPress={()=>this.visitSong()} title="Yes" backgroundColor={globals.spotifyGreen}
-                icon={{name:"spotify", type:"font-awesome"}}/>
-                <Button onPress={()=>this.setState({modalActive:false})} title="Cancel"/>
+              <View style={{...style.modalBorder, ...style.modalItem}}>
+                <Image style={style.modalImage} source={{uri: song.image}}/>
+                <View style={style.modalDetails}>
+                  <Text ellipsizeMode="tail" numberOfLines={1} style={style.songName}>{song.name}</Text>
+                  <Text ellipsizeMode="tail" numberOfLines={1} style={style.songArtist}>{song.artist}</Text>
+                </View>
               </View>
+              <TouchableOpacity style={{...style.modalBorder, ...style.modalItem}} onPress={()=>this.visitSong()}>
+                <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="spotify" type="font-awesome"/>
+                <Text style={globals.style.text}>View in Spotify</Text>
+              </TouchableOpacity>
             </View>
           </Modal>
           {
@@ -277,6 +282,32 @@ const style = StyleSheet.create({
     color: globals.sBlack
   },
   modalOptions: {
+    marginTop: 20,
     flexDirection: 'row'
+  },
+  modalView: {
+    backgroundColor: 'rgba(0,0,0,.6)',
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: globals.sWhite
+  },
+  modalBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: globals.sGrey
+  },
+  modalItem: {
+    flexDirection: 'row',
+    padding: 15
+  },
+  modalIcon: {
+    marginRight: 10
+  },
+  modalImage: {
+    height: 50,
+    width: 50
+  },
+  modalDetails: {
+    marginLeft: 10,
+    flex: 1
   }
 });
