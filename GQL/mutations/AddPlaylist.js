@@ -5,6 +5,9 @@ mutation AddPlaylist($playlist: PlaylistInput!){
   addPlaylist(playlist: $playlist) {
     id
     name
+    ownerId
+    ownerName
+    code
     image
   }
 }`;

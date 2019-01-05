@@ -4,6 +4,7 @@ import BarList from './barList';
 import Bar from './bar';
 import React from 'react';
 import globals from './helpers';
+import Header from './header';
 import Blur from './blurs';
 import ProfileBlur from './blurs/profile';
 import LocalPlaylists from '../util/LocalPlaylists';
@@ -39,6 +40,12 @@ export default class Limelight extends React.Component {
         goToProfile: () => this.setOpenedBlur(ProfileBlur),
         addToUserPlaylists: playlist => user.addPlaylist(this, playlist),
         playlists
+      },
+      header: {
+        name: "Your Playlists",
+        user: null,
+        playlist: null,
+        openBlur: (blur, props)=>this.setOpenedBlur(blur, props)
       }
     };
   }
@@ -63,13 +70,15 @@ export default class Limelight extends React.Component {
       user: this.state.user,
       playlists: this.state.playlists,
       openBlur: (blur, props) => this.setOpenedBlur(blur, props),
-      goToLogin: () => this.setOpenedBlur(ProfileBlur)
+      goToLogin: () => this.setOpenedBlur(ProfileBlur),
+      setHeader: options => this.setState({ header: {...this.state.header, ...options} })
     };
     return (
       <ApolloProvider client={globals.client}>
         <Rehydrated>
           <View style={globals.style.view}>
             <View style={globals.style.fullscreen} ref="view" onLayout={()=>this.setState({ viewRef: findNodeHandle(this.refs.view) })}>
+              <Header {...this.state.header}/>
               <Root screenProps={propsToPass}/>
             </View>
             {this.renderBlurs()}

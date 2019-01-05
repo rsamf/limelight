@@ -23,68 +23,74 @@ export default class Header extends React.Component {
     );
   }
 
+  renderAvatar() {
+    const signinSize = 25;
+    if(this.props.user) {
+      const image = this.props.user.images[0];
+      return (
+        <TouchableOpacity style={style.widerClick} onPress={()=>this.props.openBlur(ProfileBlur)}>
+        {
+          image && image.url ?
+          <Avatar
+            rounded
+            source={{uri:image.url}}
+            height={signinSize}
+          /> :
+          <Icon
+            size={signinSize}
+            type="feather" 
+            name="user" 
+            color={globals.sWhite} 
+            underlayColor={globals.sBlack}
+          />
+        }
+        </TouchableOpacity>
+      );
+    } else {
+      return (
+        <TouchableOpacity onPress={()=>Spotify.login()}>
+          <Icon 
+            containerStyle={style.widerClick} 
+            size={signinSize} 
+            type="font-awesome" 
+            name="user-circle" 
+            color={globals.sWhite} 
+            underlayColor={globals.sBlack}
+          />
+        </TouchableOpacity>
+      );
+    }
+  }
+
+  renderBackIcon() {
+    return (
+      <Icon 
+        name="ios-arrow-back" 
+        type="ionicon" 
+        color={globals.sWhite} 
+        underlayColor={globals.darkGrey}
+        containerStyle={style.widerClick}
+        onPress={()=>this.props.goBack()}
+      />
+    );
+  }
+
   renderLeft() {
-    const avatar = () => {
-      const signinSize = 25;
-      if(this.props.user) {
-        const image = this.props.user.images[0];
-        return (
-          <TouchableOpacity style={style.widerClick} onPress={()=>this.props.openBlur(ProfileBlur)}>
-          {
-            image && image.url ?
-            <Avatar
-              rounded
-              source={{uri:image.url}}
-              height={signinSize}
-            /> :
-            <Icon
-              size={signinSize}
-              type="feather" 
-              name="user" 
-              color={globals.sWhite} 
-              underlayColor={globals.sBlack}
-            />
-          }
-          </TouchableOpacity>
-        );
-      } else {
-        return (
-          <TouchableOpacity onPress={()=>Spotify.login()}>
-            <Icon 
-              containerStyle={style.widerClick} 
-              size={signinSize} 
-              type="font-awesome" 
-              name="user-circle" 
-              color={globals.sWhite} 
-              underlayColor={globals.sBlack}
-            />
-          </TouchableOpacity>
-        );
-      }
-    };
     return (
       <View style={style.clickable}>
         {
           this.props.playlist ?
-          <Icon 
-            name="ios-arrow-back" 
-            type="ionicon" 
-            color={globals.sWhite} 
-            underlayColor={globals.darkGrey}
-            containerStyle={style.widerClick}
-            onPress={()=>this.props.navigation.goBack()}
-          /> :
-          avatar()
+          this.renderBackIcon() :
+          this.renderAvatar()
         }
       </View>
     );
   }
 
   renderMiddle() {
-    const title = (this.props.playlist && this.props.playlist.name) || "Your Playlists";
     return (
       <View style={style.titleContainer}>
-        <Text style={style.textItem}>{title}</Text>
+        <Text style={style.textItem}>{this.props.name}</Text>
       </View>
     );
   }

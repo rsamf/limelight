@@ -159,7 +159,7 @@ export default class extends React.Component {
             <ProgressViewIOS style={style.progress} trackTintColor={globals.sGrey} progressTintColor={globals.sGreen} progress={this.state.track.position}/>
           }
           <View style={style.view}>
-            <View style={style.song}>
+            <View style={{...style.song, flex: this.props.isOwned ? .7 : 1}}>
               <Image style={style.songImage} source={{ uri: song.image }}/>
               <View style={style.songInfo}>
                 <Text ellipsizeMode="tail" numberOfLines={1} style={style.songName}>{song.name}</Text>
@@ -243,8 +243,7 @@ const style = StyleSheet.create({
     zIndex: 5
   },
   song: {
-    flexDirection: 'row',
-    flex: .7
+    flexDirection: 'row'
   },
   songImage: {
     height: 60,

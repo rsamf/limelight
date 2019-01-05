@@ -77,7 +77,7 @@ export default class OwnedList extends React.Component {
             this.props.user.playlists.map((p, i)=>this.eachPlaylist(p, i))
           }
           <TouchableOpacity onPress={()=>this.props.addPlaylist(2)} style={{...style.playlist, ...style.createButton}}>
-            <Icon type="feather" name="plus" color={globals.sWhite} containerStyle={style.createIcon}/>
+            <Icon type="feather" name="plus" color={globals.sBlack} containerStyle={style.createIcon}/>
             <Text ellipsizeMode="tail" numberOfLines={1} style={globals.style.smallText}> </Text>
           </TouchableOpacity>
         </ScrollView>
@@ -95,8 +95,9 @@ const style = StyleSheet.create({
     width: 90,
     height: 90,
     borderWidth: .5,
+    borderRadius: 5,
     borderColor: globals.sWhite,
-    backgroundColor: globals.darkGrey
+    backgroundColor: globals.sSand
   },
   playlist: {
     width: 110,

@@ -15,14 +15,12 @@ const net = {
   },
   addSongToSpotify: (id, song, callback) => {
     const body = { uris: [song] };
-    Spotify.sendRequest(`v1/playlists/${id}/tracks`, "POST", body, true)
-      .then(playlist => {
-        callback(playlist);
-      })
+    Spotify.sendRequest(`v1/playlists/${globals.getPlaylistId(id)}/tracks`, "POST", body, true)
+      .then(callback)
       .catch(err => {
       });
   },
-  rebasePlaylistFromSpotify: async (id, aws, addSongs, deleteSongs, update, updateSongProps, callback) => {
+  rebasePlaylistFromSpotify: async (id, aws, addSongs, deleteSongs, update, setHeader, callback) => {
     let spotifyPlaylist = await getPlaylistFromSpotify(id);
     let spotifySongs = globals.getSongsFromPlaylist(spotifyPlaylist);
     let diff = globals.diff(spotifySongs, aws.songs || []);
@@ -41,7 +39,7 @@ const net = {
       toEdit.image = spotifyImage;
     }
     if(toEdit.name || toEdit.image) {
-      update(toEdit);
+      update(toEdit, setHeader);
     }
     callback(spotifyPlaylist, diff.new.length === 0 && diff.old.length === 0 && diff.ordered);
   },

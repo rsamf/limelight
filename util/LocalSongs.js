@@ -1,5 +1,4 @@
 import LocalObject from './LocalObject';
-import globals from '../components/helpers';
 
 export default class LocalSongs extends LocalObject {
   constructor(playlistId, component) {

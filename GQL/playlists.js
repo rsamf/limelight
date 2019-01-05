@@ -30,7 +30,7 @@ export default (Component) => compose(
       return {
         navigation: props.ownProps.navigation,
         playlists: props.ownProps.playlists,
-        data: playlists,
+        data: playlists ? playlists.filter(p=>p) : [],
         loading: props.data.loading,
         error: props.data.error
       };

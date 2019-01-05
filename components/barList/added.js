@@ -67,7 +67,7 @@ class AddedPlaylistsComponent extends React.Component {
       <Swipeout right={swipeoutBtns} style={style.swipeout}>
         <TouchableOpacity style={style.playlist} onPress={()=>this.props.navigation.navigate('Bar', playlist.id)}>
           <View style={{flexDirection: 'row'}}>
-            <Image style={style.playlistImage} source={{uri:playlist.image || ""}}/>
+            <Image style={style.playlistImage} source={{uri: playlist.image || ""}}/>
             <View style={style.playlistDetails}>
               <Text ellipsizeMode='tail' numberOfLines={1} style={globals.style.text}>{playlist.name}</Text>
               <Text ellipsizeMode='tail' numberOfLines={1} style={style.playlistOwner}>{playlist.ownerName}</Text>

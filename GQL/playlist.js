@@ -60,7 +60,6 @@ export default (Component) => compose(
         requests: (props.data.getSongs && props.data.getSongs.songs) || [],
         refetchRequests: props.data.refetch,
         subscribeToRequests: () => {
-          console.warn("SUBBING");
           props.data.subscribeToMore({
             document: OnRequestsChangedSubscription,
             variables: { id: "r-"+props.ownProps.children },
@@ -96,11 +95,20 @@ export default (Component) => compose(
   graphql(UpdatePlaylistMutation, {
     props: props => {
       return {
-        updatePlaylist: (changed) => {
+        updatePlaylist: (changed, setHeader) => {
           props.mutate({
             variables: {
               id: props.ownProps.playlist.id,
               ...changed
+            },
+            update: (proxy, { data: { updatePlaylist } }) => {
+              let data = proxy.readQuery({ 
+                query: GetPlaylist, 
+                variables: { id: props.ownProps.children }
+              });
+              data.getPlaylist = {...data.getPlaylist, ...updatePlaylist};
+              proxy.writeQuery({ query: GetPlaylist, variables: { id: props.ownProps.children }, data });
+              setHeader({playlist: data.getPlaylist});
             }
           });
         }

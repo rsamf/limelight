@@ -31,6 +31,10 @@ export default {
         blurProps: {
           ...component.state.blurProps,
           user
+        },
+        header: {
+          ...component.state.header,
+          user
         }
       });
     };

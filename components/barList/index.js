@@ -37,6 +37,12 @@ export default class BarList extends React.Component {
   }
 
   componentDidMount() {
+    this.props.navigation.addListener('willFocus', () => {
+      this.props.screenProps.setHeader({
+        name: "Your Playlists",
+        playlist: null
+      });
+    });
     if(navigator) {
       try {
         navigator.geolocation.getCurrentPosition((pos) => {
@@ -95,7 +101,6 @@ export default class BarList extends React.Component {
     }
     return (
       <View style={globals.style.view}>
-        <Header {...this.props.screenProps}/>
         <View style={style.playlists}>
           <SectionList
             refreshControl={

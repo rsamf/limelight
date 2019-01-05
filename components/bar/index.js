@@ -1,7 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
 import globals from '../helpers';
-import Header from '../header';
 import Spotlight from './spotlight';
 import Songs from './songs';
 import createPlaylist from '../../GQL/playlist';
@@ -13,8 +12,6 @@ import user from '../../util/user';
 class PlaylistComponent extends React.Component {
   constructor(props) {
     super(props);
-
-    this.UPDATE_PERIOD = 10 * 1000;
 
     this.state = {
       songs: new LocalSongs(this.props.children, this), // Do not set state on this
@@ -31,34 +28,28 @@ class PlaylistComponent extends React.Component {
     if(loading) return;
     if(props.error) return props.navigation.navigate('BarList');
     if(this.initializing) {
-      this.initializing = false;
       if(!props.songs || !props.playlist) {
         this.init(props);
       } else {
         this.get(props);
       }
-      // this.interval = setInterval(()=>this.get(), this.UPDATE_PERIOD);
+      this.initializing = false;
       this.props.subscribeToSongChanges();
       this.props.subscribeToRequests();
     } else {
+      console.log("UPDATE");
       this.state.songs.rebase(props.songs);
-      this.setState({ refreshing: false });
+      this.setState({ refreshing: false, loading: false });
     }
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
   }
 
   init(props){
     if(props.isOwned) {
       network.initialize(props.children, props.user, playlist => {
-        this.state.songs.rebase(playlist.songs, null, () => {
-          this.setState({
-            playlist,
-            loading: false
-          });
-        });
+        this.props.refetchSongs();
+        this.props.refetchPlaylist();
+        this.props.refetchRequests();
+        this.setPlaylist(playlist);
       });
     } else {
       props.navigation.navigate('BarList');
@@ -68,32 +59,36 @@ class PlaylistComponent extends React.Component {
   get(props = this.props) {
     if(props.isOwned) {
       const callback = (playlist, songs) => {
-        this.setState({
-          playlist,
-          loading: false,
-          refreshing: false
-        });
+        this.setState({ loading: false, refreshing: false });
+        this.setPlaylist(props.playlist);
         if(songs) this.state.songs.rebase(songs);
       };
-      const awsPlaylist = {
-        ...props.playlist,
-        songs: props.songs
-      };
       network.rebasePlaylistFromSpotify(
-        props.children, 
-        awsPlaylist, 
+        props.children,
+        { ...props.playlist, songs: props.songs }, 
         this.props.addSongs,
         this.props.deleteSongs, 
         this.props.updatePlaylist,
-        this.props.updateSongProps,
+        this.props.setHeader,
         callback
       );
     } else {
-      this.setState({
-        loading: false,
-        refreshing: false
-      });
+      if(this.state.initializing) this.state.songs.rebase(props.songs);
+      this.setState({ loading: false, refreshing: false });
+      this.setPlaylist(props.playlist);
     }
+  }
+
+  setPlaylist(playlist) {
+    this.props.setHeader({
+      name: playlist.name,
+      updatePlaylist: (
+        this.props.isOwned ? 
+        p => this.props.updatePlaylist(p, this.props.setHeader) :
+        _ => {} 
+      ),
+      playlist,
+    });
   }
 
   refresh() {
@@ -116,8 +111,8 @@ class PlaylistComponent extends React.Component {
 
   addSong(song, uri, requestIndex) {
     if(this.props.isOwned) {
-      network.addSongToSpotify(this.state.playlist.id, uri, playlist => {
-        if(playlist) {
+      network.addSongToSpotify(this.props.playlist.id, uri, data => {
+        if(!data.error) {
           this.props.addSongs([awsSong(song)]);
         }
       });
@@ -153,13 +148,6 @@ class PlaylistComponent extends React.Component {
         {
           !this.state.loading ? (
           <View style={globals.style.view}>
-            <Header
-              user={this.props.user}
-              openBlur={(blur, props)=>this.props.openBlur(blur,props)}
-              navigation={this.props.navigation}
-              playlist={this.props.playlist}
-              updatePlaylist={(p)=>this.props.updatePlaylist(p)}
-            />
             <Songs
               isOwned={this.props.isOwned}
               voted={(i)=>!this.state.songs.canVote(i)}
@@ -201,12 +189,23 @@ export default class Bar extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.props.navigation.addListener('willFocus', () => {
+      this.props.screenProps.setHeader({
+        name: "Loading Playlist...", 
+        playlist: {}, 
+        goBack: () => this.props.navigation.navigate('BarList')
+      });
+    });
+  }
+
   render(){
     return (
       <View style={globals.style.view}>
         {
-          <Playlist 
+          <Playlist
             {...this.props.screenProps} 
+            setHeader={options=>this.props.screenProps.setHeader(options)}
             isOwned={this.state.isOwned}
             navigation={this.props.navigation} 
           >
