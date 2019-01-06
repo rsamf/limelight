@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, SectionList, StyleSheet, Text, RefreshControl } from 'react-native';
 import globals from '../helpers';
-import Header from '../header';
 import OwnedPlaylists from './owned';
 import AddedPlaylists from './added';
 import NearbyPlaylists from './nearby';
@@ -43,21 +42,24 @@ export default class BarList extends React.Component {
         playlist: null
       });
     });
+    this.getNearby();
+  }
+
+  getNearby(callback) {
     if(navigator) {
       try {
         navigator.geolocation.getCurrentPosition((pos) => {
           const lng = pos.coords.longitude;
           const lat = pos.coords.latitude;
           fetch(`https://limelight-server.herokuapp.com/nearby?lng=${lng}&lat=${lat}`)
-          .then(res => res.json())
-          .then(data => {
-            this.setState({
-              nearby: data
+            .then(res => res.json())
+            .then(data => {
+              this.setState({ nearby: data });
+              if(callback) callback();
             });
-          });
         });
       } catch(e) {
-        return;
+        if(callback) callback();
       }
     }
   }
@@ -83,11 +85,18 @@ export default class BarList extends React.Component {
   }
 
   onRefresh() {
-    user.refreshPlaylists((playlists)=>{
-      this.setState({
-        refreshing: false
-      });
-    });
+    let count = 2;
+    const checkToCallback = () => {
+      if(--count === 0) {
+        this.setState({ refreshing: false });
+      }
+    };
+    this.getNearby(checkToCallback);
+    if(this.props.user){
+      user.refreshPlaylists(checkToCallback);
+    } else {
+      checkToCallback();
+    }
   }
 
   render(){

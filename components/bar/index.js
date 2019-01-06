@@ -37,7 +37,6 @@ class PlaylistComponent extends React.Component {
       this.props.subscribeToSongChanges();
       this.props.subscribeToRequests();
     } else {
-      console.log("UPDATE");
       this.state.songs.rebase(props.songs);
       this.setState({ refreshing: false, loading: false });
     }
@@ -58,7 +57,7 @@ class PlaylistComponent extends React.Component {
 
   get(props = this.props) {
     if(props.isOwned) {
-      const callback = (playlist, songs) => {
+      const callback = (_, songs) => {
         this.setState({ loading: false, refreshing: false });
         this.setPlaylist(props.playlist);
         if(songs) this.state.songs.rebase(songs);

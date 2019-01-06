@@ -36,7 +36,7 @@ export default class NearbyPlaylists extends React.Component {
 const style = StyleSheet.create({
   playlist: {
     marginLeft: 20,
-    marginTop: 13,
+    marginTop: 15,
     marginBottom: 10,
     flexDirection: 'row',
     alignItems: 'center',
