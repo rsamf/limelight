@@ -4,7 +4,7 @@ import Messages from './components/messages';
 import LocalMessages from './util/LocalMessages';
 import React from 'react';
 
-export default class extends React.Component {
+export default class App extends React.Component {
   constructor(props) {
     super(props);
     StatusBar.setBarStyle('light-content', true);
@@ -34,4 +34,4 @@ export default class extends React.Component {
   }
 }
 
-AppRegistry.registerComponent('Limelight', () => Root);
+AppRegistry.registerComponent('Limelight', () => App);

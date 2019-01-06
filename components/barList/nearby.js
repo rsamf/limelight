@@ -11,10 +11,10 @@ export default class NearbyPlaylists extends React.Component {
   eachPlaylist(playlist, i) {
     return (
       <TouchableOpacity style={style.playlist} onPress={()=>this.props.navigation.navigate('Bar', playlist.id)}>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Image style={style.playlistImage} source={{uri:playlist.image}}/>
           <View style={style.playlistDetails}>
-            <Text ellipsizeMode='tail' numberOfLines={1} style={globals.style.text}>{playlist.name}</Text>
+            <Text ellipsizeMode='tail' numberOfLines={1} style={globals.style.biggerText}>{playlist.name}</Text>
             <Text ellipsizeMode='tail' numberOfLines={1} style={style.playlistOwner}>{playlist.ownerName}</Text>
           </View>
         </View>
@@ -36,7 +36,7 @@ export default class NearbyPlaylists extends React.Component {
 const style = StyleSheet.create({
   playlist: {
     marginLeft: 20,
-    marginTop: 13,
+    marginTop: 15,
     marginBottom: 10,
     flexDirection: 'row',
     alignItems: 'center',
@@ -46,8 +46,8 @@ const style = StyleSheet.create({
     marginLeft: 5
   },
   playlistImage: {
-    width: 60,
-    height: 60
+    width: 50,
+    height: 50
   },
   playlistOwner: {
     ...globals.style.smallText,

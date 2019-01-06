@@ -69,6 +69,7 @@ export default class AddPlaylistBlur extends React.Component {
         code: this.state.iDinput
       }
     }).then(({data: {getPlaylistsByCode: {playlists}}})=>{
+      console.warn(playlists);
       this.setState({
         searchedPlaylists: playlists,
         loading: false,
@@ -269,8 +270,8 @@ const style = StyleSheet.create({
   playlists: {
     flex: .8,
     marginTop: 20,
-    marginLeft: 20,
-    marginRight: 20
+    marginLeft: 30,
+    marginRight: 30
   },
   playlist: {
     marginTop: 10,

@@ -15,8 +15,6 @@ const style = StyleSheet.create({
   },
   playlist: {
     marginLeft: 20,
-    marginTop: 13,
-    marginBottom: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between'
@@ -25,8 +23,8 @@ const style = StyleSheet.create({
     marginLeft: 5
   },
   playlistImage: {
-    width: 60,
-    height: 60
+    width: 50,
+    height: 50
   },
   playlistOwner: {
     ...globals.style.smallText,
@@ -44,6 +42,7 @@ const style = StyleSheet.create({
     ...globals.style.center
   },
   swipeout: {
+    marginTop: 15,
     backgroundColor: globals.sBlack
   }
 });
@@ -54,7 +53,9 @@ class AddedPlaylistsComponent extends React.Component {
     this.state = {};
   }
 
-  eachPlaylist(playlist) {
+  eachPlaylist(playlist, i) {
+    console.log(i);
+    const isLastPlaylist = i === this.props.data.length - 1;
     const swipeoutBtns = [{
       component: (
         <View style={style.removeButton}>
@@ -64,12 +65,12 @@ class AddedPlaylistsComponent extends React.Component {
       onPress: ()=>this.props.playlists.remove(playlist.id)
     }];
     return (
-      <Swipeout right={swipeoutBtns} style={style.swipeout}>
+      <Swipeout right={swipeoutBtns} style={{...style.swipeout, marginBottom : isLastPlaylist ? 15 : 0}}>
         <TouchableOpacity style={style.playlist} onPress={()=>this.props.navigation.navigate('Bar', playlist.id)}>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Image style={style.playlistImage} source={{uri: playlist.image || ""}}/>
             <View style={style.playlistDetails}>
-              <Text ellipsizeMode='tail' numberOfLines={1} style={globals.style.text}>{playlist.name}</Text>
+              <Text ellipsizeMode='tail' numberOfLines={1} style={globals.style.biggerText}>{playlist.name}</Text>
               <Text ellipsizeMode='tail' numberOfLines={1} style={style.playlistOwner}>{playlist.ownerName}</Text>
             </View>
           </View>
@@ -98,7 +99,7 @@ class AddedPlaylistsComponent extends React.Component {
     return (
       <FlatList 
         data={this.props.data}
-        renderItem={({item})=>this.eachPlaylist(item)}
+        renderItem={({item, index})=>this.eachPlaylist(item, index)}
         keyExtractor={(item, index)=>String(index)} 
       />
     );
