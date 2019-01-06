@@ -29,6 +29,11 @@ const style = StyleSheet.create({
     fontFamily: 'Futura',
     fontSize: 18
   },
+  biggerText: {
+    color: sWhite,
+    fontFamily: 'Futura',
+    fontSize: 20
+  },
   errorText: {
     color: sGrey,
     fontFamily: 'Futura',

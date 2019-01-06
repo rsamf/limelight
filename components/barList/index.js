@@ -92,7 +92,7 @@ export default class BarList extends React.Component {
       }
     };
     this.getNearby(checkToCallback);
-    if(this.props.user){
+    if(this.props.screenProps.user){
       user.refreshPlaylists(checkToCallback);
     } else {
       checkToCallback();

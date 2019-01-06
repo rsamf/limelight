@@ -90,8 +90,8 @@ export default class extends React.Component {
       <View style={style.song}>
         <View style={style.addButtonContainer}>
           <TouchableOpacity onPress={()=>this.props.search()} style={style.addButton}>
-            <Icon name='add' color={globals.sWhite}/>
-            <Text style={globals.style.text}>Add Song</Text>
+            <Icon name='add' color={globals.sBlack}/>
+            <Text style={{...globals.style.text,color: globals.sBlack}}>Add Song</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -281,9 +281,9 @@ const style = StyleSheet.create({
     paddingLeft: 30,
     paddingRight: 30,
     borderRadius: 20,
-    borderWidth: 1,
-    borderColor: globals.sWhite,
-    backgroundColor: globals.sBlue,
+    // borderWidth: 1,
+    // borderColor: globals.sGreen,
+    backgroundColor: globals.sWhite,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'
