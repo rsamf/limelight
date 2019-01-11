@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
+import Modal from 'react-native-modal';
 import globals from '../helpers';
 import Swipeout from 'react-native-swipeout';
 import createPlaylists from '../../GQL/playlists';
@@ -14,21 +15,9 @@ const style = StyleSheet.create({
     margin: 50
   },
   playlist: {
-    marginLeft: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between'
-  },
-  playlistDetails: {
-    marginLeft: 5
-  },
-  playlistImage: {
-    width: 50,
-    height: 50
-  },
-  playlistOwner: {
-    ...globals.style.smallText,
-    color: globals.sGrey
   },
   removeButton: {
     backgroundColor: globals.sBlack, 
@@ -43,6 +32,9 @@ const style = StyleSheet.create({
   },
   swipeout: {
     marginTop: 15,
+    marginLeft: 15,
+    marginRight: 15,
+    marginBottom: 10,
     backgroundColor: globals.sBlack
   }
 });
@@ -50,11 +42,13 @@ const style = StyleSheet.create({
 class AddedPlaylistsComponent extends React.Component {
   constructor(props){
     super(props);
-    this.state = {};
+    this.state = {
+      activePlaylistModal: null
+    };
   }
 
   eachPlaylist(playlist, i) {
-    console.log(i);
+    console.log(playlist);
     const isLastPlaylist = i === this.props.data.length - 1;
     const swipeoutBtns = [{
       component: (
@@ -66,16 +60,29 @@ class AddedPlaylistsComponent extends React.Component {
     }];
     return (
       <Swipeout right={swipeoutBtns} style={{...style.swipeout, marginBottom : isLastPlaylist ? 15 : 0}}>
-        <TouchableOpacity style={style.playlist} onPress={()=>this.props.navigation.navigate('Bar', playlist.id)}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image style={style.playlistImage} source={{uri: playlist.image || ""}}/>
-            <View style={style.playlistDetails}>
-              <Text ellipsizeMode='tail' numberOfLines={1} style={globals.style.biggerText}>{playlist.name}</Text>
-              <Text ellipsizeMode='tail' numberOfLines={1} style={style.playlistOwner}>{playlist.ownerName}</Text>
-            </View>
-          </View>
+        <TouchableOpacity 
+          style={style.playlist} 
+          onPress={()=>this.props.navigation.navigate('Bar', playlist.id)} 
+          onLongPress={()=>this.showPlaylistModal(playlist)}
+        >
+          {globals.getPlaylistView(playlist)}
         </TouchableOpacity>
       </Swipeout>
+    );
+  }
+
+  showPlaylistModal(val = null) {
+    console.log("showing ", val);
+    this.setState({ activePlaylistModal: val });
+  }
+
+  renderModal() {
+    const playlist = this.state.activePlaylistModal;
+    const isOwned = (playlist && this.props.user) && (playlist.ownerId === this.props.user.id);
+    return (
+      <Modal isVisible={!!this.state.activePlaylistModal} onBackdropPress={()=>this.showPlaylistModal()}>
+        {globals.getPlaylistModal(playlist, ()=>this.goToBar(playlist.id), isOwned)}
+      </Modal>
     );
   }
 
@@ -96,12 +103,16 @@ class AddedPlaylistsComponent extends React.Component {
         </View>
       );
     }
+    
     return (
-      <FlatList 
-        data={this.props.data}
-        renderItem={({item, index})=>this.eachPlaylist(item, index)}
-        keyExtractor={(item, index)=>String(index)} 
-      />
+      <View>
+        {this.renderModal()}
+        <FlatList 
+          data={this.props.data}
+          renderItem={({item, index})=>this.eachPlaylist(item, index)}
+          keyExtractor={(item, index)=>String(index)} 
+        />
+      </View>
     );
   }
 }

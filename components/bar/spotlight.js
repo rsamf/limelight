@@ -148,7 +148,7 @@ export default class extends React.Component {
                   <Text ellipsizeMode="tail" numberOfLines={1} style={style.songArtist}>{song.artist}</Text>
                 </View>
               </View>
-              <TouchableOpacity style={{...style.modalBorder, ...style.modalItem}} onPress={()=>this.visitSong()}>
+              <TouchableOpacity style={{...style.modalBorder, ...style.modalItem}} onPress={()=>globals.visitSong(this.props.children)}>
                 <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="spotify" type="font-awesome"/>
                 <Text style={globals.style.text}>View in Spotify</Text>
               </TouchableOpacity>
@@ -192,17 +192,6 @@ export default class extends React.Component {
       );
     }
     return <View></View>;
-  }
-
-  visitSong() {
-    let url = "https://open.spotify.com/track/"+this.props.children.id;
-    Linking.canOpenURL(url).then(supported => {
-      if (!supported) {
-        Alert.alert("Could not open the link to the song!");
-      } else {
-        Linking.openURL(url);
-      }
-    });
   }
 }
 
@@ -268,13 +257,6 @@ const style = StyleSheet.create({
   },
   controlItem: {
     marginRight: 30
-  },
-  modalView: {
-    flex: 1, 
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 10,
-    backgroundColor: globals.sWhite
   },
   modalText: {
     ...globals.style.text,

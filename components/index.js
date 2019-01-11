@@ -13,6 +13,8 @@ import { Rehydrated } from 'aws-appsync-react';
 import { ApolloProvider } from 'react-apollo';
 import user from '../util/user';
 import spotify from '../util/spotify';
+import net from '../util/net';
+import Offline from './offline';
 
 const Root = createStackNavigator({
   BarList: {
@@ -32,6 +34,7 @@ export default class Limelight extends React.Component {
     super(props);
     const playlists = new LocalPlaylists(this);
     this.state = {
+      isOnline: true,
       user: null,
       playlists,
       blur: null,
@@ -42,7 +45,7 @@ export default class Limelight extends React.Component {
         playlists
       },
       header: {
-        name: "Your Playlists",
+        name: "Playlists",
         user: null,
         playlist: null,
         openBlur: (blur, props)=>this.setOpenedBlur(blur, props)
@@ -53,6 +56,7 @@ export default class Limelight extends React.Component {
   componentDidMount(){
     spotify.initialize();
     user.get(this);
+    net.init(this);
   }
 
   setOpenedBlur(blur, props) {
@@ -78,8 +82,12 @@ export default class Limelight extends React.Component {
         <Rehydrated>
           <View style={globals.style.view}>
             <View style={globals.style.fullscreen} ref="view" onLayout={()=>this.setState({ viewRef: findNodeHandle(this.refs.view) })}>
-              <Header {...this.state.header}/>
-              <Root screenProps={propsToPass}/>
+              <Header {...this.state.header} isOnline={this.state.isOnline}/>
+              {
+                this.state.isOnline ?
+                <Root screenProps={propsToPass}/> :
+                <Offline retry={()=>net.get()}/>
+              }
             </View>
             {this.renderBlurs()}
           </View>
@@ -96,7 +104,7 @@ export default class Limelight extends React.Component {
           viewRef={this.state.viewRef}
           close={()=>this.setOpenedBlur(null)}
         >
-          <InnerContent {...this.state.blurProps}/>
+          <InnerContent {...this.state.blurProps} isOnline={this.state.isOnline}/>
         </Blur>
       );
     }

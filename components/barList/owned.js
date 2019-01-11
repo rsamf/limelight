@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, ScrollView, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import Modal from 'react-native-modal';
 import { Icon } from 'react-native-elements';
 import globals from '../helpers'
 import user from '../../util/user';
@@ -41,14 +42,24 @@ class Side extends React.Component {
 export default class OwnedList extends React.Component {
   constructor(props){
     super(props);
+
+    this.state = {
+      activePlaylistModal: null
+    };
   }
 
   goToBar(id) {
+    this.setState({ activePlaylistModal: null });
     this.props.navigation.navigate('Bar', id);
   }
 
   componentDidMount() {
     user.setOwnedPlaylistsScrollView(this.refs.scroll);
+  }
+
+  showPlaylistModal(val = null) {
+    console.log("showing ", val);
+    this.setState({ activePlaylistModal: val });
   }
 
   eachPlaylist(playlist, i) {
@@ -60,17 +71,30 @@ export default class OwnedList extends React.Component {
       );
     }
     return (
-      <TouchableOpacity onPress={()=>this.goToBar(playlist.id)} key={i} style={style.playlist}>
-        {/* <Image source={{uri:playlist.image}} defaultSource={{uri:require('../../images/notes.png')}} style={style.playlistImage}/> */}
-        <Image source={{uri:playlist.image}} style={style.playlistImage}/>
-        <Text ellipsizeMode="tail" numberOfLines={1} style={globals.style.smallText}>{playlist.name}</Text>
+      <TouchableOpacity onPress={()=>this.goToBar(playlist.id)} onLongPress={()=>this.showPlaylistModal(playlist)} key={i} style={style.playlist}>
+        {
+          playlist.image ?
+          <Image style={style.playlistImage} source={{uri: playlist.image}}/> :
+          <Icon containerStyle={style.playlistImage} size={80} color={globals.sWhite} name="music" type="feather"/>
+        }
+        <Text ellipsizeMode="tail" numberOfLines={1} style={style.playlistText}>{playlist.name}</Text>
       </TouchableOpacity>
+    );
+  }
+
+  renderModal() {
+    const playlist = this.state.activePlaylistModal;
+    return (
+      <Modal isVisible={!!this.state.activePlaylistModal} onBackdropPress={()=>this.showPlaylistModal()}>
+        {globals.getPlaylistModal(playlist, ()=>this.goToBar(playlist.id), true)}
+      </Modal>
     );
   }
 
   render() {
     return (
       <View style={style.view}>
+        {this.renderModal()}
         <Side value="left"/>
         <ScrollView ref="scroll" horizontal={true} style={style.scroll}>
           {
@@ -91,23 +115,29 @@ const style = StyleSheet.create({
   createButton: {
     marginRight: 80
   },
+  playlist: {
+    width: 165,
+    height: 165,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  playlistImage: {
+    width: 145,
+    height: 145,
+    borderWidth: 0.5,
+    borderColor: globals.sGrey
+  },
   createIcon: {
-    width: 90,
-    height: 90,
+    width: 145,
+    height: 145,
     borderWidth: .5,
     borderRadius: 5,
     borderColor: globals.sWhite,
     backgroundColor: globals.sSand
   },
-  playlist: {
-    width: 110,
-    height: 110,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  playlistImage: {
-    width: 90,
-    height: 90
+  playlistText: {
+    marginTop: 2,
+    ...globals.style.smallText
   },
   view: {
     flexDirection: 'row',

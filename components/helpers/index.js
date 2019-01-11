@@ -1,4 +1,4 @@
-import { StyleSheet, View, TextInput, ActivityIndicator, Dimensions, Platform } from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity, TextInput, ActivityIndicator, Dimensions, Platform, Linking, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import React from 'react';
 import * as AWS from 'aws-sdk';
@@ -89,6 +89,84 @@ const style = StyleSheet.create({
     borderBottomColor: sWhite,
     borderBottomWidth: 2,
     flex: 1
+  },
+  modalText: {
+    color: sBlack,
+    fontFamily: 'Futura',
+    fontSize: 18
+  },
+  modalOptions: {
+    marginTop: 20,
+    flexDirection: 'row'
+  },
+  modalView: {
+    backgroundColor: 'rgba(0,0,0,.6)',
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: sWhite
+  },
+  modalBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: sGrey
+  },
+  modalItem: {
+    flexDirection: 'row',
+    padding: 15
+  },
+  modalIcon: {
+    marginRight: 10
+  },
+  modalImage: {
+    width: 50,
+    height: 50,
+    borderWidth: 0.5,
+    borderColor: sGrey
+  },
+  modalDetails: {
+    marginLeft: 10,
+    flex: 1
+  },
+  playlist: {
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 15,
+    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  playlistWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flex: 1
+  },
+  playlistData: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1
+  },
+  playlistDetails: {
+    marginLeft: 10,
+    flex: 1
+  },
+  playlistImage: {
+    width: 50,
+    height: 50,
+    borderWidth: 0.5,
+    borderColor: sGrey
+  },
+  playlistOwner: {
+    color: sSand,
+    fontFamily: 'Futura',
+    fontSize: 12,
+    color: sGrey
+  },
+  playlistIcons: {
+    width: 25,
+    alignItems: 'center'
+  },
+  playlistIcon: {
+    marginBottom: 3,
   }
 });
 
@@ -122,13 +200,13 @@ const diff = (truth, previous) => {
   return toReturn;
 };
 
-const createSearchTextInput = (placeholder, onChangeText, onSubmitEditing) => {
-  return () => (
+const createSearchTextInput = (placeholder, onChangeText, onSubmitEditing, additionalProps) => {
+  return (
     <View style={style.textInputContainer}>
       <Icon name="search" color={sWhite}/>
       <TextInput
         placeholder={placeholder}
-        placeholderTextColor={globals.sWhite}
+        placeholderTextColor={sWhite}
         style={style.textInput} 
         blurOnSubmit={true} 
         enablesReturnKeyAutomatically={true} 
@@ -138,6 +216,7 @@ const createSearchTextInput = (placeholder, onChangeText, onSubmitEditing) => {
         onSubmitEditing={onSubmitEditing}
         returnKeyType="search"
         autoFocus={true}
+        {...additionalProps}
       />
     </View>
   );
@@ -163,7 +242,7 @@ const createTextInput = (onChangeText, onSubmitEditing, onBlur) => {
 const Loader = () => {
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <ActivityIndicator size="large" color={globals.sGrey}/>
+      <ActivityIndicator size="large" color={sGrey}/>
     </View>
   );
 };
@@ -227,6 +306,76 @@ const client = new AWSAppSyncClient({
   disableOffline: true
 });
 
+const visitSong = id => {
+  let url = "https://open.spotify.com/track/"+this.props.children.id;
+  Linking.canOpenURL(url).then(supported => {
+    if (!supported) {
+      Alert.alert("Could not open the link to the song!");
+    } else {
+      Linking.openURL(url);
+    }
+  });
+};
+
+const visitPlaylist = (ownerId, playlistId) => {
+  const url = `https://open.spotify.com/user/${ownerId}/playlist/${playlistId}`;
+  Linking.canOpenURL(url).then(supported => {
+    if (!supported) {
+      Alert.alert("Could not open the link to the playlist!");
+    } else {
+      Linking.openURL(url);
+    }
+  });
+};
+
+const getPlaylistView = (playlist, ...extraIcons) => (
+  <View style={style.playlistWrapper}>
+    <View style={style.playlistData}>
+      {
+        playlist.image ?
+        <Image style={style.playlistImage} source={{uri: playlist.image}}/> :
+        <Icon containerStyle={style.playlistImage} color={sWhite} name="music" type="feather"/>
+      }
+      <View style={style.playlistDetails}>
+        <Text ellipsizeMode='tail' numberOfLines={1} style={style.text}>{playlist.name}</Text>
+        <Text ellipsizeMode='tail' numberOfLines={1} style={style.playlistOwner}>{playlist.ownerName}</Text>
+      </View>
+    </View>
+    <View style={style.playlistIcons}>
+      <Icon containerStyle={style.playlistIcon} size={21} color={sWhite} name="spotify" type="font-awesome"/>
+      {extraIcons.map((iconName, i) => (
+        <Icon containerStyle={style.playlistIcon} size={21} color={sWhite} name={iconName} type="font-awesome" key={i}/>
+      ))}
+    </View>
+  </View>
+);
+
+const getPlaylistModal = (playlist, play, isOwned) => (
+  playlist ?
+  <View style={style.modalView}>
+    <View style={{...style.modalBorder, ...style.modalItem}}>
+      {
+        playlist.image ?
+        <Image style={style.modalImage} source={{uri: playlist.image}}/> :
+        <Icon containerStyle={style.modalImage} color={sWhite} name="music" type="feather"/>
+      }
+      <View style={style.modalDetails}>
+        <Text ellipsizeMode="tail" numberOfLines={1} style={style.text}>{playlist.name}</Text>
+        <Text ellipsizeMode="tail" numberOfLines={1} style={style.playlistOwner}>{playlist.ownerName}</Text>
+      </View>
+    </View>
+    <TouchableOpacity style={{...style.modalBorder, ...style.modalItem}} onPress={()=>play()}>
+      <Icon containerStyle={style.modalIcon} color={sWhite} name={isOwned ? "play" : "door-open"} type="material-community"/>
+      <Text style={style.text}>{isOwned ? "Play Music" : "Connect to DJ"}</Text>
+    </TouchableOpacity>
+    <TouchableOpacity style={{...style.modalBorder, ...style.modalItem}} onPress={()=>visitPlaylist(playlist.ownerId, getPlaylistId(playlist.id))}>
+      <Icon containerStyle={style.modalIcon} color={sWhite} name="spotify" type="font-awesome"/>
+      <Text style={style.text}>View in Spotify</Text>
+    </TouchableOpacity>
+  </View> :
+  <View/>
+);
+
 const globals = {
   style,
   sBlue,
@@ -251,6 +400,10 @@ const globals = {
   getSongsFromPlaylist,
   isX,
   client,
+  visitSong,
+  visitPlaylist,
+  getPlaylistView,
+  getPlaylistModal
 };
 
 

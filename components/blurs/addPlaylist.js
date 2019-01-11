@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, FlatList, Image } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, FlatList, Image, TextInput } from 'react-native';
 import globals from '../helpers';
 import { ButtonGroup, Icon, Badge } from 'react-native-elements';
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -60,6 +60,7 @@ export default class AddPlaylistBlur extends React.Component {
   }
 
   searchPlaylists() {
+    if(!this.props.isOnline) return;
     this.setState({
       loading: true
     });
@@ -69,7 +70,6 @@ export default class AddPlaylistBlur extends React.Component {
         code: this.state.iDinput
       }
     }).then(({data: {getPlaylistsByCode: {playlists}}})=>{
-      console.warn(playlists);
       this.setState({
         searchedPlaylists: playlists,
         loading: false,
@@ -116,13 +116,6 @@ export default class AddPlaylistBlur extends React.Component {
       </View>
     );
   }
-
-  SearchTextInput = globals.createSearchTextInput("Type in your Invitational Code",
-  (iDinput) => {
-    this.setState({iDinput});
-  }, () => {
-    this.searchPlaylists();
-  });
 
   TextInput = globals.createTextInput((nameInput) => {
     this.setState({nameInput});
@@ -176,6 +169,13 @@ export default class AddPlaylistBlur extends React.Component {
             <Text style={globals.style.errorText}>Sorry, I couldn't find a playlist that matched that code. Try again soon.</Text>
           </View>
         );
+      } else if(!this.props.isOnline) {
+        toRender = (
+          <View style={style.message}>
+            <Icon name="emoji-sad" type="entypo" color={globals.sGrey}/>
+            <Text style={globals.style.errorText}>Sorry, check your connection.</Text>
+          </View>
+        );
       } else {
         toRender = (
           <FlatList 
@@ -187,7 +187,11 @@ export default class AddPlaylistBlur extends React.Component {
       }
       return (
         <View style={style.selectedRender}>
-          <this.SearchTextInput/>
+          <SearchTextInput 
+            onSubmit={()=>this.searchPlaylists()} 
+            onChange={(iDinput)=>this.setState({iDinput})}
+            isOnline={this.props.isOnline}
+          />
           <View style={style.playlists}>
             {toRender}
           </View>
@@ -231,6 +235,35 @@ export default class AddPlaylistBlur extends React.Component {
 
     return (
       <QRCodeScanner onRead={(data)=>success(data)}/>
+    );
+  }
+}
+
+class SearchTextInput extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  // return globals.createSearchTextInput("Type in your Invitational Code", onChange, onSubmit, {disabled: !props.isOnline});
+  render () {
+    return (
+      <View style={globals.style.textInputContainer}>
+        <Icon name="search" color={sWhite}/>
+        <TextInput
+          placeholder="Type in your Invitational Code"
+          placeholderTextColor={globals.sWhite}
+          style={globals.style.textInput} 
+          blurOnSubmit={true} 
+          enablesReturnKeyAutomatically={true} 
+          autoCapitalize="none" 
+          spellCheck={false}
+          onChangeText={this.props.onChange}
+          onSubmitEditing={this.props.onSubmit}
+          returnKeyType="search"
+          autoFocus={true}
+          disabled={!this.props.isOnline}
+        />
+      </View>
     );
   }
 }

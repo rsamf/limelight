@@ -63,6 +63,7 @@ export default class Header extends React.Component {
   }
 
   renderBackIcon() {
+    const onPress = this.props.isOnline ? this.props.goBack : _ => {};
     return (
       <Icon 
         name="ios-arrow-back" 
@@ -70,7 +71,7 @@ export default class Header extends React.Component {
         color={globals.sWhite} 
         underlayColor={globals.darkGrey}
         containerStyle={style.widerClick}
-        onPress={()=>this.props.goBack()}
+        onPress={onPress}
       />
     );
   }
@@ -113,16 +114,23 @@ export default class Header extends React.Component {
       return <View></View>;
     }
     return (
-      <TouchableOpacity onPress={()=>this.props.openBlur(AddPlaylistBlur, {selected: 0})}>
+      <TouchableOpacity onPress={()=>this.showAddPlaylistBlur()}>
         <Icon containerStyle={style.widerClick} color={globals.sWhite} type="entypo" name="plus"/>
       </TouchableOpacity>    
     );
   }
 
+  showAddPlaylistBlur() {
+    this.props.openBlur(AddPlaylistBlur, {
+      selected: 0
+    });
+  }
+
   showPlaylistOptions() {
     this.props.openBlur(PlaylistOptionsBlur, {
       playlist: this.props.playlist,
-      updatePlaylist: (p)=>this.props.updatePlaylist(p)
+      updatePlaylist: (p)=>this.props.updatePlaylist(p),
+      isOnline: this.props.isOnline
     });
   }
 }

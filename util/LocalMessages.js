@@ -19,17 +19,10 @@ export default class LocalMessages extends LocalArray {
         // this.wipe(); ///
         this.getMessagesToRead(getMessages);
       })
-      .catch((err) => {
-        // this.getMessagesToRead([{
-        //   id: -1,
-        //   type: "EVERY",
-        //   title: "Oops!",
-        //   content: "Sorry, but Amazon Web Services which Limelight requires seems to be malfunctioning...",
-        //   subcontent: "Try again soon!"
-        // }]);
+      .catch(_ => {
         this.unreadMessages = [];
-        this.update();
         this.ready=true;
+        this.update();
       });
   }
 

@@ -8,6 +8,7 @@ const getPlaylists = (user, func) => {
       let mapped = filtered.map(playlist => ({
         id: playlist.uri,
         ownerId: playlist.owner.id,
+        ownerName: playlist.owner.display_name,
         image: playlist.images && playlist.images[0] && playlist.images[0].url,
         name: playlist.name
       }));

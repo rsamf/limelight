@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, SectionList, StyleSheet, Text, RefreshControl } from 'react-native';
+import { Icon } from 'react-native-elements';
 import globals from '../helpers';
 import OwnedPlaylists from './owned';
 import AddedPlaylists from './added';
@@ -9,10 +10,9 @@ import user from '../../util/user';
 
 const style = StyleSheet.create({
   sectionHeader: {
-    ...globals.style.smallText,
-    color: globals.sSand,
-    backgroundColor: globals.darkerGrey,
     padding: 5,
+    backgroundColor: globals.darkerGrey,
+    flexDirection: 'row',
     shadowRadius: 5,
     shadowOffset: {
       height: 15
@@ -21,9 +21,20 @@ const style = StyleSheet.create({
     shadowColor: globals.sBlack,
     zIndex: 5
   },
+  sectionHeaderText: {
+    ...globals.style.smallText,
+    fontSize: 12,
+    color: globals.sSand,
+    marginRight: 5
+  },
   playlists: {
     flex: 1
-  }
+  },
+  spotifyIcon: {
+    position: 'absolute',
+    right: 10,
+    top: 3
+  },
 });
 
 export default class BarList extends React.Component {
@@ -38,7 +49,7 @@ export default class BarList extends React.Component {
   componentDidMount() {
     this.props.navigation.addListener('willFocus', () => {
       this.props.screenProps.setHeader({
-        name: "Your Playlists",
+        name: "Playlists",
         playlist: null
       });
     });
@@ -102,9 +113,9 @@ export default class BarList extends React.Component {
   render(){
     let sections = [];
     if(this.props.screenProps.user) {
-      sections.push({title: 'Created by You', data: ["OWNED"]})
+      sections.push({title: 'From Spotify', data: ["OWNED"]})
     }
-    sections.push({title: 'Added by You', data: ["ADDED"]})
+    sections.push({title: 'Added', data: ["ADDED"]})
     if(this.state.nearby.length > 0) {
       sections.push({title: 'Nearby', data: ["NEARBY"]});
     }
@@ -117,7 +128,19 @@ export default class BarList extends React.Component {
             }
             renderItem={({item})=>this.eachPlaylist(item)}
             renderSectionHeader={({section: {title}}) => (
-              <Text style={style.sectionHeader}>{title}</Text>
+              <View style={style.sectionHeader}>
+                <Text style={style.sectionHeaderText}>{title}</Text>
+                {
+                  title === "From Spotify" &&
+                  <Icon 
+                    containerStyle={style.spotifyIcon}
+                    color={globals.sWhite}
+                    size={21}
+                    name="spotify"
+                    type="font-awesome"
+                  />
+                }
+              </View>
             )}
             sections={sections}
             keyExtractor={(_, i)=>String(i)} 

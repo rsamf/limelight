@@ -1,15 +1,15 @@
-rootProject.name = 'spotlight'
+rootProject.name = 'limelight'
+include ':rn-spotify-sdk'
+project(':rn-spotify-sdk').projectDir = new File(rootProject.projectDir, '../node_modules/rn-spotify-sdk/android')
+include ':react-native-vector-icons'
+project(':react-native-vector-icons').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vector-icons/android')
 include ':react-native-music-control'
 project(':react-native-music-control').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-music-control/android')
+include ':react-native-events'
+project(':react-native-events').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-events/android')
 include ':react-native-camera'
 project(':react-native-camera').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-camera/android')
 include ':react-native-blur'
 project(':react-native-blur').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-blur/android')
-include ':react-native-vector-icons'
-project(':react-native-vector-icons').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vector-icons/android')
-include ':rn-spotify-sdk'
-project(':rn-spotify-sdk').projectDir = new File(rootProject.projectDir, '../node_modules/rn-spotify-sdk/android')
-include ':react-native-events'
-project(':react-native-events').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-events/android')
 
 include ':app'

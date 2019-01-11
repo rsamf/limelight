@@ -2,6 +2,7 @@ import { AppRegistry, StatusBar } from 'react-native';
 import Limelight from './components';
 import Messages from './components/messages';
 import LocalMessages from './util/LocalMessages';
+import net from './util/net';
 import React from 'react';
 
 export default class App extends React.Component {
@@ -11,6 +12,7 @@ export default class App extends React.Component {
 
     this.state = {
       messages: new LocalMessages(this),
+      isOnline: true,
       finishedReading: false
     };
   }
@@ -24,7 +26,7 @@ export default class App extends React.Component {
   render() {
     if(this.state.finishedReading) {
       return <Limelight/>;
-    } else {
+    } else  {
       return (
         <Messages ready={this.state.messages.ready} finishReading={()=>this.finishReading()}>
           {this.state.messages.unreadMessages}

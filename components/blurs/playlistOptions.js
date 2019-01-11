@@ -15,11 +15,13 @@ export default class PlaylistOptions extends React.Component {
   }
 
   submitEditingTitle() {
+    if(!this.props.isOnline) return;
     this.props.updatePlaylist({ name: this.state.editingTitle });
     this.props.close();
   }
 
   submitEditingCode() {
+    if(!this.props.isOnline) return;
     this.props.updatePlaylist({ code: this.state.editingCode });
     this.props.close();
   }
@@ -29,17 +31,6 @@ export default class PlaylistOptions extends React.Component {
     ()=>this.submitEditingCode(),
     ()=>this.setState({editingCode: null })
   )
-
-  goToPlaylist() {
-    const url = `https://open.spotify.com/user/${this.props.playlist.ownerId}/playlist/${globals.getPlaylistId(this.props.playlist.id)}`;
-    Linking.canOpenURL(url).then(supported => {
-      if (!supported) {
-        Alert.alert("Could not open the link to the playlist!");
-      } else {
-        Linking.openURL(url);
-      }
-    });
-  }
 
   render() {
     return (
@@ -62,7 +53,7 @@ export default class PlaylistOptions extends React.Component {
         <View style={style.qr}>
           <QRCode value={this.props.playlist.id} size={256}/>
         </View>
-        <TouchableOpacity style={style.goToSpotify} onPress={()=>this.goToPlaylist()}>
+        <TouchableOpacity style={style.goToSpotify} onPress={()=>this.goToPlaylist(this.props.playlist.ownerId, globals.getPlaylistId(this.props.playlist.id))}>
           <Text style={globals.style.text}>Visit in Spotify</Text>
           <Icon 
             name="spotify" 
