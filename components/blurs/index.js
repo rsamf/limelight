@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, Animated, View } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { BlurView } from 'react-native-blur';
-import globals from '../helpers';
+import globals from '../../util';
 
 export default class Blur extends React.Component {
   constructor(props) {

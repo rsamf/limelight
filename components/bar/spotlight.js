@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ProgressViewIOS, Image, TouchableOpacity, Linki
 import { Icon, Button } from 'react-native-elements';
 import Modal from "react-native-modal";
 import Spotify from 'rn-spotify-sdk';
-import globals from '../helpers';
+import globals from '../../util';
 import MusicControl from './ios-music-control';
 
 export default class extends React.Component {
@@ -148,7 +148,7 @@ export default class extends React.Component {
                   <Text ellipsizeMode="tail" numberOfLines={1} style={style.songArtist}>{song.artist}</Text>
                 </View>
               </View>
-              <TouchableOpacity style={{...style.modalBorder, ...style.modalItem}} onPress={()=>globals.visitSong(this.props.children)}>
+              <TouchableOpacity style={{...style.modalBorder, ...style.modalItem}} onPress={()=>globals.visitSong(song.id)}>
                 <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="spotify" type="font-awesome"/>
                 <Text style={globals.style.text}>View in Spotify</Text>
               </TouchableOpacity>

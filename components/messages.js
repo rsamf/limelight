@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Text, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Swiper from 'react-native-swiper';
-import globals from './helpers';
+import globals from '../util';
 
 export default class Messages extends React.Component {
   constructor(props) {

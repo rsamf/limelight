@@ -2,7 +2,7 @@ import React from 'react';
 import { View, FlatList, TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Spotify from 'rn-spotify-sdk';
-import globals from '../helpers';
+import globals from '../../util';
 
 export default class AddSong extends React.Component {
 

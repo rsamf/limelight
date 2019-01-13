@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native'
 import { Icon } from 'react-native-elements';
-import globals from './helpers';
+import globals from '../util';
 
 export default class Offline extends React.Component {
   constructor(props) {

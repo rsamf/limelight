@@ -1,4 +1,4 @@
-import globals from "../helpers";
+import globals from "../../util";
 import aws from '../../util/aws';
 import Spotify from 'rn-spotify-sdk';
 

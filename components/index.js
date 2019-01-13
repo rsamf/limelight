@@ -3,7 +3,7 @@ import { View, findNodeHandle } from 'react-native';
 import BarList from './barList';
 import Bar from './bar';
 import React from 'react';
-import globals from './helpers';
+import globals from '../util';
 import Header from './header';
 import Blur from './blurs';
 import ProfileBlur from './blurs/profile';

@@ -4,7 +4,7 @@ import { Icon, Avatar } from 'react-native-elements';
 import ProfileBlur from './blurs/profile';
 import AddPlaylistBlur from './blurs/addPlaylist';
 import PlaylistOptionsBlur from './blurs/playlistOptions';
-import globals from './helpers';
+import globals from '../util';
 import Spotify from 'rn-spotify-sdk';
 
 export default class Header extends React.Component {  

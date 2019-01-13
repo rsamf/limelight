@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, View, TouchableOpacity, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
-import globals from '../helpers';
+import globals from '../../util';
 
 export default class NearbyPlaylists extends React.Component {
   constructor(props) {
@@ -26,7 +26,6 @@ export default class NearbyPlaylists extends React.Component {
   }
 
   showPlaylistModal(val = null) {
-    console.log("showing ", val);
     this.setState({ activePlaylistModal: val });
   }
 

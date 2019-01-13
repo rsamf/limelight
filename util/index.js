@@ -345,7 +345,7 @@ const getPlaylistView = (playlist, ...extraIcons) => {
       <View style={style.playlistIcons}>
         <Icon containerStyle={style.playlistIcon} size={21} color={sWhite} name="spotify" type="font-awesome"/>
         {extraIcons.map((icon, i) => (
-          <Icon containerStyle={style.playlistIcon} size={21} color={sWhite} name={icon.name} type="font-awesome" key={i}/>
+          <Icon containerStyle={style.playlistIcon} size={21} color={sWhite} name={icon} type="font-awesome" key={i}/>
         ))}
       </View>
     </View>

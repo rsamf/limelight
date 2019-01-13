@@ -1,6 +1,6 @@
 import AddPlaylistMutation from '../GQL/mutations/AddPlaylist';
 import DeletePlaylistMutation from '../GQL/mutations/DeletePlaylist';
-import globals from '../components/helpers';
+import globals from '.';
 
 export default {
   addPlaylist: (playlist, user, callback) => {

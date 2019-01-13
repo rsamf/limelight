@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, SectionList, StyleSheet, Text, RefreshControl } from 'react-native';
 import { Icon } from 'react-native-elements';
-import globals from '../helpers';
+import globals from '../../util';
 import OwnedPlaylists from './owned';
 import AddedPlaylists from './added';
 import NearbyPlaylists from './nearby';
@@ -46,7 +46,6 @@ export default class BarList extends React.Component {
 
   componentDidMount() {
     this.props.navigation.addListener('willFocus', () => {
-      console.warn("FOCUSED");
       this.props.screenProps.setHeader({
         name: "Playlists",
         playlist: null,
@@ -123,6 +122,7 @@ export default class BarList extends React.Component {
       <View style={globals.style.view}>
         <View style={style.playlists}>
           <SectionList
+            indicatorStyle="white"
             refreshControl={
               <RefreshControl refreshing={this.state.refreshing} onRefresh={()=>this.onRefresh()}/>
             }

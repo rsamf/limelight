@@ -1,5 +1,5 @@
 import LocalArray from './LocalArray';
-import globals from '../components/helpers';
+import globals from '.';
 import GetMessagesQuery from '../GQL/queries/GetMessages';
 
 export default class LocalMessages extends LocalArray {
@@ -27,9 +27,10 @@ export default class LocalMessages extends LocalArray {
   }
 
   getMessagesToRead(aws) {
+    let isFreshInstall = this.length === 0;
     let newMessages = this.sorted(aws);
     this.unreadMessages = newMessages.filter(message => {
-      if(message.type === "WELCOME" || message.type === "ONCE") {
+      if(message.type === "WELCOME" || (message.type === "ONCE" && !isFreshInstall)) {
         return !this.contains(message.id);
       }
       if(message.type === "EVERY") {

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ScrollView, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
 import { Icon } from 'react-native-elements';
-import globals from '../helpers'
+import globals from '../../util'
 import user from '../../util/user';
 
 class Side extends React.Component {
@@ -58,7 +58,6 @@ export default class OwnedList extends React.Component {
   }
 
   showPlaylistModal(val = null) {
-    console.log("showing ", val);
     this.setState({ activePlaylistModal: val });
   }
 

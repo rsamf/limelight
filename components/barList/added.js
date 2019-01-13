@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Modal from 'react-native-modal';
-import globals from '../helpers';
+import globals from '../../util';
 import Swipeout from 'react-native-swipeout';
 import createPlaylists from '../../GQL/playlists';
 

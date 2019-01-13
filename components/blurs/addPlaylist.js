@@ -4,7 +4,7 @@ import { ButtonGroup, Icon } from 'react-native-elements';
 import Modal from 'react-native-modal';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import GetPlaylistsByCode from '../../GQL/queries/GetPlaylistsByCode';
-import globals from '../helpers';
+import globals from '../../util';
 import Spotify from 'rn-spotify-sdk';
 import aws from '../../util/aws';
 import user from '../../util/user';
@@ -86,7 +86,8 @@ export default class AddPlaylistBlur extends React.Component {
 
   eachPlaylist(playlist) {
     return (
-      <TouchableOpacity 
+      <TouchableOpacity
+        style={style.playlist}
         onPress={()=>this.joinPlaylist(playlist)}
         onLongPress={()=>this.showPlaylistModal(playlist)}
       >
@@ -158,7 +159,6 @@ export default class AddPlaylistBlur extends React.Component {
 
   renderModal() {
     const playlist = this.state.activePlaylistModal;
-    console.log(playlist);
     const isOwned = (playlist && this.props.user) && (playlist.ownerId === this.props.user.id);
     const isAdded = playlist && this.props.playlists.contains(playlist.id);
     return (
@@ -323,9 +323,7 @@ const style = StyleSheet.create({
   },
   playlist: {
     marginTop: 10,
-    marginBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center'
+    marginBottom: 10
   },
   playlistContent: {
     flexDirection:'row',

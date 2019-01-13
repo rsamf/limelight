@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import globals from '../helpers';
+import globals from '../../util';
 import Spotlight from './spotlight';
 import Songs from './songs';
 import createPlaylist from '../../GQL/playlist';

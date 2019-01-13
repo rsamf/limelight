@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { Avatar, Button } from 'react-native-elements';
 import Spotify from 'rn-spotify-sdk';
-import globals from '../helpers';
+import globals from '../../util';
 
 export default class Profile extends React.Component {
   constructor(props) {

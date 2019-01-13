@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert, Linking } from 'react-native';
 import { Icon } from 'react-native-elements';
 import QRCode from 'react-native-qrcode';
-import globals from '../helpers';
+import globals from '../../util';
 
 export default class PlaylistOptions extends React.Component {
   constructor(props) {
@@ -61,7 +61,7 @@ export default class PlaylistOptions extends React.Component {
         <View style={style.qr}>
           <QRCode value={this.props.playlist.id} size={256}/>
         </View>
-        <TouchableOpacity style={style.goToSpotify} onPress={()=>this.goToPlaylist(this.props.playlist.ownerId, globals.getPlaylistId(this.props.playlist.id))}>
+        <TouchableOpacity style={style.goToSpotify} onPress={()=>globals.visitPlaylist(this.props.playlist.ownerId, globals.getPlaylistId(this.props.playlist.id))}>
           <Text style={globals.style.text}>Visit in Spotify</Text>
           <Icon 
             name="spotify" 

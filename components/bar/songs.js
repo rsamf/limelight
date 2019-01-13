@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, StyleSheet, View, Image, TouchableOpacity, Linking, Alert, SectionList, RefreshControl } from 'react-native';
 import Modal from "react-native-modal";
 import { Icon } from 'react-native-elements';
-import globals from '../helpers';
+import globals from '../../util';
 
 export default class extends React.Component {
   constructor(props){
@@ -31,6 +31,11 @@ export default class extends React.Component {
     });
   }
 
+  vote(index) {
+    this.setState({ viewingSong: null });
+    this.props.vote(index);
+  }
+
   eachSong(song, i) {
     const votedColor = this.props.voted(i) ? globals.sGreen : globals.sGrey;
     return (
@@ -43,7 +48,7 @@ export default class extends React.Component {
             name="chevron-with-circle-up" 
             color={votedColor} 
             underlayColor={globals.sBlack}
-            onPress={()=>this.props.vote(i)}
+            onPress={()=>this.vote(i)}
           />
           <Text style={{...style.voteNumber, color: votedColor }}>
             {song.votes}
@@ -137,6 +142,7 @@ export default class extends React.Component {
   render() {
     const songs = this.props.children;
     const requests = this.props.requests;
+    const isVoted = this.state.viewingSong && !this.state.viewingSongIsRequest && this.props.voted(this.state.viewingSongIndex);
     return (
       <View style={style.view}>
         {
@@ -150,6 +156,13 @@ export default class extends React.Component {
                   <Text ellipsizeMode="tail" numberOfLines={1} style={style.songArtist}>{this.state.viewingSong.artist}</Text>
                 </View>
               </View>
+              {
+                !this.state.viewingSongIsRequest &&
+                <TouchableOpacity disabled={isVoted} style={{...style.modalBorder, ...style.modalItem, opacity: 1-.5*isVoted}} onPress={()=>this.vote(this.state.viewingSongIndex)}>
+                  <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="arrow-circle-o-up" type="font-awesome"/>
+                  <Text style={globals.style.text}>Vote</Text>
+                </TouchableOpacity>
+              }
               <TouchableOpacity style={{...style.modalBorder, ...style.modalItem}} onPress={()=>this.visitSong()}>
                 <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="spotify" type="font-awesome"/>
                 <Text style={globals.style.text}>View in Spotify</Text>
@@ -180,6 +193,7 @@ export default class extends React.Component {
         }
         <View style={globals.style.view}>
           <SectionList
+            indicatorStyle="white"
             refreshControl={
               <RefreshControl refreshing={this.props.refreshing} onRefresh={()=>this.props.refresh()}/>
             }
