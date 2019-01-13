@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, FlatList, TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
+import { Icon } from 'react-native-elements';
 import Spotify from 'rn-spotify-sdk';
 import globals from '../helpers';
 
@@ -23,12 +24,13 @@ export default class AddSong extends React.Component {
     let uri = song.uri;
     song = globals.getSongData(song, true);
     return (
-      <TouchableOpacity style={style.song} onPress={()=>this.addSong(song, uri)}>
+      <TouchableOpacity style={style.song} onPress={()=>this.addSong(song, uri)} onLongPress={()=>globals.visitSong(song.id)}>
         <Image style={style.songImage} source={{uri: song.image}}/>
         <View style={style.songInfo}>
           <Text ellipsizeMode='tail' numberOfLines={1} style={style.songName}>{song.name}</Text>
           <Text ellipsizeMode='tail' numberOfLines={1} style={style.songArtist}>{song.artist}</Text>
         </View>
+        <Icon name="spotify" type="font-awesome" color={globals.sWhite} size={21}/>
       </TouchableOpacity>
     );
   }
@@ -43,7 +45,8 @@ export default class AddSong extends React.Component {
     });
   }
 
-  SearchTextInput = globals.createSearchTextInput("Type in a song or artist",
+  SearchTextInput = globals.createSearchTextInput(
+  "Search by song or artist",
   (songToSearch) => {
     this.setState({songToSearch});
   }, () => {
@@ -62,6 +65,7 @@ export default class AddSong extends React.Component {
             data={this.state.searchedSongs} 
             keyExtractor={(_, index)=>String(index)} 
             renderItem={({item})=>this.eachAddSong(item)}
+            indicatorStyle="white"
           />
         }
       </View>
@@ -75,15 +79,17 @@ const style = StyleSheet.create({
   },
   song: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     marginTop: 10,
-    marginBottom: 10
+    marginBottom: 10,
+    marginRight: 10
   },
   songInfo: {
     flex: 1
   },
   songs: {
-    marginLeft: 40,
-    marginRight: 40,
+    marginLeft: 25,
+    marginRight: 15,
     marginTop: 20
   },
   songImage: {

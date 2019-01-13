@@ -98,20 +98,17 @@ export default class Header extends React.Component {
 
   renderRight() {
     if(this.props.playlist) {
-      if(this.props.user && this.props.user.id === this.props.playlist.ownerId) {
-        return (
-          <TouchableOpacity onPress={()=>this.showPlaylistOptions()}>
-            <Icon 
-              containerStyle={style.widerClick} 
-              name="md-more" 
-              type="ionicon" 
-              color={globals.sWhite} 
-              underlayColor={globals.sSand}
-            />
-          </TouchableOpacity>
-        );
-      }
-      return <View></View>;
+      return (
+        <TouchableOpacity onPress={()=>this.showPlaylistOptions()}>
+          <Icon 
+            containerStyle={style.widerClick} 
+            name="md-more" 
+            type="ionicon" 
+            color={globals.sWhite} 
+            underlayColor={globals.sSand}
+          />
+        </TouchableOpacity>
+      );
     }
     return (
       <TouchableOpacity onPress={()=>this.showAddPlaylistBlur()}>
@@ -122,13 +119,15 @@ export default class Header extends React.Component {
 
   showAddPlaylistBlur() {
     this.props.openBlur(AddPlaylistBlur, {
-      selected: 0
+      selected: 0,
+      navigation: this.props.navigation
     });
   }
 
   showPlaylistOptions() {
     this.props.openBlur(PlaylistOptionsBlur, {
       playlist: this.props.playlist,
+      isOwned: this.props.user && (this.props.user.id === this.props.playlist.ownerId),
       updatePlaylist: (p)=>this.props.updatePlaylist(p),
       isOnline: this.props.isOnline
     });

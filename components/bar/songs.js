@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet, View, Image, TouchableOpacity, Linking, Alert, SectionList, RefreshControl } from 'react-native';
 import Modal from "react-native-modal";
-import { Icon, Button } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import globals from '../helpers';
 
 export default class extends React.Component {
@@ -186,8 +186,12 @@ export default class extends React.Component {
             renderItem={({item, index, section}) => this.each(item, index, section)}
             renderSectionHeader={({section: {title}}) => (
                 title === "Requests" && this.props.requests.length === 0 ?
-                (<View/>) :
-                <Text style={style.sectionHeader}>{title}</Text>
+                (<View/>) : (
+                  <View style={style.sectionHeader}>
+                    <Text style={style.sectionHeaderText}>{title}</Text>
+                    <Icon name="spotify" type="font-awesome" size={21} color={sWhite}/>
+                  </View>
+                )
             )}
             sections={[
               {title: 'Queue', data: songs},
@@ -207,17 +211,21 @@ const style = StyleSheet.create({
     marginBottom: 82
   },
   sectionHeader: {
-    ...globals.style.smallText,
-    color: globals.sSand,
     backgroundColor: globals.darkerGrey,
-    padding: 5,
+    paddingRight: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     shadowRadius: 5,
     shadowOffset: {
-      height: 15
+      height: 10
     },
     shadowOpacity: .9,
     shadowColor: globals.sBlack,
     zIndex: 5
+  },
+  sectionHeaderText: {
+    ...globals.style.smallText,
+    margin: 5,
   },
   song: {
     flexDirection: 'row',

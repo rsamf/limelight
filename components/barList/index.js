@@ -10,9 +10,9 @@ import user from '../../util/user';
 
 const style = StyleSheet.create({
   sectionHeader: {
-    padding: 5,
     backgroundColor: globals.darkerGrey,
     flexDirection: 'row',
+    justifyContent: 'space-between',
     shadowRadius: 5,
     shadowOffset: {
       height: 15
@@ -25,15 +25,13 @@ const style = StyleSheet.create({
     ...globals.style.smallText,
     fontSize: 12,
     color: globals.sSand,
-    marginRight: 5
+    margin: 5
   },
   playlists: {
     flex: 1
   },
   spotifyIcon: {
-    position: 'absolute',
-    right: 10,
-    top: 3
+    marginRight: 5
   },
 });
 
@@ -48,9 +46,11 @@ export default class BarList extends React.Component {
 
   componentDidMount() {
     this.props.navigation.addListener('willFocus', () => {
+      console.warn("FOCUSED");
       this.props.screenProps.setHeader({
         name: "Playlists",
-        playlist: null
+        playlist: null,
+        navigation: this.props.navigation
       });
     });
     this.getNearby();

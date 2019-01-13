@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, FlatList, Image, TextInput } from 'react-native';
-import globals from '../helpers';
-import { ButtonGroup, Icon, Badge } from 'react-native-elements';
+import { ButtonGroup, Icon } from 'react-native-elements';
+import Modal from 'react-native-modal';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import GetPlaylistsByCode from '../../GQL/queries/GetPlaylistsByCode';
+import globals from '../helpers';
 import Spotify from 'rn-spotify-sdk';
 import aws from '../../util/aws';
 import user from '../../util/user';
@@ -17,7 +18,8 @@ export default class AddPlaylistBlur extends React.Component {
       nameInput: "",
       searchedPlaylists: [],
       searching: false,
-      showNoneMessage: false
+      showNoneMessage: false,
+      activePlaylistModal: null
     };
   }
   
@@ -43,6 +45,10 @@ export default class AddPlaylistBlur extends React.Component {
       </View>
     )
   }]
+
+  showPlaylistModal(val = null) {
+    this.setState({ activePlaylistModal: val });
+  }
 
   setSelected(i) {
     const go = () => this.setState({selectedButton: i});
@@ -71,7 +77,7 @@ export default class AddPlaylistBlur extends React.Component {
       }
     }).then(({data: {getPlaylistsByCode: {playlists}}})=>{
       this.setState({
-        searchedPlaylists: playlists,
+        searchedPlaylists: playlists.map(p => ({...p, ownerId: globals.getUserId(p.id)})),
         loading: false,
         showNoneMessage: playlists.length === 0
       });
@@ -79,21 +85,12 @@ export default class AddPlaylistBlur extends React.Component {
   }
 
   eachPlaylist(playlist) {
-    let disabled = this.props.playlists.contains(playlist.id);
-    let playlistStyle = { ...style.playlist, opacity: 1 - .5*disabled };
     return (
-      <TouchableOpacity disabled={disabled} style={playlistStyle} onPress={()=>this.joinPlaylist(playlist)}>
-        <Image style={style.playlistImage} source={{uri:playlist.image || ""}}/>
-        <View style={style.playlistContent}>
-          <View style={style.playlistDetails}>
-            <Text ellipsizeMode='tail' numberOfLines={1} style={globals.style.text}>{playlist.name}</Text>
-            <Text ellipsizeMode='tail' numberOfLines={1} style={globals.style.smallText}>{playlist.ownerName}</Text>
-          </View>
-          {
-            disabled &&
-            <Badge value="Added" textStyle={globals.style.smallText}/>
-          }
-        </View>
+      <TouchableOpacity 
+        onPress={()=>this.joinPlaylist(playlist)}
+        onLongPress={()=>this.showPlaylistModal(playlist)}
+      >
+        {globals.getPlaylistView(playlist)}
       </TouchableOpacity>
     );
   }
@@ -153,6 +150,24 @@ export default class AddPlaylistBlur extends React.Component {
     });
   }
 
+  goToBar(id) {
+    this.setState({ activePlaylistModal: null });
+    this.props.navigation.navigate('Bar', id);
+    this.props.close();
+  }
+
+  renderModal() {
+    const playlist = this.state.activePlaylistModal;
+    console.log(playlist);
+    const isOwned = (playlist && this.props.user) && (playlist.ownerId === this.props.user.id);
+    const isAdded = playlist && this.props.playlists.contains(playlist.id);
+    return (
+      <Modal isVisible={!!this.state.activePlaylistModal} onBackdropPress={()=>this.showPlaylistModal()}>
+        {globals.getPlaylistModal(playlist, ()=>this.goToBar(playlist.id), isOwned, ()=>this.joinPlaylist(playlist), isAdded)}
+      </Modal>
+    );
+  }
+
   renderSelected() {
     if(this.state.selectedButton === 0) {
       let toRender;
@@ -187,6 +202,7 @@ export default class AddPlaylistBlur extends React.Component {
       }
       return (
         <View style={style.selectedRender}>
+          {this.renderModal()}
           <SearchTextInput 
             onSubmit={()=>this.searchPlaylists()} 
             onChange={(iDinput)=>this.setState({iDinput})}
@@ -244,7 +260,6 @@ class SearchTextInput extends React.Component {
     super(props);
   }
 
-  // return globals.createSearchTextInput("Type in your Invitational Code", onChange, onSubmit, {disabled: !props.isOnline});
   render () {
     return (
       <View style={globals.style.textInputContainer}>

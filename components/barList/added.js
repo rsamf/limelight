@@ -48,7 +48,6 @@ class AddedPlaylistsComponent extends React.Component {
   }
 
   eachPlaylist(playlist, i) {
-    console.log(playlist);
     const isLastPlaylist = i === this.props.data.length - 1;
     const swipeoutBtns = [{
       component: (
@@ -72,10 +71,14 @@ class AddedPlaylistsComponent extends React.Component {
   }
 
   showPlaylistModal(val = null) {
-    console.log("showing ", val);
     this.setState({ activePlaylistModal: val });
   }
 
+  goToBar(id) {
+    this.setState({ activePlaylistModal: null });
+    this.props.navigation.navigate('Bar', id);
+  }
+  
   renderModal() {
     const playlist = this.state.activePlaylistModal;
     const isOwned = (playlist && this.props.user) && (playlist.ownerId === this.props.user.id);

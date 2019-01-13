@@ -15,13 +15,13 @@ export default class PlaylistOptions extends React.Component {
   }
 
   submitEditingTitle() {
-    if(!this.props.isOnline) return;
+    if(!this.props.isOnline || !this.props.isOwned) return;
     this.props.updatePlaylist({ name: this.state.editingTitle });
     this.props.close();
   }
 
   submitEditingCode() {
-    if(!this.props.isOnline) return;
+    if(!this.props.isOnline || !this.props.isOwned) return;
     this.props.updatePlaylist({ code: this.state.editingCode });
     this.props.close();
   }
@@ -32,24 +32,32 @@ export default class PlaylistOptions extends React.Component {
     ()=>this.setState({editingCode: null })
   )
 
+  renderCode() {
+    if(this.props.isOwned) {
+      if(this.state.editingCode !== null) {
+        return <this.TextInput/>;
+      }
+      return (
+        <TouchableOpacity style={style.code} onPress={()=>this.setState({editingCode:this.props.playlist.name})}>
+          <Text style={style.codeText}>{this.props.playlist.code || "Create a Code for People to Join"}</Text>
+          <Icon
+            iconStyle={style.codeIcon}
+            type="entypo"
+            name="edit"
+            color={globals.sWhite}
+            size={18}
+          />
+        </TouchableOpacity>
+      );
+    }
+    return <Text style={style.codeText}>{this.props.playlist.code || "Create a Code for People to Join"}</Text>;
+  }
+
   render() {
     return (
       <View style={style.view}>
         <Text style={style.name}>{this.props.playlist.name}</Text>
-        {
-          this.state.editingCode !== null ?
-          <this.TextInput/> :
-          <TouchableOpacity style={style.code} onPress={()=>this.setState({editingCode:this.props.playlist.name})}>
-            <Text style={style.codeText}>{this.props.playlist.code || "Create a Code for People to Join"}</Text>
-            <Icon
-              iconStyle={style.codeIcon}
-              type="entypo"
-              name="edit"
-              color={globals.sWhite}
-              size={18}
-            />
-          </TouchableOpacity>
-        }
+        {this.renderCode()}
         <View style={style.qr}>
           <QRCode value={this.props.playlist.id} size={256}/>
         </View>

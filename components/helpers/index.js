@@ -1,5 +1,5 @@
 import { StyleSheet, View, Image, Text, TouchableOpacity, TextInput, ActivityIndicator, Dimensions, Platform, Linking, Alert } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { Icon, Badge } from 'react-native-elements';
 import React from 'react';
 import * as AWS from 'aws-sdk';
 import { AUTH_TYPE } from "aws-appsync/lib/link/auth-link";
@@ -201,7 +201,7 @@ const diff = (truth, previous) => {
 };
 
 const createSearchTextInput = (placeholder, onChangeText, onSubmitEditing, additionalProps) => {
-  return (
+  return () => (
     <View style={style.textInputContainer}>
       <Icon name="search" color={sWhite}/>
       <TextInput
@@ -307,7 +307,7 @@ const client = new AWSAppSyncClient({
 });
 
 const visitSong = id => {
-  let url = "https://open.spotify.com/track/"+this.props.children.id;
+  let url = "https://open.spotify.com/track/"+id;
   Linking.canOpenURL(url).then(supported => {
     if (!supported) {
       Alert.alert("Could not open the link to the song!");
@@ -328,29 +328,31 @@ const visitPlaylist = (ownerId, playlistId) => {
   });
 };
 
-const getPlaylistView = (playlist, ...extraIcons) => (
-  <View style={style.playlistWrapper}>
-    <View style={style.playlistData}>
-      {
-        playlist.image ?
-        <Image style={style.playlistImage} source={{uri: playlist.image}}/> :
-        <Icon containerStyle={style.playlistImage} color={sWhite} name="music" type="feather"/>
-      }
-      <View style={style.playlistDetails}>
-        <Text ellipsizeMode='tail' numberOfLines={1} style={style.text}>{playlist.name}</Text>
-        <Text ellipsizeMode='tail' numberOfLines={1} style={style.playlistOwner}>{playlist.ownerName}</Text>
+const getPlaylistView = (playlist, ...extraIcons) => {
+  return (
+    <View style={style.playlistWrapper}>
+      <View style={style.playlistData}>
+        {
+          playlist.image ?
+          <Image style={style.playlistImage} source={{uri: playlist.image}}/> :
+          <Icon containerStyle={style.playlistImage} color={sWhite} name="music" type="feather"/>
+        }
+        <View style={style.playlistDetails}>
+          <Text ellipsizeMode='tail' numberOfLines={1} style={style.text}>{playlist.name}</Text>
+          <Text ellipsizeMode='tail' numberOfLines={1} style={style.playlistOwner}>{playlist.ownerName}</Text>
+        </View>
+      </View>
+      <View style={style.playlistIcons}>
+        <Icon containerStyle={style.playlistIcon} size={21} color={sWhite} name="spotify" type="font-awesome"/>
+        {extraIcons.map((icon, i) => (
+          <Icon containerStyle={style.playlistIcon} size={21} color={sWhite} name={icon.name} type="font-awesome" key={i}/>
+        ))}
       </View>
     </View>
-    <View style={style.playlistIcons}>
-      <Icon containerStyle={style.playlistIcon} size={21} color={sWhite} name="spotify" type="font-awesome"/>
-      {extraIcons.map((iconName, i) => (
-        <Icon containerStyle={style.playlistIcon} size={21} color={sWhite} name={iconName} type="font-awesome" key={i}/>
-      ))}
-    </View>
-  </View>
-);
+  );
+};
 
-const getPlaylistModal = (playlist, play, isOwned) => (
+const getPlaylistModal = (playlist, play, isOwned, addFunc, isAdded) => (
   playlist ?
   <View style={style.modalView}>
     <View style={{...style.modalBorder, ...style.modalItem}}>
@@ -364,6 +366,19 @@ const getPlaylistModal = (playlist, play, isOwned) => (
         <Text ellipsizeMode="tail" numberOfLines={1} style={style.playlistOwner}>{playlist.ownerName}</Text>
       </View>
     </View>
+    {
+      addFunc &&
+      <TouchableOpacity disabled={isAdded} style={{...style.modalBorder, ...style.modalItem, opacity: 1-isAdded*.5, justifyContent: 'space-between'}} onPress={addFunc}>
+        <View style={{flexDirection:'row'}}>
+          <Icon containerStyle={style.modalIcon} color={sWhite} name="plus" type="material-community"/>
+          <Text style={style.text}>Add as Favorite</Text>
+        </View>
+        {
+          isAdded &&
+          <Badge value="Added" textStyle={{ color: sWhite }}/>
+        }
+      </TouchableOpacity>
+    }
     <TouchableOpacity style={{...style.modalBorder, ...style.modalItem}} onPress={()=>play()}>
       <Icon containerStyle={style.modalIcon} color={sWhite} name={isOwned ? "play" : "door-open"} type="material-community"/>
       <Text style={style.text}>{isOwned ? "Play Music" : "Connect to DJ"}</Text>
