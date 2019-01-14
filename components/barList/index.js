@@ -71,6 +71,8 @@ export default class BarList extends React.Component {
       } catch(e) {
         if(callback) callback();
       }
+    } else {
+      if(callback) callback();
     }
   }
 
