@@ -51,7 +51,7 @@ export default class AddSong extends React.Component {
     this.setState({songToSearch});
   }, () => {
     this.searchSongs();
-  });
+  }, {autoFocus: true});
 
   render() {
     return (

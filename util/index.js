@@ -1,5 +1,6 @@
 import { StyleSheet, View, Image, Text, TouchableOpacity, TextInput, ActivityIndicator, Dimensions, Platform, Linking, Alert } from 'react-native';
 import { Icon, Badge } from 'react-native-elements';
+import MarqueeText from 'react-native-marquee';
 import React from 'react';
 import * as AWS from 'aws-sdk';
 import { AUTH_TYPE } from "aws-appsync/lib/link/auth-link";
@@ -27,22 +28,22 @@ const style = StyleSheet.create({
   text: {
     color: sWhite,
     fontFamily: 'Futura',
-    fontSize: 18
+    fontSize: 21
   },
   biggerText: {
     color: sWhite,
     fontFamily: 'Futura',
-    fontSize: 20
+    fontSize: 24
   },
   errorText: {
     color: sGrey,
     fontFamily: 'Futura',
-    fontSize: 18
+    fontSize: 21
   },
   smallText:{
     color: sSand,
     fontFamily: 'Futura',
-    fontSize: 12
+    fontSize: 14
   },
   textInputFailed: {
   },
@@ -89,15 +90,6 @@ const style = StyleSheet.create({
     borderBottomColor: sWhite,
     borderBottomWidth: 2,
     flex: 1
-  },
-  modalText: {
-    color: sBlack,
-    fontFamily: 'Futura',
-    fontSize: 18
-  },
-  modalOptions: {
-    marginTop: 20,
-    flexDirection: 'row'
   },
   modalView: {
     backgroundColor: 'rgba(0,0,0,.6)',
@@ -155,12 +147,6 @@ const style = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: sGrey
   },
-  playlistOwner: {
-    color: sSand,
-    fontFamily: 'Futura',
-    fontSize: 12,
-    color: sGrey
-  },
   playlistIcons: {
     width: 25,
     alignItems: 'center'
@@ -215,7 +201,6 @@ const createSearchTextInput = (placeholder, onChangeText, onSubmitEditing, addit
         onChangeText={(text)=>onChangeText(text)}
         onSubmitEditing={onSubmitEditing}
         returnKeyType="search"
-        autoFocus={true}
         {...additionalProps}
       />
     </View>
@@ -339,7 +324,7 @@ const getPlaylistView = (playlist, ...extraIcons) => {
         }
         <View style={style.playlistDetails}>
           <Text ellipsizeMode='tail' numberOfLines={1} style={style.text}>{playlist.name}</Text>
-          <Text ellipsizeMode='tail' numberOfLines={1} style={style.playlistOwner}>{playlist.ownerName}</Text>
+          <Text ellipsizeMode='tail' numberOfLines={1} style={{...style.smallText, color: sGrey}}>{playlist.ownerName}</Text>
         </View>
       </View>
       <View style={style.playlistIcons}>
@@ -362,8 +347,8 @@ const getPlaylistModal = (playlist, play, isOwned, addFunc, isAdded) => (
         <Icon containerStyle={style.modalImage} color={sWhite} name="music" type="feather"/>
       }
       <View style={style.modalDetails}>
-        <Text ellipsizeMode="tail" numberOfLines={1} style={style.text}>{playlist.name}</Text>
-        <Text ellipsizeMode="tail" numberOfLines={1} style={style.playlistOwner}>{playlist.ownerName}</Text>
+        {globals.getScrollableText(playlist.name)}
+        {globals.getScrollableText(playlist.ownerName, {...style.smallText, color: sGrey})}
       </View>
     </View>
     {
@@ -390,6 +375,20 @@ const getPlaylistModal = (playlist, play, isOwned, addFunc, isAdded) => (
   </View> :
   <View/>
 );
+
+const getScrollableText = (text, optionalStyle) => {
+  return (
+    <MarqueeText
+      duration={text.length * 100} 
+      marqueeOnStart 
+      loop 
+      numberOfLines={1} 
+      style={optionalStyle || style.text}
+    >
+      {text}
+    </MarqueeText>
+  );
+};
 
 const globals = {
   style,
@@ -418,7 +417,8 @@ const globals = {
   visitSong,
   visitPlaylist,
   getPlaylistView,
-  getPlaylistModal
+  getPlaylistModal,
+  getScrollableText
 };
 
 

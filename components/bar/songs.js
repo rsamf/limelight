@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet, View, Image, TouchableOpacity, Linking, Alert, SectionList, RefreshControl } from 'react-native';
-import Modal from "react-native-modal";
 import { Icon } from 'react-native-elements';
+import Modal from "react-native-modal";
 import globals from '../../util';
 
 export default class extends React.Component {
@@ -152,8 +152,8 @@ export default class extends React.Component {
               <View style={{...style.modalBorder, ...style.modalItem}}>
                 <Image style={style.modalImage} source={{uri: this.state.viewingSong.image}}/>
                 <View style={style.modalDetails}>
-                  <Text ellipsizeMode="tail" numberOfLines={1} style={style.songName}>{this.state.viewingSong.name}</Text>
-                  <Text ellipsizeMode="tail" numberOfLines={1} style={style.songArtist}>{this.state.viewingSong.artist}</Text>
+                  {globals.getScrollableText(this.state.viewingSong.name)}
+                  {globals.getScrollableText(this.state.viewingSong.artist, style.songArtist)}
                 </View>
               </View>
               {

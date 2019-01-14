@@ -132,7 +132,7 @@ const style = StyleSheet.create({
     borderWidth: .5,
     borderRadius: 5,
     borderColor: globals.sWhite,
-    backgroundColor: globals.sSand
+    backgroundColor: globals.sWhite
   },
   playlistText: {
     marginTop: 2,

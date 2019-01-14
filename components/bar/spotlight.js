@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ProgressViewIOS, Image, TouchableOpacity, Linking, Alert } from 'react-native';
-import { Icon, Button } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import Modal from "react-native-modal";
 import Spotify from 'rn-spotify-sdk';
 import globals from '../../util';
@@ -144,8 +144,8 @@ export default class extends React.Component {
               <View style={{...style.modalBorder, ...style.modalItem}}>
                 <Image style={style.modalImage} source={{uri: song.image}}/>
                 <View style={style.modalDetails}>
-                  <Text ellipsizeMode="tail" numberOfLines={1} style={style.songName}>{song.name}</Text>
-                  <Text ellipsizeMode="tail" numberOfLines={1} style={style.songArtist}>{song.artist}</Text>
+                  {globals.getScrollableText(song.name)}
+                  {globals.getScrollableText(song.artist, style.songArtist)}
                 </View>
               </View>
               <TouchableOpacity style={{...style.modalBorder, ...style.modalItem}} onPress={()=>globals.visitSong(song.id)}>
@@ -162,8 +162,8 @@ export default class extends React.Component {
             <View style={{...style.song, flex: this.props.isOwned ? .7 : .95}}>
               <Image style={style.songImage} source={{ uri: song.image }}/>
               <View style={style.songInfo}>
-                <Text ellipsizeMode="tail" numberOfLines={1} style={style.songName}>{song.name}</Text>
-                <Text ellipsizeMode="tail" numberOfLines={1} style={style.songArtist}>{song.artist}</Text>
+                {globals.getScrollableText(song.name)}
+                {globals.getScrollableText(song.artist, style.songArtist)}
               </View>
             </View>
             {
@@ -191,7 +191,7 @@ export default class extends React.Component {
         </View>
       );
     }
-    return <View></View>;
+    return <View/>;
   }
 }
 

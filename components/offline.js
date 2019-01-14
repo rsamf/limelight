@@ -39,6 +39,8 @@ const style = StyleSheet.create({
   },
   text: {
     ...globals.style.text,
-    marginTop: 5
+    marginTop: 5,
+    marginLeft: 20,
+    marginRight: 20
   }
 });

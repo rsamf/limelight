@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { Icon, Avatar } from 'react-native-elements';
 import ProfileBlur from './blurs/profile';
 import AddPlaylistBlur from './blurs/addPlaylist';
@@ -16,9 +16,11 @@ export default class Header extends React.Component {
   render(){
     return (
       <View style={style.view}>
-        {this.renderLeft()}
-        {this.renderMiddle()}
-        {this.renderRight()}
+        <View style={style.innerView}>
+          {this.renderLeft()}
+          {this.renderMiddle()}
+          {this.renderRight()}
+        </View>
       </View>
     );
   }
@@ -91,7 +93,7 @@ export default class Header extends React.Component {
   renderMiddle() {
     return (
       <View style={style.titleContainer}>
-        <Text style={style.textItem}>{this.props.name}</Text>
+        <Text numberOfLines={1} ellipsizeMode="tail" style={style.textItem}>{this.props.name}</Text>
       </View>
     );
   }
@@ -139,23 +141,22 @@ const style = StyleSheet.create({
     backgroundColor: globals.darkGrey,
     height: 70 + (globals.isX() ? 15 : 0),
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: 30 + (globals.isX() ? 15 : 0),
     paddingLeft: 10,
     paddingRight: 10,
     paddingBottom: 10,
   },
+  innerView: {
+    justifyContent: 'space-between',
+    flex: 1,
+    flexDirection: 'row'
+  },
   titleContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'absolute',
-    marginTop: 20 + (globals.isX() ? 15 : 0),
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0
+    flex: 1
   },
   textItem: {
     ...globals.style.text,

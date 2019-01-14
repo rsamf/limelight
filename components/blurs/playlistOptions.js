@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 import QRCode from 'react-native-qrcode';
 import globals from '../../util';
@@ -39,7 +39,7 @@ export default class PlaylistOptions extends React.Component {
       }
       return (
         <TouchableOpacity style={style.code} onPress={()=>this.setState({editingCode:this.props.playlist.name})}>
-          <Text style={style.codeText}>{this.props.playlist.code || "Create a Code for People to Join"}</Text>
+          <Text ellipsizeMode="tail" numberOfLines={1}  style={style.codeText}>{this.props.playlist.code || "Insert Invitational Code"}</Text>
           <Icon
             iconStyle={style.codeIcon}
             type="entypo"
@@ -50,13 +50,13 @@ export default class PlaylistOptions extends React.Component {
         </TouchableOpacity>
       );
     }
-    return <Text style={style.codeText}>{this.props.playlist.code || "Create a Code for People to Join"}</Text>;
+    return <Text ellipsizeMode="tail" numberOfLines={1} style={style.codeText}>{this.props.playlist.code || "Insert Invitational Code"}</Text>;
   }
 
   render() {
     return (
       <View style={style.view}>
-        <Text style={style.name}>{this.props.playlist.name}</Text>
+        {globals.getScrollableText(this.props.playlist.name)}
         {this.renderCode()}
         <View style={style.qr}>
           <QRCode value={this.props.playlist.id} size={256}/>
