@@ -134,7 +134,7 @@ export default class BarList extends React.Component {
                 <Text style={style.sectionHeaderText}>{title}</Text>
                 {
                   title === "From Spotify" &&
-                  <Icon 
+                  <Icon
                     containerStyle={style.spotifyIcon}
                     color={globals.sWhite}
                     size={21}
