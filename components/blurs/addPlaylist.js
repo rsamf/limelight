@@ -85,13 +85,14 @@ export default class AddPlaylistBlur extends React.Component {
   }
 
   eachPlaylist(playlist) {
+    const isOwned = (playlist && this.props.user) && (playlist.ownerId === this.props.user.id);
     return (
       <TouchableOpacity
         style={style.playlist}
         onPress={()=>this.joinPlaylist(playlist)}
         onLongPress={()=>this.showPlaylistModal(playlist)}
       >
-        {globals.getPlaylistView(playlist)}
+        {globals.getPlaylistView(playlist, ()=>this.goToBar(playlist.id), isOwned)}
       </TouchableOpacity>
     );
   }

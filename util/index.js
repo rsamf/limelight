@@ -14,6 +14,7 @@ const sBlue = '#43e5f8',//'#23a5c8',//'#84bd00'
       sGrey = '#929292',
       darkGrey = '#333333',
       darkerGrey = '#282828',
+      evenDarkerGrey = '#1e1e1e',
       sSand = '#ecebe8',
       sWhite = '#ffffff',
       spotifyGreen = "#1DB954",
@@ -118,16 +119,22 @@ const style = StyleSheet.create({
     marginLeft: 10,
     flex: 1
   },
-  playlist: {
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 15,
-    marginBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
+  // playlist: {
+  //   marginLeft: 15,
+  //   marginRight: 15,
+  //   marginTop: 15,
+  //   marginBottom: 10,
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   justifyContent: 'space-between',
+  //   flex: 1
+  // },
   playlistWrapper: {
+    flex: 1,
+    backgroundColor: evenDarkerGrey,
+    padding: 10
+  },
+  playlist: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     flex: 1
@@ -139,6 +146,10 @@ const style = StyleSheet.create({
   },
   playlistDetails: {
     marginLeft: 10,
+    flex: 1
+  },
+  playlistButtons: {
+    flexDirection: 'row',
     flex: 1
   },
   playlistImage: {
@@ -313,25 +324,43 @@ const visitPlaylist = (ownerId, playlistId) => {
   });
 };
 
-const getPlaylistView = (playlist, ...extraIcons) => {
+const getPlaylistView = (playlist, play, isOwned, ...extraIcons) => {
   return (
     <View style={style.playlistWrapper}>
-      <View style={style.playlistData}>
-        {
-          playlist.image ?
-          <Image style={style.playlistImage} source={{uri: playlist.image}}/> :
-          <Icon containerStyle={style.playlistImage} color={sWhite} name="music" type="feather"/>
-        }
-        <View style={style.playlistDetails}>
-          <Text ellipsizeMode='tail' numberOfLines={1} style={style.text}>{playlist.name}</Text>
-          <Text ellipsizeMode='tail' numberOfLines={1} style={{...style.smallText, color: sGrey}}>{playlist.ownerName}</Text>
+      <View style={style.playlist}>
+        <View style={style.playlistData}>
+          {
+            playlist.image ?
+            <Image style={style.playlistImage} source={{uri: playlist.image}}/> :
+            <Icon containerStyle={style.playlistImage} color={sWhite} name="music" type="feather"/>
+          }
+          <View style={style.playlistDetails}>
+            <Text ellipsizeMode='tail' numberOfLines={1} style={style.text}>{playlist.name}</Text>
+            <Text ellipsizeMode='tail' numberOfLines={1} style={{...style.smallText, color: sGrey}}>{playlist.ownerName}</Text>
+          </View>
+        </View>
+        <View style={style.playlistIcons}>
+          {extraIcons.map((icon, i) => (
+            <Icon containerStyle={style.playlistIcon} size={21} color={sWhite} name={icon} type="font-awesome" key={i}/>
+          ))}
         </View>
       </View>
-      <View style={style.playlistIcons}>
-        <Icon containerStyle={style.playlistIcon} size={21} color={sWhite} name="spotify" type="font-awesome"/>
-        {extraIcons.map((icon, i) => (
-          <Icon containerStyle={style.playlistIcon} size={21} color={sWhite} name={icon} type="font-awesome" key={i}/>
-        ))}
+      <View style={{flexDirection: 'row', marginTop: 10}}>
+        <TouchableOpacity onPress={()=>visitPlaylist(playlist.ownerId, getPlaylistId(playlist.id))} style={{padding: 10, paddingTop: 2, paddingBottom: 2, borderRadius: 20, borderWidth: 1, borderColor: sWhite, flexDirection: 'row', marginRight: 10}}>
+          <Icon containerStyle={{marginRight: 5}} size={21} color={sWhite} name="spotify" type="font-awesome"/>
+          <Text style={style.smallText}>Visit in Spotify</Text>
+        </TouchableOpacity>
+        {
+          isOwned ?
+          <TouchableOpacity onPress={()=>play()} style={{padding: 10, paddingTop: 2, paddingBottom: 2, borderRadius: 20, borderWidth: 1, borderColor: sWhite, flexDirection: 'row'}}>
+            <Icon containerStyle={{marginRight: 5}} size={21} color={sWhite} name="play" type="material-community"/>
+            <Text style={style.smallText}>Play Music</Text>
+          </TouchableOpacity> :
+          <TouchableOpacity onPress={()=>play()} style={{padding: 10, paddingTop: 2, paddingBottom: 2, borderRadius: 20, borderWidth: 1, borderColor: sWhite, flexDirection: 'row'}}>
+            <Icon containerStyle={{marginRight: 5}} size={21} color={sWhite} name="door-open" type="material-community"/>
+            <Text style={style.smallText}>Connect to DJ</Text>
+          </TouchableOpacity>
+        }
       </View>
     </View>
   );
@@ -399,6 +428,7 @@ const globals = {
   sGrey,
   darkGrey,
   darkerGrey,
+  evenDarkerGrey,
   sSand,
   sWhite,
   darkRed,

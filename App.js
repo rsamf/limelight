@@ -2,7 +2,6 @@ import { AppRegistry, StatusBar } from 'react-native';
 import Limelight from './components';
 import Messages from './components/messages';
 import LocalMessages from './util/LocalMessages';
-import net from './util/net';
 import React from 'react';
 
 export default class App extends React.Component {

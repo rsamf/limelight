@@ -24,7 +24,7 @@ export default class Offline extends React.Component {
 
 const style = StyleSheet.create({
   alertIcon: {
-    marginBottom: 20
+    marginBottom: 10
   },
   retryButton: {
     backgroundColor: globals.sWhite,
@@ -41,6 +41,7 @@ const style = StyleSheet.create({
     ...globals.style.text,
     marginTop: 5,
     marginLeft: 20,
-    marginRight: 20
+    marginRight: 20,
+    textAlign: "center"
   }
 });

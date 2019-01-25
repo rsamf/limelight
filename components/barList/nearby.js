@@ -11,7 +11,8 @@ export default class NearbyPlaylists extends React.Component {
     };
   }
 
-  eachPlaylist(playlist, i) {
+  eachPlaylist(playlist) {
+    const isOwned = (playlist && this.props.user) && (playlist.ownerId === this.props.user.id);
     return (
       <TouchableOpacity 
         style={style.playlist} 
@@ -19,10 +20,15 @@ export default class NearbyPlaylists extends React.Component {
         onLongPress={()=>this.showPlaylistModal(playlist)}
       >
         {
-          globals.getPlaylistView(playlist, "map-pin")
+          globals.getPlaylistView(playlist, ()=>this.goToBar(playlist.id), isOwned, "map-pin")
         }
       </TouchableOpacity>
     );
+  }
+
+  goToBar(id) {
+    this.setState({ activePlaylistModal: null });
+    this.props.navigation.navigate('Bar', id);
   }
 
   showPlaylistModal(val = null) {

@@ -123,7 +123,7 @@ const style = StyleSheet.create({
   playlistImage: {
     width: 145,
     height: 145,
-    borderWidth: 0.5,
+    borderWidth: 1,
     borderColor: globals.sGrey
   },
   createIcon: {
