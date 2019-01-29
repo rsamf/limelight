@@ -17,7 +17,9 @@ const style = StyleSheet.create({
   playlist: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    margin: 15,
+    marginTop: 0
   },
   removeButton: {
     backgroundColor: globals.sBlack, 
@@ -28,13 +30,6 @@ const style = StyleSheet.create({
   message: {
     margin: 30,
     ...globals.style.center
-  },
-  swipeout: {
-    marginTop: 15,
-    marginLeft: 15,
-    marginRight: 15,
-    marginBottom: 10,
-    backgroundColor: globals.sBlack
   }
 });
 
@@ -47,26 +42,15 @@ class AddedPlaylistsComponent extends React.Component {
   }
 
   eachPlaylist(playlist, i) {
-    const isLastPlaylist = i === this.props.data.length - 1;
-    const swipeoutBtns = [{
-      component: (
-        <View style={style.removeButton}>
-          <Icon name='close' color={globals.darkRed}/>
-        </View>
-      ),
-      onPress: ()=>this.props.playlists.remove(playlist.id)
-    }];
     const isOwned = (playlist && this.props.user) && (playlist.ownerId === this.props.user.id);
     return (
-      <Swipeout right={swipeoutBtns} style={{...style.swipeout, marginBottom : isLastPlaylist ? 15 : 0}}>
-        <TouchableOpacity 
-          style={style.playlist} 
-          onPress={()=>this.props.navigation.navigate('Bar', playlist.id)} 
-          onLongPress={()=>this.showPlaylistModal(playlist)}
-        >
-          {globals.getPlaylistView(playlist, ()=>this.goToBar(playlist.id), isOwned)}
-        </TouchableOpacity>
-      </Swipeout>
+      <TouchableOpacity 
+        style={style.playlist} 
+        onPress={()=>this.props.navigation.navigate('Bar', playlist.id)} 
+        onLongPress={()=>this.showPlaylistModal(playlist)}
+      >
+        {globals.getPlaylistView(playlist, ()=>this.goToBar(playlist.id), isOwned)}
+      </TouchableOpacity>
     );
   }
 

@@ -19,7 +19,8 @@ const style = StyleSheet.create({
     },
     shadowOpacity: .9,
     shadowColor: globals.sBlack,
-    zIndex: 5
+    zIndex: 5,
+    marginBottom: 15
   },
   sectionHeaderText: {
     ...globals.style.smallText,
