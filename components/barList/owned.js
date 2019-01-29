@@ -140,7 +140,6 @@ const style = StyleSheet.create({
   },
   view: {
     flexDirection: 'row',
-    marginTop: 18,
     marginBottom: 15
   },
   scroll: {
