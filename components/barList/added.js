@@ -41,6 +41,11 @@ class AddedPlaylistsComponent extends React.Component {
     };
   }
 
+  removePlaylist() {
+    this.setState({ activePlaylistModal: null });
+    this.props.playlists.remove(playlist.id);
+  }
+  
   eachPlaylist(playlist, i) {
     const isOwned = (playlist && this.props.user) && (playlist.ownerId === this.props.user.id);
     return (
