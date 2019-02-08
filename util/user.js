@@ -2,6 +2,7 @@ import Spotify from 'rn-spotify-sdk';
 import LocalObject from './LocalObject';
 
 const getPlaylists = (user, func) => {
+  console.warn("Sending Request");
   Spotify.sendRequest('v1/me/playlists', "GET", {}, false).then(({items}) => {
     if(items) {
       let filtered = items.filter(playlist => playlist.owner.id === user.id);
@@ -10,7 +11,8 @@ const getPlaylists = (user, func) => {
         ownerId: playlist.owner.id,
         ownerName: playlist.owner.display_name,
         image: playlist.images && playlist.images[0] && playlist.images[0].url,
-        name: playlist.name
+        name: playlist.name,
+        length: playlist.tracks.total
       }));
       func(mapped);
     } else {

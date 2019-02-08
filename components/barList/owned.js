@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ScrollView, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
-import { Icon } from 'react-native-elements';
+import { Icon, Badge } from 'react-native-elements';
 import globals from '../../util'
 import user from '../../util/user';
 
@@ -62,6 +62,7 @@ export default class OwnedList extends React.Component {
   }
 
   eachPlaylist(playlist, i) {
+    console.warn(playlist.length);
     if(playlist === "LOADING") {
       return (
         <View key={i} style={style.playlist}>
@@ -70,14 +71,23 @@ export default class OwnedList extends React.Component {
       );
     }
     return (
-      <TouchableOpacity onPress={()=>this.goToBar(playlist.id)} onLongPress={()=>this.showPlaylistModal(playlist)} key={i} style={style.playlist}>
-        {
-          playlist.image ?
-          <Image style={style.playlistImage} source={{uri: playlist.image}}/> :
-          <Icon containerStyle={style.playlistImage} size={80} color={globals.sWhite} name="music" type="feather"/>
-        }
-        <Text ellipsizeMode="tail" numberOfLines={1} style={style.playlistText}>{playlist.name}</Text>
-      </TouchableOpacity>
+      <View key={i} style={style.playlist}>
+        <View>
+          <TouchableOpacity onPress={()=>this.goToBar(playlist.id)} onLongPress={()=>this.showPlaylistModal(playlist)}>
+            {
+              playlist.image ?
+              <Image style={style.playlistImage} source={{uri: playlist.image}}/> :
+              <Icon containerStyle={style.playlistImage} size={80} color={globals.sWhite} name="music" type="feather"/>
+            }
+          </TouchableOpacity>
+          <Text ellipsizeMode="tail" numberOfLines={1} style={style.playlistText}>{playlist.name}</Text>
+        </View>
+        <View style={{alignItems: 'center', width: 50}}>
+          <View style={style.playlistIcon}>
+            <Icon onPress={()=>globals.visitPlaylist(this.props.user.id, globals.getPlaylistId(playlist.id))} name="spotify" color={globals.sWhite} type="font-awesome"/>
+          </View>
+        </View>
+      </View>
     );
   }
 
@@ -99,7 +109,7 @@ export default class OwnedList extends React.Component {
           {
             this.props.user.playlists.map((p, i)=>this.eachPlaylist(p, i))
           }
-          <TouchableOpacity onPress={()=>this.props.addPlaylist(2)} style={{...style.playlist, ...style.createButton}}>
+          <TouchableOpacity onPress={()=>this.props.addPlaylist(2)} style={style.createButton}>
             <Icon type="feather" name="plus" color={globals.sBlack} containerStyle={style.createIcon}/>
             <Text ellipsizeMode="tail" numberOfLines={1} style={globals.style.smallText}> </Text>
           </TouchableOpacity>
@@ -112,30 +122,42 @@ export default class OwnedList extends React.Component {
 
 const style = StyleSheet.create({
   createButton: {
-    marginRight: 80
-  },
-  playlist: {
-    width: 165,
-    height: 165,
+    marginLeft: 20,
+    marginRight: 80,
     alignItems: 'center',
     justifyContent: 'center'
   },
+  playlist: {
+    marginLeft: 10,
+    marginRight: 10,
+    width: 240,
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    borderWidth: .5,
+    borderRadius: 20,
+    borderColor: globals.sWhite,
+    padding: 10,
+    paddingRight: 50,
+    flexDirection: 'row'
+  },
   playlistImage: {
-    width: 145,
-    height: 145,
-    borderWidth: 1,
-    borderColor: globals.sGrey
+    width: 180,
+    height: 180,
+    borderWidth: .5,
+    borderColor: globals.darkGrey
+  },
+  playlistIcon: {
+    marginBottom: 20
   },
   createIcon: {
-    width: 145,
-    height: 145,
-    borderWidth: .5,
+    width: 180,
+    height: 180,
     borderRadius: 5,
-    borderColor: globals.sWhite,
     backgroundColor: globals.sWhite
   },
   playlistText: {
     marginTop: 2,
+    textAlign: 'center',
     ...globals.style.smallText
   },
   view: {

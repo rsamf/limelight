@@ -70,6 +70,15 @@ const style = StyleSheet.create({
   centerRow: {
     alignItems: 'center'
   },
+  shadow: {
+    shadowRadius: 5,
+    shadowOffset: {
+      height: 12
+    },
+    shadowOpacity: 1,
+    shadowColor: sBlack,
+    zIndex: 5,
+  },
   textInputContainer: {
     flexDirection: 'row',
     justifyContent: 'center'

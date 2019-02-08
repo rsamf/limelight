@@ -229,13 +229,7 @@ const style = StyleSheet.create({
     paddingRight: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    shadowRadius: 5,
-    shadowOffset: {
-      height: 10
-    },
-    shadowOpacity: .9,
-    shadowColor: globals.sBlack,
-    zIndex: 5
+    ...globals.style.shadow
   },
   sectionHeaderText: {
     ...globals.style.smallText,

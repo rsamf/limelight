@@ -223,13 +223,10 @@ const style = StyleSheet.create({
     height: 80 + (globals.isX() ? 15 : 0),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    shadowRadius: 5,
+    ...globals.style.shadow,
     shadowOffset: {
-      height: -15
-    },
-    shadowOpacity: .9,
-    shadowColor: globals.sBlack,
-    zIndex: 5
+      height: -12
+    }
   },
   song: {
     flexDirection: 'row'

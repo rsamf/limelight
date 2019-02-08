@@ -13,14 +13,8 @@ const style = StyleSheet.create({
     backgroundColor: globals.darkerGrey,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    shadowRadius: 5,
-    shadowOffset: {
-      height: 15
-    },
-    shadowOpacity: .9,
-    shadowColor: globals.sBlack,
-    zIndex: 5,
-    marginBottom: 15
+    marginBottom: 15,
+    ...globals.style.shadow
   },
   sectionHeaderText: {
     ...globals.style.smallText,
@@ -133,7 +127,7 @@ export default class BarList extends React.Component {
             renderSectionHeader={({section: {title}}) => (
               <View style={style.sectionHeader}>
                 <Text style={style.sectionHeaderText}>{title}</Text>
-                {
+                {/* {
                   title === "From Spotify" &&
                   <Icon
                     containerStyle={style.spotifyIcon}
@@ -142,7 +136,7 @@ export default class BarList extends React.Component {
                     name="spotify"
                     type="font-awesome"
                   />
-                }
+                } */}
               </View>
             )}
             sections={sections}
