@@ -9,15 +9,8 @@ export default class PlaylistOptions extends React.Component {
     super(props);
 
     this.state = {
-      editingTitle: null,
       editingCode: null
     };
-  }
-
-  submitEditingTitle() {
-    if(!this.props.isOnline || !this.props.isOwned) return;
-    this.props.updatePlaylist({ name: this.state.editingTitle });
-    this.props.close();
   }
 
   submitEditingCode() {
@@ -56,7 +49,7 @@ export default class PlaylistOptions extends React.Component {
   render() {
     return (
       <View style={style.view}>
-        {globals.getScrollableText(this.props.playlist.name)}
+        <Text style={globals.style.text}>{this.props.playlist.name}</Text>
         {this.renderCode()}
         <View style={style.qr}>
           <QRCode value={this.props.playlist.id} size={256}/>

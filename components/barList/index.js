@@ -127,16 +127,6 @@ export default class BarList extends React.Component {
             renderSectionHeader={({section: {title}}) => (
               <View style={style.sectionHeader}>
                 <Text style={style.sectionHeaderText}>{title}</Text>
-                {/* {
-                  title === "From Spotify" &&
-                  <Icon
-                    containerStyle={style.spotifyIcon}
-                    color={globals.sWhite}
-                    size={21}
-                    name="spotify"
-                    type="font-awesome"
-                  />
-                } */}
               </View>
             )}
             sections={sections}

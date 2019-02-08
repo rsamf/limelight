@@ -62,7 +62,6 @@ export default class OwnedList extends React.Component {
   }
 
   eachPlaylist(playlist, i) {
-    console.warn(playlist.length);
     if(playlist === "LOADING") {
       return (
         <View key={i} style={style.playlist}>
@@ -131,8 +130,6 @@ const style = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     width: 240,
-    // alignItems: 'center',
-    // justifyContent: 'center',
     borderWidth: .5,
     borderRadius: 20,
     borderColor: globals.sWhite,
