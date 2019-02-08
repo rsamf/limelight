@@ -148,7 +148,7 @@ export default class extends React.Component {
                   {globals.getScrollableText(song.artist, style.songArtist)}
                 </View>
               </View>
-              <TouchableOpacity style={{...style.modalBorder, ...style.modalItem}} onPress={()=>globals.visitSong(song.id)}>
+              <TouchableOpacity style={style.modalItem} onPress={()=>globals.visitSong(song.id)}>
                 <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="spotify" type="font-awesome"/>
                 <Text style={globals.style.text}>View in Spotify</Text>
               </TouchableOpacity>
@@ -160,7 +160,9 @@ export default class extends React.Component {
           }
           <View style={style.view}>
             <View style={{...style.song, flex: this.props.isOwned ? .7 : .95}}>
-              <Image style={style.songImage} source={{ uri: song.image }}/>
+              <TouchableOpacity onPress={()=>this.setState({modalActive:true})}>
+                <Image style={style.songImage} source={{ uri: song.image }}/>
+              </TouchableOpacity>
               <View style={style.songInfo}>
                 {globals.getScrollableText(song.name)}
                 {globals.getScrollableText(song.artist, style.songArtist)}
