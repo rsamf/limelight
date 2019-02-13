@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet, View, Image, TouchableOpacity, Linking, Alert, SectionList, RefreshControl } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { Icon, Badge } from 'react-native-elements';
 import Modal from "react-native-modal";
 import globals from '../../util';
 
@@ -39,34 +39,45 @@ export default class extends React.Component {
   eachSong(song, i) {
     const votedColor = this.props.voted(i) ? globals.sGreen : globals.sGrey;
     return (
-      <TouchableOpacity key={i} onLongPress={()=>this.onLongPress(song, false, i)}>
+      <View style={{marginBottom: 10}} key={i}>
         <View style={style.song}>
           <Icon
-            containerStyle={style.voteIcon} 
-            size={35}
-            type="entypo" 
-            name="chevron-with-circle-up" 
-            color={votedColor} 
+            containerStyle={style.voteIcon}
+            size={30}
+            type="simple-line-icon" 
+            name="arrow-up-circle"
+            color={votedColor}
             underlayColor={globals.sBlack}
             onPress={()=>this.vote(i)}
           />
-          <Text style={{...style.voteNumber, color: votedColor }}>
-            {song.votes}
-          </Text>
-          <Image style={style.songImage} source={{uri: song.image}}/>
+          {/* <Image style={style.songImage} source={{uri: song.image}}/> */}
           <View style={style.songInfo}>
             <Text ellipsizeMode="tail" numberOfLines={1} style={style.songName}>{song.name}</Text>
             <Text ellipsizeMode="tail" numberOfLines={1} style={style.songArtist}>{song.artist}</Text>
           </View>
         </View>
-      </TouchableOpacity>
+        <View style={{marginLeft:10, marginRight: 10, flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{flexDirection: 'row'}}>
+            <View style={{justifyContent: 'center'}}>
+              <Badge containerStyle={{width:35}} textStyle={{color: votedColor}} value={song.votes}/>
+            </View>
+            <TouchableOpacity onPress={()=>globals.visitSong(song.id)} style={{marginLeft: 10, justifyContent: 'center'}}>
+              <Icon size={21} color={sWhite} name="spotify" type="font-awesome"/>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity onPress={()=>this.onLongPress(song, false, i)} style={{paddingLeft: 10, paddingRight:10, paddingTop: 0, paddingBottom: 0, borderRadius: 20, borderWidth: 1, borderColor: sWhite, flexDirection: 'row', marginLeft: 10}}>
+            <Icon color={sWhite} name="more-horizontal" type="feather"/>
+            {/* <Text style={globals.style.smallText}>More</Text> */}
+          </TouchableOpacity>
+        </View>
+      </View>
     );
   }
 
   eachRequest(song, i) {
     if(song === "ADD") return this.renderAddButton();
     return (
-      <TouchableOpacity key={i} onLongPress={()=>this.onLongPress(song, true, i)}>
+      <View key={i}>
         <View style={style.request}>
           {
             this.props.isOwned &&
@@ -80,13 +91,13 @@ export default class extends React.Component {
               onPress={()=>this.addSong(song, i)}
             />
           }
-          <Image style={style.songImage} source={{uri: song.image}}/>
+          {/* <Image style={style.songImage} source={{uri: song.image}}/> */}
           <View style={style.songInfo}>
             <Text ellipsizeMode="tail" numberOfLines={1} style={style.songName}>{song.name}</Text>
             <Text ellipsizeMode="tail" numberOfLines={1} style={style.songArtist}>{song.artist}</Text>
           </View>
         </View>
-      </TouchableOpacity>
+      </View>
     );
   }
 
@@ -163,10 +174,6 @@ export default class extends React.Component {
                   <Text style={globals.style.text}>Vote</Text>
                 </TouchableOpacity>
               }
-              <TouchableOpacity style={{...style.modalBorder, ...style.modalItem}} onPress={()=>this.visitSong()}>
-                <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="spotify" type="font-awesome"/>
-                <Text style={globals.style.text}>View in Spotify</Text>
-              </TouchableOpacity>
               {
                 this.props.isOwned && (
                   this.state.viewingSongIsRequest ? (
@@ -175,7 +182,7 @@ export default class extends React.Component {
                         <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="check" type="feather"/>
                         <Text style={globals.style.text}>Accept</Text>
                       </TouchableOpacity>
-                      <TouchableOpacity style={{...style.modalItem}} onPress={()=>this.ackSong()}>
+                      <TouchableOpacity style={{...style.modalBorder, ...style.modalItem}} onPress={()=>this.ackSong()}>
                         <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="x" type="feather"/>
                         <Text style={globals.style.text}>Reject</Text>
                       </TouchableOpacity>
@@ -188,6 +195,10 @@ export default class extends React.Component {
                   )
                 )
               }
+              <TouchableOpacity style={{...style.modalItem}} onPress={()=>this.visitSong()}>
+                <Icon containerStyle={style.modalIcon} color={globals.sWhite} name="spotify" type="font-awesome"/>
+                <Text style={globals.style.text}>View in Spotify</Text>
+              </TouchableOpacity>
             </View>
           </Modal>
         }
@@ -203,7 +214,7 @@ export default class extends React.Component {
                 (<View/>) : (
                   <View style={style.sectionHeader}>
                     <Text style={style.sectionHeaderText}>{title}</Text>
-                    <Icon name="spotify" type="font-awesome" size={21} color={sWhite}/>
+                    {/* <Icon name="spotify" type="font-awesome" size={21} color={sWhite}/> */}
                   </View>
                 )
             )}
@@ -238,7 +249,7 @@ const style = StyleSheet.create({
   song: {
     flexDirection: 'row',
     flex: 1,
-    paddingBottom: 12,
+    paddingBottom: 5,
     paddingTop: 12,
     marginLeft: 10,
     marginRight: 10,
@@ -282,8 +293,7 @@ const style = StyleSheet.create({
     paddingTop: 10,
     marginLeft: 10,
     marginRight: 10,
-    alignItems: 'center',
-    opacity: .7
+    alignItems: 'center'
   },
   addButtonContainer: {
     flex: 1,
@@ -297,8 +307,6 @@ const style = StyleSheet.create({
     paddingLeft: 30,
     paddingRight: 30,
     borderRadius: 20,
-    // borderWidth: 1,
-    // borderColor: globals.sGreen,
     backgroundColor: globals.sWhite,
     flexDirection: 'row',
     justifyContent: 'center',

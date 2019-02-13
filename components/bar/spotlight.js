@@ -201,8 +201,7 @@ const style = StyleSheet.create({
   spotifyIcon: {
     position: 'absolute',
     right: 2,
-    top: 2,
-    opacity: .66
+    top: 2
   },
   progress: {
     flex: 1,
