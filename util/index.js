@@ -406,7 +406,7 @@ const getPlaylistModal = (playlist, play, isOwned, addFunc, isAdded) => (
       <Icon containerStyle={style.modalIcon} color={sWhite} name={isOwned ? "play" : "door-open"} type="material-community"/>
       <Text style={style.text}>{isOwned ? "Play Music" : "Connect to DJ"}</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={{...style.modalBorder, ...style.modalItem}} onPress={()=>visitPlaylist(playlist.ownerId, getPlaylistId(playlist.id))}>
+    <TouchableOpacity style={style.modalItem} onPress={()=>visitPlaylist(playlist.ownerId, getPlaylistId(playlist.id))}>
       <Icon containerStyle={style.modalIcon} color={sWhite} name="spotify" type="font-awesome"/>
       <Text style={style.text}>View in Spotify</Text>
     </TouchableOpacity>

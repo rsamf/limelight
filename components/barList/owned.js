@@ -83,7 +83,7 @@ export default class OwnedList extends React.Component {
         </View>
         <View style={{alignItems: 'center', width: 50}}>
           <View style={style.playlistIcon}>
-            <Icon onPress={()=>globals.visitPlaylist(this.props.user.id, globals.getPlaylistId(playlist.id))} name="spotify" color={globals.sWhite} type="font-awesome"/>
+            <Icon underlayColor={globals.sBlack} onPress={()=>globals.visitPlaylist(this.props.user.id, globals.getPlaylistId(playlist.id))} name="spotify" color={globals.sWhite} type="font-awesome"/>
           </View>
         </View>
       </View>
@@ -129,11 +129,11 @@ const style = StyleSheet.create({
   playlist: {
     marginLeft: 10,
     marginRight: 10,
-    width: 240,
+    width: 250,
     borderWidth: .5,
     borderRadius: 20,
     borderColor: globals.sWhite,
-    padding: 10,
+    padding: 20,
     paddingRight: 50,
     flexDirection: 'row'
   },
