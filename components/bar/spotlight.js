@@ -25,105 +25,82 @@ export default class extends React.Component {
     ()=>this.play(), ()=>this.pause(), ()=>this.next(), ()=>this.seekStart()
   ]
 
-  stop(){
-    Spotify.setPlaying(false);
-    Spotify.seek(0);
+  updateTrack(state) {
+    this.setState({
+      track: { ...this.state.track, ...state }
+    });
   }
 
   setPlaybackState() {
     Spotify.getPlaybackStateAsync().then(state => {
       if(!state) return;
-      if(state.playing) {
-        this.nexting = false;
-        this.setState({
-          track: {
-            ...this.state.track,
-            position: state.position/this.props.children.duration
-          }
-        });
-      } else {
-        if (this.state.track.playing && !this.nexting) {
-          this.next();
-        }
-      }
-    }).catch(() => {
-      this.setState({
-        track: {
-          ...this.state.track,
-          playing: false
-        }
+      console.log(this.state.track, state);
+      this.updateTrack({
+        position: state.position/this.props.children.duration,
+        playing: state.playing || this.optimisticallyPlaying,
+        initialized: state.position > 0
       });
+    }).catch(() => {
+      this.updateTrack({ playing: false });
     });
+  }
+
+  componentDidMount() {
+    if(this.props.isOwned) {
+      MusicControl.init(...this.musicControlFunctions);
+      this.optimisticallyPlaying = false;
+      if(!this.interval) {
+        this.interval = setInterval(()=>this.setPlaybackState(), 1000);
+      }
+      this.setNewSong();
+      Spotify.addListener("audioDeliveryDone", ()=>this.next());
+    }
   }
 
   componentWillReceiveProps(newProps) {
     if(newProps.isOwned) {
-      MusicControl.init(...this.musicControlFunctions);
-      if(!this.interval) {
-        this.interval = setInterval(()=>this.setPlaybackState(), 1000)
-      }
-      let song = newProps.children;
-      if(song && this.props.children && song.id !== this.props.children.id) {
-        this.stop();
-        MusicControl.setSong(newProps.children);
-        Spotify.playURI(`spotify:track:${song.id}`, 0, 0);
-        this.setState({
-          track: {
-            position: 0,
-            playing: true,
-            initialized: true
-          }
-        });
+      if(newProps.children && this.props.children && (newProps.children.id !== this.props.children.id)) {
+        this.setNewSong(newProps.children, true);
       }
     }
   }
 
-  next() {
-    this.nexting = true;
-    this.props.next();
+  setNewSong(song = this.props.children, play=false) {
+    if(!song) return;
+    Spotify.playURI(`spotify:track:${song.id}`, 0, 0);
+    MusicControl.setSong(song);
+    MusicControl.updateSong(true, 0);
+    if(!play) Spotify.setPlaying(false);
+    this.updateTrack({ initialized: true });
   }
 
   pause() {
     Spotify.setPlaying(false);
-    this.setState({
-      track: {
-        ...this.state.track,
-        playing: false
-      }
-    });
+    MusicControl.updateSong(false, this.state.track.position*this.props.children.duration);
+    this.optimisticallyPlaying = false;
+    this.updateTrack({ playing: false });
   }
 
-  play(fromBackground) {
+  play() {
     if(this.state.track.initialized) {
-      // Play Already playing song
       Spotify.setPlaying(true);
+      MusicControl.updateSong(true, this.state.track.position*this.props.children.duration);
     } else {
-      // Play new song
-      let song = this.props.children;
-      if(!song) return;
-      if(!fromBackground) {
-        this.stop();
-        MusicControl.setSong(song);
-      }
-      Spotify.playURI(`spotify:track:${song.id}`, 0, 0);
+      this.setNewSong(this.props.children, true);
     }
-    this.setState({
-      track: {
-        position: this.state.track.position,
-        playing: true,
-        initialized: true
-      }
-    });
+    this.optimisticallyPlaying = true;
+    this.updateTrack({ playing: true });
+    setTimeout(() => {
+      this.optimisticallyPlaying = false;
+    }, 3000);
+  }
+
+  next() {
+    this.props.next();
   }
 
   seekStart(){
     Spotify.seek(0);
-    this.setState({
-      track: {
-        ...this.state.track,
-        position: 0
-      }
-    });
   }
 
   componentWillUnmount(){

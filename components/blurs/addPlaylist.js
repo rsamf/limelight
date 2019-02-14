@@ -276,7 +276,7 @@ class SearchTextInput extends React.Component {
           onChangeText={this.props.onChange}
           onSubmitEditing={this.props.onSubmit}
           returnKeyType="search"
-          autoFocus={true}
+          autoFocus={false}
           disabled={!this.props.isOnline}
         />
       </View>

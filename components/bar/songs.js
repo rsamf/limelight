@@ -50,7 +50,7 @@ export default class extends React.Component {
     return (
       <View style={{margin: 10}} key={i}>
         <View style={style.song}>
-          <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 2}}>
+          <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 2, flex: 1}}>
             <Icon
               containerStyle={style.voteIcon}
               size={30}
@@ -291,6 +291,7 @@ const style = StyleSheet.create({
     flex: 1
   },
   songName: {
+    flex: 1,
     ...globals.style.text
   },
   songArtist: {

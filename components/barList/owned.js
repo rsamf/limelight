@@ -129,11 +129,11 @@ const style = StyleSheet.create({
   playlist: {
     marginLeft: 10,
     marginRight: 10,
-    width: 250,
+    width: 245,
     borderWidth: .5,
     borderRadius: 20,
     borderColor: globals.sWhite,
-    padding: 20,
+    padding: 15,
     paddingRight: 50,
     flexDirection: 'row'
   },

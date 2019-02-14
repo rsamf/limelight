@@ -355,17 +355,17 @@ const getPlaylistView = (playlist, play, isOwned, ...extraIcons) => {
         </View>
       </View>
       <View style={{flexDirection: 'row', marginTop: 10}}>
-        <TouchableOpacity onPress={()=>visitPlaylist(playlist.ownerId, getPlaylistId(playlist.id))} style={{padding: 10, paddingTop: 2, paddingBottom: 2, borderRadius: 20, borderWidth: 1, borderColor: sWhite, flexDirection: 'row', marginRight: 10}}>
+        <TouchableOpacity onPress={()=>visitPlaylist(playlist.ownerId, getPlaylistId(playlist.id))} style={{padding: 10, paddingTop: 2, paddingBottom: 2, borderRadius: 20, borderWidth: 1, borderColor: sWhite, flexDirection: 'row', marginRight: 10, alignItems: 'center'}}>
           <Icon containerStyle={{marginRight: 5}} size={21} color={sWhite} name="spotify" type="font-awesome"/>
           <Text style={style.smallText}>Visit in Spotify</Text>
         </TouchableOpacity>
         {
           isOwned ?
-          <TouchableOpacity onPress={()=>play()} style={{padding: 10, paddingTop: 2, paddingBottom: 2, borderRadius: 20, borderWidth: 1, borderColor: sWhite, flexDirection: 'row'}}>
+          <TouchableOpacity onPress={()=>play()} style={{padding: 10, paddingTop: 2, paddingBottom: 2, borderRadius: 20, borderWidth: 1, borderColor: sWhite, flexDirection: 'row', alignItems: 'center'}}>
             <Icon containerStyle={{marginRight: 5}} size={21} color={sWhite} name="play" type="material-community"/>
             <Text style={style.smallText}>Play Music</Text>
           </TouchableOpacity> :
-          <TouchableOpacity onPress={()=>play()} style={{padding: 10, paddingTop: 2, paddingBottom: 2, borderRadius: 20, borderWidth: 1, borderColor: sWhite, flexDirection: 'row'}}>
+          <TouchableOpacity onPress={()=>play()} style={{padding: 10, paddingTop: 2, paddingBottom: 2, borderRadius: 20, borderWidth: 1, borderColor: sWhite, flexDirection: 'row', alignItems: 'center'}}>
             <Icon containerStyle={{marginRight: 5}} size={21} color={sWhite} name="door-open" type="material-community"/>
             <Text style={style.smallText}>Connect to DJ</Text>
           </TouchableOpacity>

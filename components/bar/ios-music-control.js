@@ -5,20 +5,14 @@ export default {
     MusicControl.enableBackgroundMode(true);
     MusicControl.enableControl('play', true);
     MusicControl.enableControl('pause', true);
-    MusicControl.enableControl('stop', false);
     MusicControl.enableControl('nextTrack', true);
-    MusicControl.enableControl('previousTrack', false);
-    MusicControl.enableControl('seekForward', false);
     MusicControl.enableControl('seekBackward', true);
-    MusicControl.enableControl('skipForward', false);
-    MusicControl.enableControl('skipBackward', false);
-    MusicControl.on('play', () => {playFunction(true)});
-    MusicControl.on('pause', () => {pauseFunction()});
-    MusicControl.on('nextTrack', () => {nextFunction()});
-    MusicControl.on('seekBackward', ()=> {seekBackwardFunction()});
+    MusicControl.on('play', playFunction);
+    MusicControl.on('pause', pauseFunction);
+    MusicControl.on('nextTrack', nextFunction);
+    MusicControl.on('seekBackward', seekBackwardFunction);
   },
   setSong: (song) => {
-    // MusicControl.resetNowPlaying();
     MusicControl.setNowPlaying({
       title: song.name,
       artwork: song.image,
