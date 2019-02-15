@@ -9,6 +9,7 @@ mutation RequestAddSong($id: ID!, $song: SongInput!){
       name
       image
       artist
+      artists
       duration
     }
   }

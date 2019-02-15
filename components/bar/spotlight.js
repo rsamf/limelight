@@ -68,7 +68,7 @@ export default class extends React.Component {
   setNewSong(song = this.props.children, play=false) {
     if(!song) return;
     Spotify.playURI(`spotify:track:${song.id}`, 0, 0);
-    MusicControl.setSong(song);
+    MusicControl.setSong(song, this.props.name);
     MusicControl.updateSong(true, 0);
     if(!play) Spotify.setPlaying(false);
     this.updateTrack({ initialized: true });

@@ -164,6 +164,7 @@ class PlaylistComponent extends React.Component {
             <Spotlight 
               isOwned={this.props.isOwned} 
               next={()=>this.props.nextSong()}
+              name={this.props.playlist && this.props.playlist.name}
             >
               {this.state.songs.spotlight}
             </Spotlight>

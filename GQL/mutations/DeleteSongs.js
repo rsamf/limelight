@@ -8,6 +8,7 @@ mutation DeleteSongs($id: ID!, $songs: [ID]!) {
       id
       name
       artist
+      artists
       image
       duration
       votes

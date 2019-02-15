@@ -253,10 +253,12 @@ const Loader = () => {
 };
 
 const getSongData = (track, smallerImage) => {
+  console.log(track.artists.map(({name})=>name));
   return {
     id: track.id,
     name: track.name,
     artist: track.artists[0].name,
+    artists: track.artists.map(({name})=>name),
     duration: track.duration_ms/1000,
     image: (
       smallerImage ? 
@@ -428,6 +430,13 @@ const getScrollableText = (text, optionalStyle) => {
   );
 };
 
+const getArtistsText = song => {
+  if (song.artists) {
+    return song.artists.join(', ');
+  }
+  return song.artist;
+};
+
 const globals = {
   style,
   sBlue,
@@ -457,7 +466,8 @@ const globals = {
   visitPlaylist,
   getPlaylistView,
   getPlaylistModal,
-  getScrollableText
+  getScrollableText,
+  getArtistsText
 };
 
 

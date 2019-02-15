@@ -9,6 +9,7 @@ mutation NextSong($id: ID!) {
       image
       name
       artist
+      artists
       votes
       duration
       state

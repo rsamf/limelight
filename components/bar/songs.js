@@ -47,6 +47,7 @@ export default class extends React.Component {
 
   eachSong(song, i) {
     const votedColor = this.props.voted(i) ? globals.sGreen : globals.sGrey;
+    const artist = globals.getArtistsText(song);
     return (
       <View style={{margin: 10}} key={i}>
         <View style={style.song}>
@@ -63,14 +64,14 @@ export default class extends React.Component {
             <Text ellipsizeMode="tail" numberOfLines={1} style={style.songName}>{song.name}</Text>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{flexDirection: 'row', flex: 1}}>
               <View style={{justifyContent: 'center'}}>
                 <Badge containerStyle={{width:35}} textStyle={{color: votedColor}} value={song.votes}/>
               </View>
               <TouchableOpacity onPress={()=>this.onPressSpotify(song)} style={{marginLeft: 10, justifyContent: 'center'}}>
                 <Icon size={21} color={sWhite} name="spotify" type="font-awesome"/>
               </TouchableOpacity>
-              <Text ellipsizeMode="tail" numberOfLines={1} style={{marginLeft: 10, ...style.songArtist}}>{song.artist}</Text>
+              <Text ellipsizeMode="tail" numberOfLines={1} style={{flex: 1, marginLeft: 10, ...style.songArtist}}>{artist}</Text>
             </View>
             <TouchableOpacity onPress={()=>this.onLongPress(song, false, i)} style={{paddingLeft: 10, paddingRight:10, paddingTop: 0, paddingBottom: 0, borderRadius: 20, borderWidth: 1, borderColor: sWhite, flexDirection: 'row', marginLeft: 10}}>
               <Icon color={sWhite} name="more-horizontal" type="feather"/>

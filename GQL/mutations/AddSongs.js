@@ -9,6 +9,7 @@ mutation AddSongs($id: ID!, $songs: [SongInput]!) {
       image
       name
       artist
+      artists
       votes
       duration
       state

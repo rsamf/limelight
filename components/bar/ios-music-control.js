@@ -12,12 +12,13 @@ export default {
     MusicControl.on('nextTrack', nextFunction);
     MusicControl.on('seekBackward', seekBackwardFunction);
   },
-  setSong: (song) => {
+  setSong: (song, playlistName) => {
     MusicControl.setNowPlaying({
       title: song.name,
       artwork: song.image,
       artist: song.artist,
-      duration: song.duration
+      duration: song.duration,
+      album: playlistName
     });
     MusicControl.updatePlayback({
       state: MusicControl.STATE_PLAYING, // (STATE_ERROR, STATE_STOPPED, STATE_PLAYING, STATE_PAUSED, STATE_BUFFERING)

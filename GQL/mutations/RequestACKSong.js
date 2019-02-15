@@ -9,6 +9,7 @@ mutation RequestACKSong($id: ID!, $index: Int!, $accepted: Boolean){
       name
       image
       artist
+      artists
       duration
     }
   }
