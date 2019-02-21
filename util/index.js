@@ -29,22 +29,22 @@ const style = StyleSheet.create({
   text: {
     color: sWhite,
     fontFamily: 'Futura',
-    fontSize: 21
+    fontSize: 18
   },
   biggerText: {
     color: sWhite,
     fontFamily: 'Futura',
-    fontSize: 24
+    fontSize: 21
   },
   errorText: {
     color: sGrey,
     fontFamily: 'Futura',
-    fontSize: 21
+    fontSize: 18
   },
   smallText:{
     color: sSand,
     fontFamily: 'Futura',
-    fontSize: 14
+    fontSize: 12
   },
   textInputFailed: {
   },
@@ -85,7 +85,7 @@ const style = StyleSheet.create({
   },
   textInput: {
     fontFamily: 'Futura',
-    fontSize: 18,
+    fontSize: 16,
     padding: 10,
     color: sWhite,
     borderBottomColor: sWhite,
