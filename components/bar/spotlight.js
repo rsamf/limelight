@@ -122,7 +122,7 @@ export default class extends React.Component {
                 <Image style={style.modalImage} source={{uri: song.image}}/>
                 <View style={style.modalDetails}>
                   {globals.getScrollableText(song.name)}
-                  {globals.getScrollableText(song.artist, style.songArtist)}
+                  {globals.getScrollableText(globals.getArtistsText(song), style.songArtist)}
                 </View>
               </View>
               <TouchableOpacity style={style.modalItem} onPress={()=>globals.visitSong(song.id)}>
@@ -142,7 +142,7 @@ export default class extends React.Component {
               </TouchableOpacity>
               <View style={style.songInfo}>
                 {globals.getScrollableText(song.name)}
-                {globals.getScrollableText(song.artist, style.songArtist)}
+                {globals.getScrollableText(globals.getArtistsText(song), style.songArtist)}
               </View>
             </View>
             {

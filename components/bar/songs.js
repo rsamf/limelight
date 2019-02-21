@@ -74,7 +74,7 @@ export default class extends React.Component {
               <Text ellipsizeMode="tail" numberOfLines={1} style={{flex: 1, marginLeft: 10, ...style.songArtist}}>{artist}</Text>
             </View>
             <TouchableOpacity onPress={()=>this.onLongPress(song, false, i)} style={{paddingLeft: 10, paddingRight:10, paddingTop: 0, paddingBottom: 0, borderRadius: 20, borderWidth: 1, borderColor: sWhite, flexDirection: 'row', marginLeft: 10}}>
-              <Icon color={sWhite} name="more-horizontal" type="feather"/>
+              <Icon color={sWhite} size={18} name="more-horizontal" type="feather"/>
             </TouchableOpacity>
           </View>
         </View>
@@ -181,7 +181,7 @@ export default class extends React.Component {
                 <Image style={style.modalImage} source={{uri: this.state.viewingSong.image}}/>
                 <View style={style.modalDetails}>
                   {globals.getScrollableText(this.state.viewingSong.name)}
-                  {globals.getScrollableText(this.state.viewingSong.artist, style.songArtist)}
+                  {globals.getScrollableText(globals.getArtistsText(this.state.viewingSong), style.songArtist)}
                 </View>
               </View>
               {

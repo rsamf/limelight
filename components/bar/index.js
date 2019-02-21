@@ -222,6 +222,7 @@ function awsSong(song) {
     id: song.id,
     name: song.name,
     artist: song.artist,
+    artists: song.artists,
     image: song.image,
     duration: song.duration
   };

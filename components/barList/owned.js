@@ -130,7 +130,7 @@ const style = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     width: 245,
-    borderWidth: .5,
+    borderWidth: 1,
     borderRadius: 20,
     borderColor: globals.sWhite,
     padding: 15,

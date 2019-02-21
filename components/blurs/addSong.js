@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, FlatList, TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Text, Image, StyleSheet, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
+import Modal from "react-native-modal";
 import Spotify from 'rn-spotify-sdk';
 import globals from '../../util';
 
@@ -11,7 +12,8 @@ export default class AddSong extends React.Component {
     this.state = {
       searchedSongs: [],
       songToSearch: "",
-      loading: false
+      loading: false,
+      viewingSong: null
     };
   }
 
@@ -20,18 +22,34 @@ export default class AddSong extends React.Component {
     this.props.close();
   }
 
-  eachAddSong(song) {
+  eachAddSong(song, index) {
     let uri = song.uri;
     song = globals.getSongData(song, true);
     return (
-      <TouchableOpacity style={style.song} onPress={()=>this.addSong(song, uri)} onLongPress={()=>globals.visitSong(song.id)}>
-        <Image style={style.songImage} source={{uri: song.image}}/>
-        <View style={style.songInfo}>
-          <Text ellipsizeMode='tail' numberOfLines={1} style={style.songName}>{song.name}</Text>
-          <Text ellipsizeMode='tail' numberOfLines={1} style={style.songArtist}>{song.artist}</Text>
+      <View style={style.song} key={index}>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <TouchableOpacity onPress={()=>this.setState({viewingSong:song})}>
+            <Image style={style.songImage} source={{uri: song.image}}/>
+          </TouchableOpacity>
+          <View style={style.songInfo}>
+            <Text ellipsizeMode='tail' numberOfLines={1} style={style.songName}>{song.name}</Text>
+            <Text ellipsizeMode='tail' numberOfLines={1} style={style.songArtist}>{globals.getArtistsText(song)}</Text>
+          </View>
+          <TouchableOpacity onPress={()=>this.addSong(song, uri)} style={style.addButton}>
+            <Icon name="plus" type="feather" color={globals.sWhite}/>
+            <Text style={{...globals.style.smallText, marginLeft: 5}}>Add</Text>
+          </TouchableOpacity>
         </View>
-        <Icon name="spotify" type="font-awesome" color={globals.sWhite} size={21}/>
-      </TouchableOpacity>
+        <TouchableOpacity style={style.spotifyButton} onPress={()=>this.setState({viewingSong:song})}>
+          <Text style={{...globals.style.smallText, marginRight: 5}}>Visit in Spotify</Text>
+          <Icon 
+            name="spotify" 
+            type="entypo"
+            color={globals.sWhite}
+            size={18}
+          />
+        </TouchableOpacity>
+      </View>
     );
   }
 
@@ -55,18 +73,35 @@ export default class AddSong extends React.Component {
 
   render() {
     return (
-      <View style={style.view}>
+      <View>
+        {
+          this.state.viewingSong &&
+          <Modal isVisible={!!this.state.viewingSong} onBackdropPress={()=>this.setState({ viewingSong: null })}>
+            <View style={globals.style.modalView}>
+              <View style={{...globals.style.modalBorder, ...globals.style.modalItem}}>
+                <Image style={globals.style.modalImage} source={{uri: this.state.viewingSong.image}}/>
+                <View style={globals.style.modalDetails}>
+                  {globals.getScrollableText(this.state.viewingSong.name)}
+                  {globals.getScrollableText(globals.getArtistsText(this.state.viewingSong), style.songArtist)}
+                </View>
+              </View>
+              <TouchableOpacity style={{...globals.style.modalItem}} onPress={()=>globals.visitSong(this.state.viewingSong.id)}>
+                <Icon containerStyle={globals.style.modalIcon} color={globals.sWhite} name="spotify" type="font-awesome"/>
+                <Text style={globals.style.text}>View in Spotify</Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+        }
         <this.SearchTextInput/>
         {
           this.state.loading ?
           <globals.Loader/> :
-          <FlatList
+          <ScrollView
             style={style.songs}
-            data={this.state.searchedSongs} 
-            keyExtractor={(_, index)=>String(index)} 
-            renderItem={({item})=>this.eachAddSong(item)}
             indicatorStyle="white"
-          />
+          >
+            {this.state.searchedSongs.map((item, index)=>this.eachAddSong(item, index))}
+          </ScrollView>
         }
       </View>
     );
@@ -74,22 +109,33 @@ export default class AddSong extends React.Component {
 }
 
 const style = StyleSheet.create({
-  view: {
-    flex: 1
+  spotifyButton: {
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: globals.sWhite,
+    flexDirection: 'row',
+    padding: 3,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderRadius: 40,
+    alignSelf: 'flex-start'
+  },
+  addButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 5
   },
   song: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     marginTop: 10,
     marginBottom: 10,
-    marginRight: 10
   },
   songInfo: {
     flex: 1
   },
   songs: {
     marginLeft: 25,
-    marginRight: 15,
+    marginRight: 25,
     marginTop: 20
   },
   songImage: {

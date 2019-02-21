@@ -101,6 +101,10 @@ const style = StyleSheet.create({
     borderBottomWidth: 2,
     flex: 1
   },
+  modalOptions: {
+    marginTop: 20,
+    flexDirection: 'row'
+  },
   modalView: {
     backgroundColor: 'rgba(0,0,0,.6)',
     borderWidth: 1,
@@ -120,9 +124,7 @@ const style = StyleSheet.create({
   },
   modalImage: {
     width: 50,
-    height: 50,
-    borderWidth: 0.5,
-    borderColor: sGrey
+    height: 50
   },
   modalDetails: {
     marginLeft: 10,

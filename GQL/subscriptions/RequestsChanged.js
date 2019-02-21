@@ -8,6 +8,7 @@ subscription($id: ID!){
       name
       image
       artist
+      artists
     }
   }
 }
