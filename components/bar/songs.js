@@ -49,9 +49,9 @@ export default class extends React.Component {
     const votedColor = this.props.voted(i) ? globals.sGreen : globals.sGrey;
     const artist = globals.getArtistsText(song);
     return (
-      <View style={{margin: 10}} key={i}>
+      <View key={i}>
         <View style={style.song}>
-          <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 2, flex: 1}}>
+          <View style={style.songContent}>
             <Icon
               containerStyle={style.voteIcon}
               size={30}
@@ -64,7 +64,7 @@ export default class extends React.Component {
             <Text ellipsizeMode="tail" numberOfLines={1} style={style.songName}>{song.name}</Text>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-            <View style={{flexDirection: 'row', flex: 1}}>
+            <View style={style.songMetaLeft}>
               <View style={{justifyContent: 'center'}}>
                 <Badge containerStyle={{width:35}} textStyle={{color: votedColor}} value={song.votes}/>
               </View>
@@ -73,8 +73,8 @@ export default class extends React.Component {
               </TouchableOpacity>
               <Text ellipsizeMode="tail" numberOfLines={1} style={{flex: 1, marginLeft: 10, ...style.songArtist}}>{artist}</Text>
             </View>
-            <TouchableOpacity onPress={()=>this.onLongPress(song, false, i)} style={{paddingLeft: 10, paddingRight:10, paddingTop: 0, paddingBottom: 0, borderRadius: 20, borderWidth: 1, borderColor: sWhite, flexDirection: 'row', marginLeft: 10}}>
-              <Icon color={sWhite} size={18} name="more-horizontal" type="feather"/>
+            <TouchableOpacity onPress={()=>this.onLongPress(song, false, i)} style={style.songMore}>
+              <Icon color={sWhite} name="more-horizontal" type="feather"/>
             </TouchableOpacity>
           </View>
         </View>
@@ -87,13 +87,13 @@ export default class extends React.Component {
     return (
       <View key={i}>
         <View style={style.request}>
-          <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 2}}>
+          <View style={style.songContent}>
             {
               this.props.isOwned &&
               <Icon
                 containerStyle={style.addIcon} 
-                size={35}
-                type="entypo" 
+                size={30}
+                type="simple-line-icon" 
                 name="plus" 
                 color={globals.sWhite}
                 underlayColor={globals.sBlack} 
@@ -102,14 +102,14 @@ export default class extends React.Component {
             }
             <Text ellipsizeMode="tail" numberOfLines={1} style={style.songName}>{song.name}</Text>
           </View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-            <View style={{flexDirection: 'row'}}>
+          <View style={style.songMeta}>
+            <View style={style.songMetaLeft}>
               <TouchableOpacity onPress={()=>this.onPressSpotify(song)} style={{marginRight: 10, justifyContent: 'center'}}>
                 <Icon size={21} color={sWhite} name="spotify" type="font-awesome"/>
               </TouchableOpacity>
               <Text ellipsizeMode="tail" numberOfLines={1} style={style.songArtist}>{song.artist}</Text>
             </View>
-            <TouchableOpacity onPress={()=>this.onLongPress(song, true, i)} style={{paddingLeft: 10, paddingRight:10, paddingTop: 0, paddingBottom: 0, borderRadius: 20, borderWidth: 1, borderColor: sWhite, flexDirection: 'row', marginLeft: 10}}>
+            <TouchableOpacity onPress={()=>this.onLongPress(song, true, i)} style={style.songMore}>
               <Icon color={sWhite} name="more-horizontal" type="feather"/>
             </TouchableOpacity>
           </View>
@@ -231,7 +231,6 @@ export default class extends React.Component {
                 (<View/>) : (
                   <View style={style.sectionHeader}>
                     <Text style={style.sectionHeaderText}>{title}</Text>
-                    {/* <Icon name="spotify" type="font-awesome" size={21} color={sWhite}/> */}
                   </View>
                 )
             )}
@@ -265,7 +264,7 @@ const style = StyleSheet.create({
   },
   song: {
     flex: 1,
-    margin: 5
+    margin: 15
   },
   voteIcon: {
     width: 35,
@@ -299,9 +298,33 @@ const style = StyleSheet.create({
     ...globals.style.smallText,
     color: globals.sGrey
   },
+  songMetaLeft: {
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    flex: 1
+  },
+  songContent: {
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    marginBottom: 2, 
+    flex: 1
+  },
+  songMeta: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center'
+  },
+  songMore: {
+    paddingLeft: 10,
+    paddingRight:10, 
+    paddingTop: 0, 
+    paddingBottom: 0,
+    flexDirection: 'row', 
+    marginLeft: 10
+  },
   request: {
     flex: 1,
-    margin: 10
+    margin: 15
   },
   addButtonContainer: {
     flex: 1,

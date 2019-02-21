@@ -379,7 +379,7 @@ const getPlaylistView = (playlist, play, isOwned, ...extraIcons) => {
   );
 };
 
-const getPlaylistModal = (playlist, play, isOwned, addFunc, isAdded) => (
+const getPlaylistModal = (playlist, play, isOwned, addFunc, isAdded, removeFunc) => (
   playlist ?
   <View style={style.modalView}>
     <View style={{...style.modalBorder, ...style.modalItem}}>
@@ -410,6 +410,13 @@ const getPlaylistModal = (playlist, play, isOwned, addFunc, isAdded) => (
       <Icon containerStyle={style.modalIcon} color={sWhite} name={isOwned ? "play" : "door-open"} type="material-community"/>
       <Text style={style.text}>{isOwned ? "Play Music" : "Connect to DJ"}</Text>
     </TouchableOpacity>
+    {
+      removeFunc &&
+      <TouchableOpacity style={{...style.modalBorder, ...style.modalItem}} onPress={()=>removeFunc()}>
+        <Icon containerStyle={style.modalIcon} color={sWhite} name="x" type="feather"/>
+        <Text style={style.text}>Remove</Text>
+      </TouchableOpacity>
+    }
     <TouchableOpacity style={style.modalItem} onPress={()=>visitPlaylist(playlist.ownerId, getPlaylistId(playlist.id))}>
       <Icon containerStyle={style.modalIcon} color={sWhite} name="spotify" type="font-awesome"/>
       <Text style={style.text}>View in Spotify</Text>

@@ -73,7 +73,7 @@ export default class AddSong extends React.Component {
 
   render() {
     return (
-      <View>
+      <View style={{flex: 1}}>
         {
           this.state.viewingSong &&
           <Modal isVisible={!!this.state.viewingSong} onBackdropPress={()=>this.setState({ viewingSong: null })}>
@@ -118,7 +118,9 @@ const style = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     borderRadius: 40,
-    alignSelf: 'flex-start'
+    alignSelf: 'flex-start',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   addButton: {
     flexDirection: 'row',

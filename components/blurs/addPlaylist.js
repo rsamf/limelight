@@ -198,6 +198,7 @@ export default class AddPlaylistBlur extends React.Component {
             data={this.state.searchedPlaylists} 
             keyExtractor={(item, index) => String(index)} 
             renderItem={({item}) => this.eachPlaylist(item)}
+            indicatorStyle='white'
           />
         );
       }
@@ -319,8 +320,8 @@ const style = StyleSheet.create({
   playlists: {
     flex: .8,
     marginTop: 20,
-    marginLeft: 30,
-    marginRight: 30
+    marginLeft: 15,
+    marginRight: 15
   },
   playlist: {
     marginTop: 10,

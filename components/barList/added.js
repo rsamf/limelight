@@ -3,7 +3,6 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native
 import { Icon } from 'react-native-elements';
 import Modal from 'react-native-modal';
 import globals from '../../util';
-import Swipeout from 'react-native-swipeout';
 import createPlaylists from '../../GQL/playlists';
 
 const style = StyleSheet.create({
@@ -41,7 +40,7 @@ class AddedPlaylistsComponent extends React.Component {
     };
   }
 
-  removePlaylist() {
+  removePlaylist(playlist) {
     this.setState({ activePlaylistModal: null });
     this.props.playlists.remove(playlist.id);
   }
@@ -71,9 +70,10 @@ class AddedPlaylistsComponent extends React.Component {
   renderModal() {
     const playlist = this.state.activePlaylistModal;
     const isOwned = (playlist && this.props.user) && (playlist.ownerId === this.props.user.id);
+    const removeFunc = () => this.removePlaylist(this.state.activePlaylistModal);
     return (
       <Modal isVisible={!!this.state.activePlaylistModal} onBackdropPress={()=>this.showPlaylistModal()}>
-        {globals.getPlaylistModal(playlist, ()=>this.goToBar(playlist.id), isOwned)}
+        {globals.getPlaylistModal(playlist, ()=>this.goToBar(playlist.id), isOwned, null, null, removeFunc)}
       </Modal>
     );
   }
