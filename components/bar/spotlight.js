@@ -14,6 +14,7 @@ export default class extends React.Component {
       modalActive: false,
       track: {
         position: 0,
+        positionSec: 0,
         playing: false,
         initialized: false
       },
@@ -22,7 +23,7 @@ export default class extends React.Component {
   }
 
   musicControlFunctions = [
-    ()=>this.play(), ()=>this.pause(), ()=>this.next(), ()=>this.seekStart()
+    ()=>this.play(), ()=>this.pause(), ()=>this.next()
   ]
 
   updateTrack(state) {
@@ -37,6 +38,7 @@ export default class extends React.Component {
       console.log(this.state.track, state);
       this.updateTrack({
         position: state.position/this.props.children.duration,
+        positionSec: state.position,
         playing: state.playing || this.optimisticallyPlaying,
         initialized: state.position > 0
       });
@@ -54,6 +56,14 @@ export default class extends React.Component {
       }
       this.setNewSong();
       Spotify.addListener("audioDeliveryDone", ()=>this.next());
+      Spotify.addListener("play", () => {
+        MusicControl.setSong(this.props.children.name, this.props.name);
+        MusicControl.updateSong(true, this.state.track.positionSec);
+      });
+      Spotify.addListener("pause", () => {
+        MusicControl.setSong(this.props.children.name, this.props.name);
+        MusicControl.updateSong(false, this.state.track.positionSec);
+      });
     }
   }
 
@@ -68,15 +78,15 @@ export default class extends React.Component {
   setNewSong(song = this.props.children, play=false) {
     if(!song) return;
     Spotify.playURI(`spotify:track:${song.id}`, 0, 0);
-    MusicControl.setSong(song, this.props.name);
-    MusicControl.updateSong(true, 0);
+    // MusicControl.setSong(song, this.props.name);
+    // MusicControl.updateSong(play, 0);
     if(!play) Spotify.setPlaying(false);
     this.updateTrack({ initialized: true });
   }
 
   pause() {
     Spotify.setPlaying(false);
-    MusicControl.updateSong(false, this.state.track.position*this.props.children.duration);
+    // MusicControl.updateSong(false, this.state.track.positionSec);
     this.optimisticallyPlaying = false;
     this.updateTrack({ playing: false });
   }
@@ -84,7 +94,7 @@ export default class extends React.Component {
   play() {
     if(this.state.track.initialized) {
       Spotify.setPlaying(true);
-      MusicControl.updateSong(true, this.state.track.position*this.props.children.duration);
+      // MusicControl.updateSong(true, this.state.track.positionSec);
     } else {
       this.setNewSong(this.props.children, true);
     }
@@ -97,10 +107,6 @@ export default class extends React.Component {
 
   next() {
     this.props.next();
-  }
-
-  seekStart(){
-    Spotify.seek(0);
   }
 
   componentWillUnmount(){

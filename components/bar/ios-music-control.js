@@ -1,22 +1,21 @@
 import MusicControl from 'react-native-music-control';
+import globals from '../../util';
 
 export default {
-  init: (playFunction, pauseFunction, nextFunction, seekBackwardFunction) => {
+  init: (playFunction, pauseFunction, nextFunction) => {
     MusicControl.enableBackgroundMode(true);
     MusicControl.enableControl('play', true);
     MusicControl.enableControl('pause', true);
-    MusicControl.enableControl('nextTrack', true);
-    MusicControl.enableControl('seekBackward', true);
+    MusicControl.enableControl('nextTrack', false);
     MusicControl.on('play', playFunction);
     MusicControl.on('pause', pauseFunction);
     MusicControl.on('nextTrack', nextFunction);
-    MusicControl.on('seekBackward', seekBackwardFunction);
   },
   setSong: (song, playlistName) => {
     MusicControl.setNowPlaying({
       title: song.name,
       artwork: song.image,
-      artist: song.artist,
+      artist: globals.getArtistsText(song),
       duration: song.duration,
       album: playlistName
     });
