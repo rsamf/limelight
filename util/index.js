@@ -255,7 +255,6 @@ const Loader = () => {
 };
 
 const getSongData = (track, smallerImage) => {
-  console.log(track.artists.map(({name})=>name));
   return {
     id: track.id,
     name: track.name,

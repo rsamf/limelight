@@ -38,7 +38,7 @@ export default class extends React.Component {
       console.log(this.state.track, state);
       this.updateTrack({
         position: state.position/this.props.children.duration,
-        positionSec: state.position,
+        positionSec: Math.floor(state.position),
         playing: state.playing || this.optimisticallyPlaying,
         initialized: state.position > 0
       });
@@ -49,7 +49,7 @@ export default class extends React.Component {
 
   componentDidMount() {
     if(this.props.isOwned) {
-      MusicControl.init(...this.musicControlFunctions);
+      // MusicControl.init(...this.musicControlFunctions);
       this.optimisticallyPlaying = false;
       if(!this.interval) {
         this.interval = setInterval(()=>this.setPlaybackState(), 1000);
@@ -57,12 +57,10 @@ export default class extends React.Component {
       this.setNewSong();
       Spotify.addListener("audioDeliveryDone", ()=>this.next());
       Spotify.addListener("play", () => {
-        MusicControl.setSong(this.props.children.name, this.props.name);
-        MusicControl.updateSong(true, this.state.track.positionSec);
+        // MusicControl.updateSong(true, this.state.track.positionSec);
       });
       Spotify.addListener("pause", () => {
-        MusicControl.setSong(this.props.children.name, this.props.name);
-        MusicControl.updateSong(false, this.state.track.positionSec);
+        // MusicControl.updateSong(false, this.state.track.positionSec);
       });
     }
   }
@@ -79,7 +77,6 @@ export default class extends React.Component {
     if(!song) return;
     Spotify.playURI(`spotify:track:${song.id}`, 0, 0);
     // MusicControl.setSong(song, this.props.name);
-    // MusicControl.updateSong(play, 0);
     if(!play) Spotify.setPlaying(false);
     this.updateTrack({ initialized: true });
   }
@@ -113,7 +110,7 @@ export default class extends React.Component {
     if(this.props.isOwned) {
       Spotify.setPlaying(false);
       clearInterval(this.interval);
-      MusicControl.turnOff();
+      // MusicControl.turnOff();
     }
   }
 

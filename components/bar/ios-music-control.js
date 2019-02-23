@@ -12,6 +12,7 @@ export default {
     MusicControl.on('nextTrack', nextFunction);
   },
   setSong: (song, playlistName) => {
+    console.log("Setting song", song);
     MusicControl.setNowPlaying({
       title: song.name,
       artwork: song.image,
@@ -26,6 +27,7 @@ export default {
     });
   },
   updateSong: (state, elapsedTime) => {
+    console.log("TIME:", elapsedTime);
     MusicControl.updatePlayback({
       state: state ? MusicControl.STATE_PLAYING : MusicControl.STATE_PAUSED, // (STATE_ERROR, STATE_STOPPED, STATE_PLAYING, STATE_PAUSED, STATE_BUFFERING)
       speed: 1, // Playback Rate
