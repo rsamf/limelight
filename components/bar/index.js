@@ -26,7 +26,14 @@ class PlaylistComponent extends React.Component {
   componentWillReceiveProps(props) {
     let loading = props.songsLoading || props.playlistLoading || props.requestsLoading;
     if(loading) return;
-    if(props.error) return props.navigation.navigate('BarList');
+    if(props.error) {
+      this.props.setHeader({
+        name: "Playlists", 
+        playlist: null, 
+        navigation: this.props.navigation
+      });
+      return props.navigation.navigate('BarList')
+    }
     if(this.initializing) {
       if(!props.songs || !props.playlist) {
         this.init(props);
@@ -51,6 +58,11 @@ class PlaylistComponent extends React.Component {
         this.setPlaylist(playlist);
       });
     } else {
+      this.props.setHeader({
+        name: "Playlists", 
+        playlist: null, 
+        navigation: this.props.navigation
+      });
       props.navigation.navigate('BarList');
     }
   }

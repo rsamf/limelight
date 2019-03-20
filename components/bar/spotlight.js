@@ -49,18 +49,21 @@ export default class extends React.Component {
 
   componentDidMount() {
     if(this.props.isOwned) {
-      // MusicControl.init(...this.musicControlFunctions);
+      MusicControl.init(...this.musicControlFunctions);
       this.optimisticallyPlaying = false;
       if(!this.interval) {
         this.interval = setInterval(()=>this.setPlaybackState(), 1000);
       }
       this.setNewSong();
-      Spotify.addListener("audioDeliveryDone", ()=>this.next());
+      Spotify.addListener("audioDeliveryDone", ()=>{
+        console.log("audiodelivery done");
+        this.next();
+      });
       Spotify.addListener("play", () => {
-        // MusicControl.updateSong(true, this.state.track.positionSec);
+        MusicControl.updateSong(true, this.state.track.positionSec);
       });
       Spotify.addListener("pause", () => {
-        // MusicControl.updateSong(false, this.state.track.positionSec);
+        MusicControl.updateSong(false, this.state.track.positionSec);
       });
     }
   }
@@ -76,14 +79,14 @@ export default class extends React.Component {
   setNewSong(song = this.props.children, play=false) {
     if(!song) return;
     Spotify.playURI(`spotify:track:${song.id}`, 0, 0);
-    // MusicControl.setSong(song, this.props.name);
+    MusicControl.setSong(song, this.props.name);
     if(!play) Spotify.setPlaying(false);
     this.updateTrack({ initialized: true });
   }
 
   pause() {
     Spotify.setPlaying(false);
-    // MusicControl.updateSong(false, this.state.track.positionSec);
+    MusicControl.updateSong(false, this.state.track.positionSec);
     this.optimisticallyPlaying = false;
     this.updateTrack({ playing: false });
   }
@@ -91,7 +94,7 @@ export default class extends React.Component {
   play() {
     if(this.state.track.initialized) {
       Spotify.setPlaying(true);
-      // MusicControl.updateSong(true, this.state.track.positionSec);
+      MusicControl.updateSong(true, this.state.track.positionSec);
     } else {
       this.setNewSong(this.props.children, true);
     }
@@ -110,7 +113,7 @@ export default class extends React.Component {
     if(this.props.isOwned) {
       Spotify.setPlaying(false);
       clearInterval(this.interval);
-      // MusicControl.turnOff();
+      MusicControl.turnOff();
     }
   }
 

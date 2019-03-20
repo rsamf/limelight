@@ -11,6 +11,7 @@ const getPlaylistFromSpotify = (uri) => new Promise((resolve, reject) => {
 const net = {
   initialize: async (id, user, callback) => {
     let spotify = await getPlaylistFromSpotify(id);
+    spotify.uri = globals.getNewURI(spotify);
     aws.addPlaylist(spotify, user, callback);
   },
   addSongToSpotify: (id, song, callback) => {

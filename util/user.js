@@ -1,13 +1,13 @@
 import Spotify from 'rn-spotify-sdk';
 import LocalObject from './LocalObject';
+import globals from '.';
 
 const getPlaylists = (user, func) => {
-  console.warn("Sending Request");
   Spotify.sendRequest('v1/me/playlists', "GET", {}, false).then(({items}) => {
     if(items) {
       let filtered = items.filter(playlist => playlist.owner.id === user.id);
       let mapped = filtered.map(playlist => ({
-        id: playlist.uri,
+        id: globals.getNewURI(playlist),
         ownerId: playlist.owner.id,
         ownerName: playlist.owner.display_name,
         image: playlist.images && playlist.images[0] && playlist.images[0].url,

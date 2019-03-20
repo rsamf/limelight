@@ -445,6 +445,14 @@ const getArtistsText = song => {
   return song.artist;
 };
 
+const getNewURI = (playlist) => {
+  if(playlist.uri && playlist.uri.search(/spotify:user:/i) > -1) {
+    return playlist.uri;
+  } else {
+    return playlist.owner.uri + ":playlist:" + playlist.id;
+  }
+};
+
 const globals = {
   style,
   sBlue,
@@ -475,7 +483,8 @@ const globals = {
   getPlaylistView,
   getPlaylistModal,
   getScrollableText,
-  getArtistsText
+  getArtistsText,
+  getNewURI
 };
 
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, SectionList, StyleSheet, Text, RefreshControl } from 'react-native';
-import { Icon } from 'react-native-elements';
 import globals from '../../util';
 import OwnedPlaylists from './owned';
 import AddedPlaylists from './added';

@@ -131,7 +131,7 @@ export default class AddPlaylistBlur extends React.Component {
       Spotify.sendRequest(url, 'POST', {name}, true).then(data => {
         const toAdd = {
           name, 
-          uri: data.uri, 
+          uri: globals.getNewURI(data), 
           owner: {
             id: this.props.user.id
           }
