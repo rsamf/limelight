@@ -302,13 +302,13 @@ export const isX = () => {
 }
 
 const client = new AWSAppSyncClient({
-  url: "https://oiywd3csqfenhjw7d6p3k6qepe.appsync-api.us-west-2.amazonaws.com/graphql",
+  url: "<REDACTED>",
   region: "us-west-2",
   auth: {
       type: AUTH_TYPE.AWS_IAM,
       credentials: new AWS.Credentials({
-        accessKeyId: "AKIAJVF5BO4TV7IJIRYA",
-        secretAccessKey: "29jgRQTgRsApEfvqbz5HRox6lDrM6pNYhAIYgLHv"
+        accessKeyId: "<REDACTED>",
+        secretAccessKey: "<REDACTED>"
       })
   },
   disableOffline: true
