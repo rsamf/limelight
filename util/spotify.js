@@ -3,10 +3,10 @@ import Spotify from 'rn-spotify-sdk';
 export default {
   initialize: () => {
     const spotifyOptions = {
-      tokenSwapURL: "https://limelight-server.herokuapp.com/auth/swap",
-      tokenRefreshURL: "https://limelight-server.herokuapp.com/auth/refresh",
-      clientID: "65a08501d9e64abfb003fb795ee1a540",
-      sessionUserDefaultsKey: "SpotifySession",
+      tokenSwapURL: "<REDACTED>",
+      tokenRefreshURL: "<REDACTED>",
+      clientID: "<REDACTED>",
+      sessionUserDefaultsKey: "<REDACTED>",
       redirectURL: "limelight://auth",
       scopes: [
         "playlist-modify-public", 
